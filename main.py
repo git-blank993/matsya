@@ -401,193 +401,193 @@ def AppLayout(active_tab="Main"):
             ),
             cls="main-content-wrapper",
         )
-    elif active_tab == "Ballast":
-        b = s.ballast
+    # elif active_tab == "Ballast":
+    #     b = s.ballast
 
-        # ---- MAIN BALLAST SYSTEM PANEL ----
-        main_ballast_panel = Div(
-            Div(
-                BallastActionButton("Ready to Dive open"),
-                BallastActionButton("Ready to Dive Close"),
-                BallastActionButton("Dive open"),
-                BallastActionButton("Dive Close"),
-                BallastActionButton("Surface open"),
-                BallastActionButton("Surface Close"),
-                cls="ballast-btn-grid",
-            ),
-            Div(
-                Div(
-                    BallastPressureRead("Read Pressure_S", b.main_ballast.read_pressure_s, b.main_ballast.pressure_s_enable),
-                    BallastPressureRead("Read Pressure_P", b.main_ballast.read_pressure_p, b.main_ballast.pressure_p_enable),
-                    cls="ballast-pressure-col",
-                ),
-                Div("Main\nBallast\nSystem", cls="ballast-main-label"),
-                cls="ballast-mid-row",
-            ),
-            BallastActSlider("ACT 3 pos",  b.main_ballast.act3_pos),
-            BallastActSlider("ACT 3 pos 2", b.main_ballast.act3_pos2),
-            BallastActSlider("ACT 3 pos 3", b.main_ballast.act3_pos3),
-            cls="ballast-main-panel",
-        )
+    #     # ---- MAIN BALLAST SYSTEM PANEL ----
+    #     main_ballast_panel = Div(
+    #         Div(
+    #             BallastActionButton("Ready to Dive open"),
+    #             BallastActionButton("Ready to Dive Close"),
+    #             BallastActionButton("Dive open"),
+    #             BallastActionButton("Dive Close"),
+    #             BallastActionButton("Surface open"),
+    #             BallastActionButton("Surface Close"),
+    #             cls="ballast-btn-grid",
+    #         ),
+    #         Div(
+    #             Div(
+    #                 BallastPressureRead("Read Pressure_S", b.main_ballast.read_pressure_s, b.main_ballast.pressure_s_enable),
+    #                 BallastPressureRead("Read Pressure_P", b.main_ballast.read_pressure_p, b.main_ballast.pressure_p_enable),
+    #                 cls="ballast-pressure-col",
+    #             ),
+    #             Div("Main\nBallast\nSystem", cls="ballast-main-label"),
+    #             cls="ballast-mid-row",
+    #         ),
+    #         BallastActSlider("ACT 3 pos",  b.main_ballast.act3_pos),
+    #         BallastActSlider("ACT 3 pos 2", b.main_ballast.act3_pos2),
+    #         BallastActSlider("ACT 3 pos 3", b.main_ballast.act3_pos3),
+    #         cls="ballast-main-panel",
+    #     )
 
-        # ---- VBS PANEL ----
-        vbs_panel = Div(
-            Div("VBS", cls="vbs-panel-title"),
-            Div(
-                Div(
-                    Div(
-                        Div("VBS_HPU_Enable", cls="vbs-hpu-label"),
-                        Div(
-                            "HPU ON" if b.vbs.hpu_enable else "HPU OFF",
-                            cls="vbs-hpu-btn" + (" vbs-hpu-on" if b.vbs.hpu_enable else ""),
-                        ),
-                        cls="vbs-hpu-row",
-                    ),
-                    VBSMetricRow("HPU Pressure", b.vbs.hpu_pressure.value, "bar"),
-                    VBSMetricRow("HPU temp", b.vbs.hpu_temp.value, "deg C"),
-                    VBSWaterButton("Water IN"),
-                    VBSWaterButton("Water OUT"),
-                    VBSSetControl(b.vbs.vbs_set),
-                    cls="vbs-left-col",
-                ),
-                VBSTankGauge(b.vbs.tank_level),
-                cls="vbs-content-row",
-            ),
-            cls="ballast-vbs-panel",
-        )
+    #     # ---- VBS PANEL ----
+    #     vbs_panel = Div(
+    #         Div("VBS", cls="vbs-panel-title"),
+    #         Div(
+    #             Div(
+    #                 Div(
+    #                     Div("VBS_HPU_Enable", cls="vbs-hpu-label"),
+    #                     Div(
+    #                         "HPU ON" if b.vbs.hpu_enable else "HPU OFF",
+    #                         cls="vbs-hpu-btn" + (" vbs-hpu-on" if b.vbs.hpu_enable else ""),
+    #                     ),
+    #                     cls="vbs-hpu-row",
+    #                 ),
+    #                 VBSMetricRow("HPU Pressure", b.vbs.hpu_pressure.value, "bar"),
+    #                 VBSMetricRow("HPU temp", b.vbs.hpu_temp.value, "deg C"),
+    #                 VBSWaterButton("Water IN"),
+    #                 VBSWaterButton("Water OUT"),
+    #                 VBSSetControl(b.vbs.vbs_set),
+    #                 cls="vbs-left-col",
+    #             ),
+    #             VBSTankGauge(b.vbs.tank_level),
+    #             cls="vbs-content-row",
+    #         ),
+    #         cls="ballast-vbs-panel",
+    #     )
 
-        # ---- TRIM PANEL ----
-        trim_panel = Div(
-            Div(
-                Div("Trim Position (mm)", cls="trim-position-label"),
-                Div("TRIM", cls="trim-title"),
-                cls="trim-header",
-            ),
-            TrimPositionBar(b.trim.position_mm),
-            Div(
-                Div(
-                    ToggleSwitch("power", b.trim.power),
-                    cls="trim-toggle-col",
-                ),
-                Div(
-                    SimpleMetricBox("Voltage", b.trim.voltage.value, "V"),
-                    SimpleMetricBox("Current", b.trim.current.value, "A"),
-                    cls="trim-metrics-left",
-                ),
-                Div(
-                    SimpleMetricBox("Temp", b.trim.temp.value, "deg C"),
-                    SimpleMetricBox("speed", b.trim.speed.value, "mm/min"),
-                    cls="trim-metrics-right",
-                ),
-                Div(
-                    ToggleSwitch("CW/CCW", b.trim.cw_ccw),
-                    cls="trim-toggle-col",
-                ),
-                cls="trim-metrics-row",
-            ),
-            cls="ballast-trim-panel",
-        )
+    #     # ---- TRIM PANEL ----
+    #     trim_panel = Div(
+    #         Div(
+    #             Div("Trim Position (mm)", cls="trim-position-label"),
+    #             Div("TRIM", cls="trim-title"),
+    #             cls="trim-header",
+    #         ),
+    #         TrimPositionBar(b.trim.position_mm),
+    #         Div(
+    #             Div(
+    #                 ToggleSwitch("power", b.trim.power),
+    #                 cls="trim-toggle-col",
+    #             ),
+    #             Div(
+    #                 SimpleMetricBox("Voltage", b.trim.voltage.value, "V"),
+    #                 SimpleMetricBox("Current", b.trim.current.value, "A"),
+    #                 cls="trim-metrics-left",
+    #             ),
+    #             Div(
+    #                 SimpleMetricBox("Temp", b.trim.temp.value, "deg C"),
+    #                 SimpleMetricBox("speed", b.trim.speed.value, "mm/min"),
+    #                 cls="trim-metrics-right",
+    #             ),
+    #             Div(
+    #                 ToggleSwitch("CW/CCW", b.trim.cw_ccw),
+    #                 cls="trim-toggle-col",
+    #             ),
+    #             cls="trim-metrics-row",
+    #         ),
+    #         cls="ballast-trim-panel",
+    #     )
 
-        # ---- OIM / SPEED CONTROL PANEL ----
-        oim_panel = Div(
-            SpeedControlSlider(b.trim.speed_control),
-            Div(
-                OIMToggleRow("OIM_S1_Ext_Reset", b.oim.s1_ext_reset),
-                OIMToggleRow("OIM_S2_Int_Reset", b.oim.s2_int_reset),
-                OIMToggleRow("OIM_P1_Ext_Reset", b.oim.p1_ext_reset),
-                OIMToggleRow("OIM_P2_Int_Reset", b.oim.p2_int_reset),
-                cls="oim-toggles-col",
-            ),
-            cls="ballast-oim-panel",
-        )
+    #     # ---- OIM / SPEED CONTROL PANEL ----
+    #     oim_panel = Div(
+    #         SpeedControlSlider(b.trim.speed_control),
+    #         Div(
+    #             OIMToggleRow("OIM_S1_Ext_Reset", b.oim.s1_ext_reset),
+    #             OIMToggleRow("OIM_S2_Int_Reset", b.oim.s2_int_reset),
+    #             OIMToggleRow("OIM_P1_Ext_Reset", b.oim.p1_ext_reset),
+    #             OIMToggleRow("OIM_P2_Int_Reset", b.oim.p2_int_reset),
+    #             cls="oim-toggles-col",
+    #         ),
+    #         cls="ballast-oim-panel",
+    #     )
 
-        main_content_area = Div(
-            Div(
-                Div(
-                    Div(main_ballast_panel, vbs_panel, cls="ballast-top-row"),
-                    Div(trim_panel, oim_panel, cls="ballast-bottom-row"),
-                    cls="ballast-content-col",
-                ),
-                sidebar_col,
-                cls="main-content",
-            ),
-            cls="main-content-wrapper",
-        )
+    #     main_content_area = Div(
+    #         Div(
+    #             Div(
+    #                 Div(main_ballast_panel, vbs_panel, cls="ballast-top-row"),
+    #                 Div(trim_panel, oim_panel, cls="ballast-bottom-row"),
+    #                 cls="ballast-content-col",
+    #             ),
+    #             sidebar_col,
+    #             cls="main-content",
+    #         ),
+    #         cls="main-content-wrapper",
+    #     )
 
-    elif active_tab == "Propulsion":
-        pd = s.propulsion_detail
+    # elif active_tab == "Propulsion":
+    #     pd = s.propulsion_detail
 
-        # Left half: T2, T4 (port side thrusters)
-        left_col = Div(
-            ThrusterPanel(2, pd.t2),
-            ThrusterPanel(4, pd.t4),
-            cls="prop-thruster-col",
-        )
+    #     # Left half: T2, T4 (port side thrusters)
+    #     left_col = Div(
+    #         ThrusterPanel(2, pd.t2),
+    #         ThrusterPanel(4, pd.t4),
+    #         cls="prop-thruster-col",
+    #     )
 
-        # Second left: T6, T8 (port aft)
-        mid_left_col = Div(
-            ThrusterPanel(6, pd.t6),
-            ThrusterPanel(8, pd.t8),
-            cls="prop-thruster-col",
-        )
+    #     # Second left: T6, T8 (port aft)
+    #     mid_left_col = Div(
+    #         ThrusterPanel(6, pd.t6),
+    #         ThrusterPanel(8, pd.t8),
+    #         cls="prop-thruster-col",
+    #     )
 
-        # Center column: Power/Enable toggles for all 8 thrusters
-        center_col = Div(
-            Div("POWER / ENABLE", cls="prop-center-header"),
-            PropCenterToggleBlock(2, pd.t2.power, pd.t2.enable),
-            PropCenterToggleBlock(6, pd.t6.power, pd.t6.enable),
-            PropCenterToggleBlock(5, pd.t5.power, pd.t5.enable),
-            PropCenterToggleBlock(1, pd.t1.power, pd.t1.enable),
-            PropCenterToggleBlock(4, pd.t4.power, pd.t4.enable),
-            PropCenterToggleBlock(8, pd.t8.power, pd.t8.enable),
-            PropCenterToggleBlock(7, pd.t7.power, pd.t7.enable),
-            PropCenterToggleBlock(3, pd.t3.power, pd.t3.enable),
-            cls="prop-center-col",
-        )
+    #     # Center column: Power/Enable toggles for all 8 thrusters
+    #     center_col = Div(
+    #         Div("POWER / ENABLE", cls="prop-center-header"),
+    #         PropCenterToggleBlock(2, pd.t2.power, pd.t2.enable),
+    #         PropCenterToggleBlock(6, pd.t6.power, pd.t6.enable),
+    #         PropCenterToggleBlock(5, pd.t5.power, pd.t5.enable),
+    #         PropCenterToggleBlock(1, pd.t1.power, pd.t1.enable),
+    #         PropCenterToggleBlock(4, pd.t4.power, pd.t4.enable),
+    #         PropCenterToggleBlock(8, pd.t8.power, pd.t8.enable),
+    #         PropCenterToggleBlock(7, pd.t7.power, pd.t7.enable),
+    #         PropCenterToggleBlock(3, pd.t3.power, pd.t3.enable),
+    #         cls="prop-center-col",
+    #     )
 
-        # Mid right: T5, T7
-        mid_right_col = Div(
-            ThrusterPanel(5, pd.t5),
-            ThrusterPanel(7, pd.t7),
-            cls="prop-thruster-col",
-        )
+    #     # Mid right: T5, T7
+    #     mid_right_col = Div(
+    #         ThrusterPanel(5, pd.t5),
+    #         ThrusterPanel(7, pd.t7),
+    #         cls="prop-thruster-col",
+    #     )
 
-        # Right col: T1, T3
-        right_col = Div(
-            ThrusterPanel(1, pd.t1),
-            ThrusterPanel(3, pd.t3),
-            cls="prop-thruster-col",
-        )
+    #     # Right col: T1, T3
+    #     right_col = Div(
+    #         ThrusterPanel(1, pd.t1),
+    #         ThrusterPanel(3, pd.t3),
+    #         cls="prop-thruster-col",
+    #     )
 
-        main_content_area = Div(
-            Div(
-                Div(
-                    left_col,
-                    mid_left_col,
-                    center_col,
-                    mid_right_col,
-                    right_col,
-                    sidebar_col,
-                    cls="main-content",
-                ),
-                # Bottom axis control strip
-                Div(
-                    PropAxisControl("Heading ctrl", pd.heading_ctrl),
-                    PropAxisControl("Fwd ctrl", pd.fwd_ctrl),
-                    PropAxisControl("Lat ctrl", pd.lat_ctrl),
-                    PropAxisControl("Vertical ctrl", pd.vertical_ctrl),
-                    Div(
-                        Span("🐢", cls="prop-speed-icon"),
-                        Span(str(pd.speed_factor), cls="prop-speed-value"),
-                        Span("speed factor", cls="prop-speed-label"),
-                        cls="prop-speed-factor",
-                    ),
-                    cls="prop-bottom-strip",
-                ),
-                cls="prop-content-wrapper",
-            ),
-            cls="main-content-wrapper",
-        )
+    #     main_content_area = Div(
+    #         Div(
+    #             Div(
+    #                 left_col,
+    #                 mid_left_col,
+    #                 center_col,
+    #                 mid_right_col,
+    #                 right_col,
+    #                 sidebar_col,
+    #                 cls="main-content",
+    #             ),
+    #             # Bottom axis control strip
+    #             Div(
+    #                 PropAxisControl("Heading ctrl", pd.heading_ctrl),
+    #                 PropAxisControl("Fwd ctrl", pd.fwd_ctrl),
+    #                 PropAxisControl("Lat ctrl", pd.lat_ctrl),
+    #                 PropAxisControl("Vertical ctrl", pd.vertical_ctrl),
+    #                 Div(
+    #                     Span("🐢", cls="prop-speed-icon"),
+    #                     Span(str(pd.speed_factor), cls="prop-speed-value"),
+    #                     Span("speed factor", cls="prop-speed-label"),
+    #                     cls="prop-speed-factor",
+    #                 ),
+    #                 cls="prop-bottom-strip",
+    #             ),
+    #             cls="prop-content-wrapper",
+    #         ),
+    #         cls="main-content-wrapper",
+    #     )
 
     else:
         main_content_area = Div(
