@@ -311,6 +311,8 @@ body {
     border-left: 1px solid var(--color-border);
     padding: 16px 16px;
     gap: 0;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .sidebar-section {
@@ -796,6 +798,70 @@ body {
     color: white;
     border-color: var(--color-text);
     box-shadow: var(--shadow-md);
+}
+
+/* =====================================================
+   MEDIA QUERIES FOR SMALLER SCREEN HEIGHTS (IPADS)
+   ===================================================== */
+@media (max-height: 850px) {
+    .col-sidebar {
+        padding: 12px 12px;
+    }
+    .sidebar-section {
+        gap: 8px;
+    }
+    .sidebar-divider {
+        margin: 10px 0;
+    }
+    .status-pill {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    .toggle-switch {
+        gap: 3px;
+    }
+    .on-button {
+        width: 48px;
+        height: 48px;
+        font-size: 12px;
+    }
+    .sidebar-footer {
+        padding-top: 10px;
+    }
+}
+
+@media (max-height: 720px) {
+    .col-sidebar {
+        padding: 8px 8px;
+    }
+    .sidebar-section {
+        gap: 6px;
+    }
+    .sidebar-divider {
+        margin: 6px 0;
+    }
+    .sidebar-metric-readout {
+        padding: 4px 10px;
+    }
+    .sidebar-metric-value {
+        font-size: 14px;
+    }
+    .status-pill {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    .led-dot {
+        width: 12px;
+        height: 12px;
+    }
+    .led-label {
+        font-size: 9px;
+    }
+    .on-button {
+        width: 42px;
+        height: 42px;
+        font-size: 11px;
+    }
 }
 
 .on-button.power-on {
@@ -2144,5 +2210,133 @@ body {
     font-size: 11px;
     font-weight: 600;
     color: var(--color-subtext);
+}
+
+/* ==========================
+   RESPONSIVE OVERRIDES FOR SMALL SCREENS
+   Eliminates vertical scroll on heights < 850px
+   ========================== */
+@media screen and (max-height: 850px), screen and (max-width: 1100px) {
+    /* Sidebar scaling */
+    .col-sidebar {
+        padding: 10px 12px;
+        width: 160px;
+    }
+
+    .sidebar-section {
+        gap: 6px;
+    }
+
+    .sidebar-divider {
+        margin: 8px 0;
+    }
+
+    /* Status Pill scaling (Water Ingress, IR Ok, Comm) */
+    .status-pill {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    /* Environmental Metrics scaling */
+    .sidebar-metric-label {
+        font-size: 11px;
+    }
+
+    .sidebar-metric-readout {
+        padding: 4px 10px;
+    }
+
+    .sidebar-metric-value {
+        font-size: 14px;
+    }
+
+    .sidebar-metric-unit {
+        font-size: 10px;
+    }
+
+    /* Toggle scaling */
+    .toggle-label {
+        font-size: 11px;
+    }
+
+    .toggle-track {
+        width: 30px;
+        height: 16px;
+    }
+
+    .toggle-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    .toggle-dot-on {
+        transform: translateX(14px);
+    }
+
+    .toggle-state-text {
+        font-size: 10px;
+    }
+
+    /* Power Button scaling */
+    .on-button {
+        width: 44px;
+        height: 44px;
+        font-size: 12px;
+        border-width: 2px;
+    }
+
+    /* LED Panel scaling */
+    .led-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    .led-label {
+        font-size: 9px;
+    }
+
+    /* Header scaling to save vertical space */
+    .header-top {
+        padding: 6px 20px;
+    }
+
+    .header-title {
+        font-size: 18px;
+    }
+
+    .header-metrics-strip {
+        padding: 4px 20px;
+        gap: 24px;
+    }
+
+    .header-value-box {
+        font-size: 14px;
+        padding: 2px 10px;
+    }
+
+    .header-label {
+        font-size: 11px;
+    }
+
+    .topbar-metric-value {
+        font-size: 13px;
+    }
+
+    .topbar-metric-box {
+        padding: 2px 10px;
+    }
+
+    /* Gauge title scaling */
+    .gauge-title {
+        font-size: 11px;
+    }
+
+    .gauge-value {
+        font-size: 22px;
+    }
+
+    .big-number-value {
+        font-size: 42px;
+    }
 }
 
