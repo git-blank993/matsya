@@ -30,6 +30,34 @@ from components import (
     ThrusterPanel,
     PropCenterToggleBlock,
     PropAxisControl,
+    BatteryPanel,
+    PDEPanel,
+    IDEPanel,
+    UmbilicalPanel,
+    ImagingToggle,
+    LedDimmerSlider,
+    CameraActionGrid,
+    PanTiltBar,
+    PanTiltPad,
+    SensorToggleBlock,
+    SensorLedStatus,
+    AlarmLedStatus,
+    ScientificSensorRowItem,
+    SensorBoxMetric,
+    BuzzerPanel,
+    LogTable,
+    HorizontalToggle,
+    RedSignalIndicator,
+    StatusChartRowComponent,
+    KwhDataGrid,
+    KwhVerticalGauge,
+    MccIndicator,
+    MccStatusBox,
+    MccMessageInput,
+    MccShipData,
+    MccRadioGroup,
+    MccCrewStatus,
+    MccPowerDropdown,
 )
 
 import asyncio
@@ -134,9 +162,9 @@ def AppLayout(active_tab="Main"):
         Div(cls="sidebar-divider"),
         # Controls section
         Div(
-            ToggleSwitch("Joystick", s.sidebar.joystick),
-            ToggleSwitch("Thrusters Enable", s.sidebar.thrusters_enable),
-            ToggleSwitch("High Speed", s.sidebar.high_speed),
+            ToggleSwitch("Joystick", s.sidebar.joystick, id_key="toggle-joystick", toggle_url="/api/toggle_joystick"),
+            ToggleSwitch("Thrusters Enable", s.sidebar.thrusters_enable, id_key="toggle-thrusters", toggle_url="/api/toggle_thrusters_enable"),
+            ToggleSwitch("High Speed", s.sidebar.high_speed, id_key="toggle-high-speed", toggle_url="/api/toggle_high_speed"),
             cls="sidebar-section",
         ),
         Div(cls="sidebar-divider"),
@@ -417,8 +445,8 @@ def AppLayout(active_tab="Main"):
             ),
             Div(
                 Div(
-                    BallastPressureRead("Read Pressure_S", b.main_ballast.read_pressure_s, b.main_ballast.pressure_s_enable),
-                    BallastPressureRead("Read Pressure_P", b.main_ballast.read_pressure_p, b.main_ballast.pressure_p_enable),
+                    BallastPressureRead("Read Pressure_S", b.main_ballast.read_pressure_s, b.main_ballast.pressure_s_enable, id_key="tog-bpr-s", toggle_url="/api/toggle/ballast.main_ballast.pressure_s_enable"),
+                    BallastPressureRead("Read Pressure_P", b.main_ballast.read_pressure_p, b.main_ballast.pressure_p_enable, id_key="tog-bpr-p", toggle_url="/api/toggle/ballast.main_ballast.pressure_p_enable"),
                     cls="ballast-pressure-col",
                 ),
                 Div("Main\nBallast\nSystem", cls="ballast-main-label"),
@@ -466,7 +494,7 @@ def AppLayout(active_tab="Main"):
             TrimPositionBar(b.trim.position_mm),
             Div(
                 Div(
-                    ToggleSwitch("power", b.trim.power),
+                    ToggleSwitch("power", b.trim.power, id_key="tog-trim-pwr", toggle_url="/api/toggle/ballast.trim.power"),
                     cls="trim-toggle-col",
                 ),
                 Div(
@@ -480,7 +508,7 @@ def AppLayout(active_tab="Main"):
                     cls="trim-metrics-right",
                 ),
                 Div(
-                    ToggleSwitch("CW/CCW", b.trim.cw_ccw),
+                    ToggleSwitch("CW/CCW", b.trim.cw_ccw, id_key="tog-trim-cw", toggle_url="/api/toggle/ballast.trim.cw_ccw"),
                     cls="trim-toggle-col",
                 ),
                 cls="trim-metrics-row",
@@ -492,10 +520,10 @@ def AppLayout(active_tab="Main"):
         oim_panel = Div(
             SpeedControlSlider(b.trim.speed_control),
             Div(
-                OIMToggleRow("OIM_S1_Ext_Reset", b.oim.s1_ext_reset),
-                OIMToggleRow("OIM_S2_Int_Reset", b.oim.s2_int_reset),
-                OIMToggleRow("OIM_P1_Ext_Reset", b.oim.p1_ext_reset),
-                OIMToggleRow("OIM_P2_Int_Reset", b.oim.p2_int_reset),
+                OIMToggleRow("OIM_S1_Ext_Reset", b.oim.s1_ext_reset, id_key="tog-oim-s1e", toggle_url="/api/toggle/ballast.oim.s1_ext_reset"),
+                OIMToggleRow("OIM_S2_Int_Reset", b.oim.s2_int_reset, id_key="tog-oim-s2i", toggle_url="/api/toggle/ballast.oim.s2_int_reset"),
+                OIMToggleRow("OIM_P1_Ext_Reset", b.oim.p1_ext_reset, id_key="tog-oim-p1e", toggle_url="/api/toggle/ballast.oim.p1_ext_reset"),
+                OIMToggleRow("OIM_P2_Int_Reset", b.oim.p2_int_reset, id_key="tog-oim-p2i", toggle_url="/api/toggle/ballast.oim.p2_int_reset"),
                 cls="oim-toggles-col",
             ),
             cls="ballast-oim-panel",
@@ -534,14 +562,14 @@ def AppLayout(active_tab="Main"):
         # Center column: Power/Enable toggles for all 8 thrusters
         center_col = Div(
             Div("POWER / ENABLE", cls="prop-center-header"),
-            PropCenterToggleBlock(2, pd.t2.power, pd.t2.enable),
-            PropCenterToggleBlock(6, pd.t6.power, pd.t6.enable),
-            PropCenterToggleBlock(5, pd.t5.power, pd.t5.enable),
-            PropCenterToggleBlock(1, pd.t1.power, pd.t1.enable),
-            PropCenterToggleBlock(4, pd.t4.power, pd.t4.enable),
-            PropCenterToggleBlock(8, pd.t8.power, pd.t8.enable),
-            PropCenterToggleBlock(7, pd.t7.power, pd.t7.enable),
-            PropCenterToggleBlock(3, pd.t3.power, pd.t3.enable),
+            PropCenterToggleBlock(2, pd.t2.power, pd.t2.enable, toggle_url_p="/api/toggle/propulsion_detail.t2.power", toggle_url_e="/api/toggle/propulsion_detail.t2.enable"),
+            PropCenterToggleBlock(6, pd.t6.power, pd.t6.enable, toggle_url_p="/api/toggle/propulsion_detail.t6.power", toggle_url_e="/api/toggle/propulsion_detail.t6.enable"),
+            PropCenterToggleBlock(5, pd.t5.power, pd.t5.enable, toggle_url_p="/api/toggle/propulsion_detail.t5.power", toggle_url_e="/api/toggle/propulsion_detail.t5.enable"),
+            PropCenterToggleBlock(1, pd.t1.power, pd.t1.enable, toggle_url_p="/api/toggle/propulsion_detail.t1.power", toggle_url_e="/api/toggle/propulsion_detail.t1.enable"),
+            PropCenterToggleBlock(4, pd.t4.power, pd.t4.enable, toggle_url_p="/api/toggle/propulsion_detail.t4.power", toggle_url_e="/api/toggle/propulsion_detail.t4.enable"),
+            PropCenterToggleBlock(8, pd.t8.power, pd.t8.enable, toggle_url_p="/api/toggle/propulsion_detail.t8.power", toggle_url_e="/api/toggle/propulsion_detail.t8.enable"),
+            PropCenterToggleBlock(7, pd.t7.power, pd.t7.enable, toggle_url_p="/api/toggle/propulsion_detail.t7.power", toggle_url_e="/api/toggle/propulsion_detail.t7.enable"),
+            PropCenterToggleBlock(3, pd.t3.power, pd.t3.enable, toggle_url_p="/api/toggle/propulsion_detail.t3.power", toggle_url_e="/api/toggle/propulsion_detail.t3.enable"),
             cls="prop-center-col",
         )
 
@@ -587,6 +615,619 @@ def AppLayout(active_tab="Main"):
                 cls="prop-content-wrapper",
             ),
             cls="main-content-wrapper",
+        )
+
+    elif active_tab == "POWER":
+        p = s.power
+        
+        row1 = Div(
+            BatteryPanel("MB_P", "MB_P", p.mb_p, ["100", "120", "140", "160", "180"], 100, 180),
+            BatteryPanel("AUX_P", "AUX_P", p.aux_p, ["0", "10", "20", "30", "40"], 0, 40),
+            BatteryPanel("MB_S", "MB_S", p.mb_s, ["100", "120", "140", "160", "180"], 100, 180),
+            BatteryPanel("AUX_S", "AUX_S", p.aux_s, ["0", "10", "20", "30", "40"], 0, 40),
+            cls="power-row"
+        )
+        
+        row2 = Div(
+            PDEPanel("PDE_P", "PDE_P", p.pde_p),
+            IDEPanel("IDE_P", "IDE_P", p.ide_p),
+            PDEPanel("PDE_S", "PDE_S", p.pde_s),
+            IDEPanel("IDE_S", "IDE_S", p.ide_s),
+            cls="power-row"
+        )
+        
+        row3 = Div(
+            UmbilicalPanel("UB_Port", "PSP", p.ub_port),
+            UmbilicalPanel("UB_Stbd", "PSS", p.ub_stbd),
+            cls="power-row power-row-bottom"
+        )
+
+        main_content_area = Div(
+            Div(
+                Div(row1, row2, row3, cls="power-grid-container"),
+                sidebar_col,
+                cls="main-content",
+            ),
+            cls="main-content-wrapper",
+        )
+
+    elif active_tab == "Imaging":
+        img = s.imaging
+        
+        # Left Part (LEDs + Cameras)
+        led_p_col = Div(
+            Div(
+                ImagingToggle("LED P1", img.led_p1.power, id_key="tog-led-p1", toggle_url="/api/toggle/imaging.led_p1.power"),
+                ImagingToggle("LED P2", img.led_p2.power, id_key="tog-led-p2", toggle_url="/api/toggle/imaging.led_p2.power"),
+                ImagingToggle("LED P3", img.led_p3.power, id_key="tog-led-p3", toggle_url="/api/toggle/imaging.led_p3.power"),
+                cls="img-toggle-block"
+            ),
+            Div(
+                LedDimmerSlider("led 3 Dim%(10x)", img.led_p1.dim),
+                LedDimmerSlider("led 5 Dim%(10x)", img.led_p2.dim),
+                LedDimmerSlider("led 7 Dim%(10x)", img.led_p3.dim),
+                cls="img-toggle-block"
+            ),
+            cls="img-led-row"
+        )
+        
+        led_s_col = Div(
+            Div(
+                ImagingToggle("LED S1", img.led_s1.power, id_key="tog-led-s1", toggle_url="/api/toggle/imaging.led_s1.power"),
+                ImagingToggle("LED S2", img.led_s2.power, id_key="tog-led-s2", toggle_url="/api/toggle/imaging.led_s2.power"),
+                ImagingToggle("LED S3", img.led_s3.power, id_key="tog-led-s3", toggle_url="/api/toggle/imaging.led_s3.power"),
+                cls="img-toggle-block"
+            ),
+            Div(
+                LedDimmerSlider("led 4 Dim%(10x)", img.led_s1.dim),
+                LedDimmerSlider("led 6 Dim%(10x)", img.led_s2.dim),
+                LedDimmerSlider("led 8 Dim%(10x)", img.led_s3.dim),
+                cls="img-toggle-block" 
+            ),
+            cls="img-led-row"
+        )
+        
+        led_section = Div(
+            Div("LED Controls", cls="img-panel-title"),
+            Div(
+                Div(Div("Underwater LED_P", style="font-size:12px; font-weight:700; color:var(--color-text); text-align:center;"), led_p_col, cls="img-col-main"),
+                Div(Div("Underwater LED_S", style="font-size:12px; font-weight:700; color:var(--color-text); text-align:center;"), led_s_col, cls="img-col-main"),
+                cls="img-top-row"
+            ),
+            cls="img-panel"
+        )
+        
+        # Camera Panel
+        cam_section = Div(
+            Div("Camera Controls", cls="img-panel-title"),
+            Div(
+                # Camera P col
+                Div(
+                    ImagingToggle("HD camera P", img.hd_camera_p, inline=True, id_key="tog-hd-cam-p", toggle_url="/api/toggle/imaging.hd_camera_p"),
+                    Div(
+                        Div(
+                            ImagingToggle("HD SDI_P1", img.hd_sdi_p1, id_key="tog-hd-sdi-p1", toggle_url="/api/toggle/imaging.hd_sdi_p1"),
+                            ImagingToggle("HD SDI_P2", img.hd_sdi_p2, id_key="tog-hd-sdi-p2", toggle_url="/api/toggle/imaging.hd_sdi_p2"),
+                            cls="sdi-col"
+                        ),
+                        Div(
+                            ImagingToggle("HD SDI_P3", img.hd_sdi_p3, id_key="tog-hd-sdi-p3", toggle_url="/api/toggle/imaging.hd_sdi_p3"),
+                            ImagingToggle("HD SDI_P4", img.hd_sdi_p4, id_key="tog-hd-sdi-p4", toggle_url="/api/toggle/imaging.hd_sdi_p4"),
+                            cls="sdi-col"
+                        ),
+                        cls="sdi-grid"
+                    ),
+                    Div("HD Camera_P", style="font-size:14px; font-weight:800; color:var(--color-text); text-align:center; margin-bottom:8px;"),
+                    CameraActionGrid(),
+                    cls="img-cam-col"
+                ),
+                # Camera S col
+                Div(
+                    ImagingToggle("HD camera S", img.hd_camera_s, inline=True, id_key="tog-hd-cam-s", toggle_url="/api/toggle/imaging.hd_camera_s"),
+                    Div(
+                        Div(
+                            ImagingToggle("HD Camera S2", img.hd_camera_s2, inline=True, id_key="tog-hd-cam-s2", toggle_url="/api/toggle/imaging.hd_camera_s2"),
+                            ImagingToggle("HD SDI_S1", img.hd_sdi_s1, inline=True, id_key="tog-hd-sdi-s1", toggle_url="/api/toggle/imaging.hd_sdi_s1"),
+                            cls="sdi-col"
+                        ),
+                        Div(
+                            ImagingToggle("HD SDI_S2", img.hd_sdi_s2, inline=True, id_key="tog-hd-sdi-s2", toggle_url="/api/toggle/imaging.hd_sdi_s2"),
+                            ImagingToggle("HD SDI_S3", img.hd_sdi_s3, inline=True, id_key="tog-hd-sdi-s3", toggle_url="/api/toggle/imaging.hd_sdi_s3"),
+                            cls="sdi-col"
+                        ),
+                        cls="sdi-grid"
+                    ),
+                    Div("HD Camera _S", style="font-size:14px; font-weight:800; color:var(--color-text); text-align:center; margin-bottom:8px;"),
+                    CameraActionGrid(),
+                    cls="img-cam-col"
+                ),
+                cls="img-cam-grid"
+            ),
+            cls="img-panel"
+        )
+        
+        left_col = Div(led_section, cam_section, cls="img-col-main")
+        
+        # Right Part (Pan/Tilt)
+        pt = img.pt_p1
+        right_col = Div(
+            Div(
+                PanTiltBar("PAN", pt.pan, -170, 170, ["-170", "-100", "0", "100", "170"]),
+                PanTiltBar("TILT", pt.tilt, -50, 110, ["-50", "0", "50", "110"]),
+                cls="img-panel img-pt-panel"
+            ),
+            Div(
+                Div(
+                    Div("Pan&Tilt P1", cls="pt-tab active"),
+                    Div("Pan &Tilt S1", cls="pt-tab"),
+                    Div("Pan& Tilt S2", cls="pt-tab"),
+                    cls="pt-tabs-row"
+                ),
+                Div("PnT CTRL P1", style="font-size:14px; font-weight:800; color:var(--color-text); padding:10px 0 0 0; text-align:center;"),
+                PanTiltPad(pt.pan, pt.tilt),
+                cls="img-panel", style="margin-top:0;"
+            ),
+            cls="img-col-right"
+        )
+        
+        main_content_area = Div(
+            Div(
+                Div(left_col, right_col, cls="img-layout-row"),
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "Sensors":
+        sens = s.sensors
+        
+        port_toggles = Div(
+            Div("Port side", cls="sens-panel-title"),
+            SensorToggleBlock("Depth Sensor Pri", sens.toggles.depth_sensor_pri, id_key="tog-sens-ds-pri", toggle_url="/api/toggle/sensors.toggles.depth_sensor_pri"),
+            SensorToggleBlock("INS", sens.toggles.ins, id_key="tog-sens-ins", toggle_url="/api/toggle/sensors.toggles.ins"),
+            SensorToggleBlock("CTDO", sens.toggles.ctdo, id_key="tog-sens-ctdo", toggle_url="/api/toggle/sensors.toggles.ctdo"),
+            SensorToggleBlock("DVL", sens.toggles.dvl, id_key="tog-sens-dvl", toggle_url="/api/toggle/sensors.toggles.dvl"),
+            SensorToggleBlock("Multibeam Sonar", sens.toggles.multibeam_sonar, id_key="tog-sens-mbs1", toggle_url="/api/toggle/sensors.toggles.multibeam_sonar"),
+            cls="sens-panel"
+        )
+        stbd_toggles = Div(
+            Div("Starboard", cls="sens-panel-title"),
+            SensorToggleBlock("Altimeter", sens.toggles.altimeter, id_key="tog-sens-alt", toggle_url="/api/toggle/sensors.toggles.altimeter"),
+            SensorToggleBlock("Dissolved O2", sens.toggles.dissolved_o2, id_key="tog-sens-do2", toggle_url="/api/toggle/sensors.toggles.dissolved_o2"),
+            SensorToggleBlock("CTDO_S", sens.toggles.ctdo_s, id_key="tog-sens-ctdo-s", toggle_url="/api/toggle/sensors.toggles.ctdo_s"),
+            SensorToggleBlock("MBS", sens.toggles.mbs, id_key="tog-sens-mbs2", toggle_url="/api/toggle/sensors.toggles.mbs"),
+            SensorToggleBlock("IMG SONAR", sens.toggles.img_sonar, id_key="tog-sens-img-sonar", toggle_url="/api/toggle/sensors.toggles.img_sonar"),
+            cls="sens-panel"
+        )
+        
+        wi_p = Div(
+            Div("Water Ingress_p", cls="sens-panel-title"),
+            SensorLedStatus("WI PS_P", sens.indicators.wi_ps_p),
+            SensorLedStatus("WI IDE_P", sens.indicators.wi_ide_p),
+            SensorLedStatus("WI PDE_P", sens.indicators.wi_pde_p),
+            cls="sens-panel sens-panel-clear"
+        )
+        
+        ins_p = Div(
+            Div("Insulation_P", cls="sens-panel-title"),
+            SensorLedStatus("IR UB_P", sens.indicators.ir_ub_p),
+            SensorLedStatus("IR IDE_P", sens.indicators.ir_ide_p),
+            SensorLedStatus("IR PDE_P INT", sens.indicators.ir_pde_p_int),
+            SensorLedStatus("IR PDE_P EXT", sens.indicators.ir_pde_p_ext),
+            SensorLedStatus("IR PDE 148_P", sens.indicators.ir_pde_148_p),
+            cls="sens-panel sens-panel-clear"
+        )
+
+        sensor_alarm_p = Div(
+            Div("Sensor Alarm", cls="sens-panel-title"),
+            AlarmLedStatus("O2 alarm", sens.indicators.o2_alarm),
+            AlarmLedStatus("Co2 alarm", sens.indicators.co2_alarm),
+            AlarmLedStatus("Pressure 2", sens.indicators.pressure_2),
+            AlarmLedStatus("Altitude_P", sens.indicators.altitude_p),
+            AlarmLedStatus("Depth alarm", sens.indicators.depth_alarm),
+            cls="sens-panel sens-panel-clear"
+        )
+        
+        warning_panel = Div(
+            Div("Warning and Alarm Panel", cls="warning-panel-title"),
+            Div(
+                BuzzerPanel(sens.buzzer_active),
+                Div(
+                    SensorToggleBlock("Laser Light 2", sens.toggles.laser_light_2, id_key="tog-sens-ll2", toggle_url="/api/toggle/sensors.toggles.laser_light_2"),
+                    SensorToggleBlock("Pan and Tilt P1", sens.toggles.pan_and_tilt_p1, id_key="tog-sens-pt-p1", toggle_url="/api/toggle/sensors.toggles.pan_and_tilt_p1"),
+                    SensorToggleBlock("Pan and Tilt S1", sens.toggles.pan_and_tilt_s1, id_key="tog-sens-pt-s1", toggle_url="/api/toggle/sensors.toggles.pan_and_tilt_s1"),
+                    SensorToggleBlock("Pan and Tilt S2", sens.toggles.pan_and_tilt_s2, id_key="tog-sens-pt-s2", toggle_url="/api/toggle/sensors.toggles.pan_and_tilt_s2"),
+                    cls="warning-toggles"
+                ),
+                cls="warning-panel-content"
+            ),
+            cls="warning-panel-section"
+        )
+        
+        ins_s = Div(
+            Div("Insulation_S", cls="sens-panel-title"),
+            SensorLedStatus("IR UB_S", sens.indicators.ir_ub_s),
+            SensorLedStatus("IR IDE_S", sens.indicators.ir_ide_s),
+            SensorLedStatus("IR PDE_S INT", sens.indicators.ir_pde_s_int),
+            SensorLedStatus("IR PDE_S EXT", sens.indicators.ir_pde_s_ext),
+            SensorLedStatus("IR PDE 148_S", sens.indicators.ir_pde_148_s),
+            cls="sens-panel sens-panel-clear"
+        )
+        wi_s = Div(
+            Div("Water Ingress_S", cls="sens-panel-title"),
+            SensorLedStatus("WI PS_S", sens.indicators.wi_ps_s),
+            SensorLedStatus("WI IDE_S", sens.indicators.wi_ide_s),
+            SensorLedStatus("WI PDE_S", sens.indicators.wi_pde_s),
+            cls="sens-panel sens-panel-clear"
+        )
+        
+        sci = sens.scientific
+        sci_table = Div(
+            Div(
+                Span("CTDO Sensor", cls="sci-sens-header-sub"),
+                Span("Scientific Sensors", cls="sci-sens-main-title"),
+                cls="sci-sens-top"
+            ),
+            Div(
+                Span("", cls="sci-sens-th"),
+                Span("Port", cls="sci-sens-th text-center"),
+                Span("Stbd", cls="sci-sens-th text-center"),
+                Span("", cls="sci-sens-th"),
+                cls="sci-sens-table-header"
+            ),
+            ScientificSensorRowItem("Conductivity", sci.conductivity.port, sci.conductivity.stbd, "S/m"),
+            ScientificSensorRowItem("Salinity", sci.salinity.port, sci.salinity.stbd, "PSU"),
+            ScientificSensorRowItem("Water denisty", sci.water_density.port, sci.water_density.stbd, "kg/m3"),
+            ScientificSensorRowItem("Turbidity", sci.turbidity.port, sci.turbidity.stbd, "NTU"),
+            ScientificSensorRowItem("pH", sci.ph.port, sci.ph.stbd, ""),
+            ScientificSensorRowItem("CTD Temp", sci.ctd_temp.port, sci.ctd_temp.stbd, "DegC"),
+            ScientificSensorRowItem("Pressure", sci.pressure.port, sci.pressure.stbd, ""),
+            ScientificSensorRowItem("Dissolved Oxygen", sci.dissolved_oxygen.port, sci.dissolved_oxygen.stbd, "uM"),
+            ScientificSensorRowItem("ORP", sci.orp.port, sci.orp.stbd, ""),
+            cls="sci-sens-table"
+        )
+        
+        surf = sens.surface_ins
+        surf_ins_panel = Div(
+            Div("Surface INS", cls="sens-right-title"),
+            SensorBoxMetric("S_Roll", surf.s_roll, "deg"),
+            SensorBoxMetric("S_Pitch", surf.s_pitch, "deg"),
+            SensorBoxMetric("S_Heading", surf.s_heading, "deg"),
+            SensorBoxMetric("S_Speed1", surf.s_speed1, "m/s"),
+            SensorBoxMetric("S_Speed2", surf.s_speed2, "m/s"),
+            SensorBoxMetric("S_Speed3", surf.s_speed3, "m/s"),
+            SensorBoxMetric("S_Latitude", surf.s_latitude, ""),
+            SensorBoxMetric("S_Longitude", surf.s_longitude, ""),
+            cls="sens-right-panel"
+        )
+        
+        ssg = sens.subsea_gps
+        subsea_panel = Div(
+            Div("SubSea GPS", cls="sens-right-title"),
+            SensorBoxMetric("GPS Latitude", ssg.gps_latitude, ""),
+            SensorBoxMetric("GPS Longitude", ssg.gps_longitude, ""),
+            cls="sens-right-panel sens-subsea"
+        )
+        
+        redt = sens.redt_depth
+        redt_panel = Div(
+            Div("Redt Depth Sensor", cls="sens-right-title"),
+            SensorBoxMetric("S_Depth", redt.s_depth, "m"),
+            cls="sens-right-panel sens-redt"
+        )
+
+        top_row = Div(
+            Div(port_toggles, stbd_toggles, cls="sens-toggles-pair"),
+            sci_table,
+            Div(surf_ins_panel, subsea_panel, redt_panel, cls="sens-right-stack"),
+            cls="sens-top-area"
+        )
+        
+        bottom_row = Div(
+            wi_p, ins_p, sensor_alarm_p, warning_panel, ins_s, wi_s,
+            cls="sens-bottom-area"
+        )
+        
+        main_content_area = Div(
+            Div(
+                Div(top_row, bottom_row, cls="sens-dashboard"),
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "Logging":
+        log_state = s.logging
+        t = log_state.toggles
+
+        # ---- TOP: Events and Errors Tables ----
+        tables_row = Div(
+            LogTable("Event Logging", True, log_state.events),
+            LogTable("Error Logging", False, log_state.errors),
+            cls="logging-tables-row"
+        )
+        
+        # ---- BOTTOM: Toggles and LEDs Panel ----
+        toggles_left = Div(
+            Div(
+                HorizontalToggle("148 V LED S1", t.led_s1_148v, id_key="tog-log-led-s1", toggle_url="/api/toggle/logging.toggles.led_s1_148v"),
+                HorizontalToggle("148 V LED S2", t.led_s2_148v, id_key="tog-log-led-s2", toggle_url="/api/toggle/logging.toggles.led_s2_148v"),
+                cls="log-tog-col"
+            ),
+            Div(
+                HorizontalToggle("148 V LED S3", t.led_s3_148v, id_key="tog-log-led-s3", toggle_url="/api/toggle/logging.toggles.led_s3_148v"),
+                HorizontalToggle("148 V LED S4", t.led_s4_148v, id_key="tog-log-led-s4", toggle_url="/api/toggle/logging.toggles.led_s4_148v"),
+                cls="log-tog-col"
+            ),
+            Div(
+                HorizontalToggle("148 V LED P1", t.led_p1_148v, id_key="tog-log-led-p1", toggle_url="/api/toggle/logging.toggles.led_p1_148v"),
+                HorizontalToggle("148 V LED P2", t.led_p2_148v, id_key="tog-log-led-p2", toggle_url="/api/toggle/logging.toggles.led_p2_148v"),
+                cls="log-tog-col"
+            ),
+            Div(
+                HorizontalToggle("148 V LED P3", t.led_p3_148v, id_key="tog-log-led-p3", toggle_url="/api/toggle/logging.toggles.led_p3_148v"),
+                HorizontalToggle("148 V LED P4", t.led_p4_148v, id_key="tog-log-led-p4", toggle_url="/api/toggle/logging.toggles.led_p4_148v"),
+                cls="log-tog-col"
+            ),
+            cls="log-toggles-left"
+        )
+        
+        toggles_right = Div(
+            Div(
+                HorizontalToggle("Trim_S", t.trim_s, id_key="tog-log-trim-s", toggle_url="/api/toggle/logging.toggles.trim_s"),
+                RedSignalIndicator("Trim_S signal", t.trim_s_signal),
+                cls="log-tog-group"
+            ),
+            Div(
+                HorizontalToggle("PDE_P 1", t.pde_p_1, id_key="tog-log-pde-1", toggle_url="/api/toggle/logging.toggles.pde_p_1"),
+                RedSignalIndicator("PDE_P signal", t.pde_p_signal),
+                HorizontalToggle("PDE_P 2", t.pde_p_2, id_key="tog-log-pde-2", toggle_url="/api/toggle/logging.toggles.pde_p_2"),
+                cls="log-tog-group-center"
+            ),
+            Div(
+                HorizontalToggle("Trim_P", t.trim_p, id_key="tog-log-trim-p", toggle_url="/api/toggle/logging.toggles.trim_p"),
+                RedSignalIndicator("Trim_P signal", t.trim_p_signal),
+                cls="log-tog-group"
+            ),
+            cls="log-toggles-right"
+        )
+        
+        toggles_panel = Div(
+            toggles_left,
+            toggles_right,
+            cls="log-toggles-panel"
+        )
+
+        main_content_area = Div(
+            Div(
+                Div(tables_row, toggles_panel, cls="logging-dashboard"),
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "Status":
+        status_state = s.status
+        
+        row1 = StatusChartRowComponent(
+            status_state.chart1_selection,
+            [-45, -20, 0, 20, 45],
+            [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 57]
+        )
+        
+        row2 = StatusChartRowComponent(
+            status_state.chart2_selection,
+            [-15, -10, 0, 10, 15],
+            [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 57]
+        )
+        
+        main_content_area = Div(
+            Div(
+                Div(row1, row2, cls="status-dashboard"),
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "50 Kwh":
+        kwh = s.kwh
+        
+        # Extracted lists of batteries
+        port_bats = [kwh.port.bat1, kwh.port.bat2, kwh.port.bat3, kwh.port.bat4, kwh.port.bat5]
+        stbd_bats = [kwh.stbd.bat6, kwh.stbd.bat7, kwh.stbd.bat8, kwh.stbd.bat9, kwh.stbd.bat10]
+        
+        port_grid = KwhDataGrid("port side", ["BAT 1", "BAT 2", "BAT 3", "BAT 4", "BAT 5"], port_bats)
+        stbd_grid = KwhDataGrid("starboard side", ["BAT 6", "BAT 7", "BAT 8", "BAT 9", "BAT 10"], stbd_bats)
+        
+        # Center section between grids
+        center_toggles = Div(
+            RedSignalIndicator("VBS_Enable_sig", kwh.vbs_enable_sig),
+            RedSignalIndicator("Trim_Enable_sig", kwh.trim_enable_sig),
+            HorizontalToggle("Trim_Enable", kwh.trim_enable),
+            cls="kwh-center-toggles" # We'll need to style this to have labels left of the dots
+        )
+        # Actually in the picture, Trim_Enable is just a normal switch with label above
+        
+        center_toggles = Div(
+            Div(
+                Div("VBS_Enable_sig", cls="kwh-sig-label"),
+                Div(cls=f"kwh-sig-dot {'signal-dot-on' if kwh.vbs_enable_sig else 'signal-dot-off'}"),
+                cls="kwh-sig-row"
+            ),
+            Div(
+                Div("Trim_Enable_sig", cls="kwh-sig-label"),
+                Div(cls=f"kwh-sig-dot {'signal-dot-on' if kwh.trim_enable_sig else 'signal-dot-off'}"),
+                cls="kwh-sig-row"
+            ),
+            ToggleSwitch("Trim_Enable", kwh.trim_enable, id_key="tog-kwh-trim", toggle_url="/api/toggle/kwh.trim_enable"),
+            cls="kwh-center-toggles"
+        )
+
+        top_section = Div(
+            port_grid,
+            center_toggles,
+            stbd_grid,
+            cls="kwh-top-section"
+        )
+        
+        # Bottom section: gauges
+        pg = kwh.port_gauges
+        sg = kwh.stbd_gauges
+        
+        port_gauges_row = Div(
+            KwhVerticalGauge("BAT VOL", pg.vol, 100, 170, [100, 120, 140, 160, 170]),
+            KwhVerticalGauge("BAT TEMP", pg.temp, 0, 50, [0, 25, 50]),
+            KwhVerticalGauge("BAT SOC", pg.soc, 0, 200, [0, 50, 100, 150, 200]),
+            KwhVerticalGauge("BAT CUR", pg.cur, 0, 100, [0, 25, 50, 75, 100]),
+            cls="kwh-gauges-row"
+        )
+        
+        stbd_gauges_row = Div(
+            KwhVerticalGauge("BAT VOL 2", sg.vol, 100, 170, [100, 120, 140, 160, 170]),
+            KwhVerticalGauge("BAT TEMP 2", sg.temp, 0, 50, [0, 25, 50]),
+            KwhVerticalGauge("BAT SOC 2", sg.soc, 0, 200, [0, 50, 100, 150, 200]),
+            KwhVerticalGauge("BAT CUR 2", sg.cur, 0, 100, [0, 25, 50, 75, 100]),
+            cls="kwh-gauges-row"
+        )
+
+        bottom_section = Div(
+            port_gauges_row,
+            Div(ToggleSwitch("VBS_Enable", kwh.vbs_enable, id_key="tog-kwh-vbs", toggle_url="/api/toggle/kwh.vbs_enable"), cls="kwh-bottom-center"),
+            stbd_gauges_row,
+            cls="kwh-bottom-section"
+        )
+        
+        main_content_area = Div(
+            Div(
+                Div(
+                    Div("BATTERY 50 kWh STATUS", cls="kwh-main-title"),
+                    top_section, 
+                    bottom_section, 
+                    cls="kwh-dashboard"
+                ),
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "MCC":
+        mcc = s.mcc
+        ind = mcc.indicators
+        st = mcc.status
+        
+        col1 = Div(
+            MccIndicator("CO2 Sensor-D", ind.co2_sensor_d),
+            MccIndicator("Trim System-D", ind.trim_system_d),
+            MccIndicator("Magnetometer-D", ind.magnetometer_d),
+            MccIndicator("Conduct & Temp-D", ind.conduct_temp_d),
+            MccIndicator("Thruster_T1-D", ind.thruster_t1_d),
+            MccIndicator("Thruster_T2-D", ind.thruster_t2_d),
+            MccIndicator("Thruster_En_P-D", ind.thruster_en_p_d),
+            MccIndicator("Thruster_En_S-D", ind.thruster_en_s_d),
+            MccIndicator("4K camera P-D", ind.camera_4k_p_d),
+            MccIndicator("HD Camera P3-D", ind.hd_camera_p3_d),
+            MccIndicator("SD_Camera_P4-D", ind.sd_camera_p4_d),
+            MccIndicator("CTDO-D", ind.ctdo_d),
+            cls="mcc-col"
+        )
+        
+        col2 = Div(
+            MccIndicator("Forwd_Low-D", ind.forwd_low_d),
+            MccIndicator("Forwd_Medi-D", ind.forwd_medi_d),
+            MccIndicator("Lateral_Low-D", ind.lateral_low_d),
+            MccIndicator("Lateral_Medi-D", ind.lateral_medi_d),
+            MccIndicator("Verti_Low-D", ind.verti_low_d),
+            MccIndicator("Verti_Medi-D", ind.verti_medi_d),
+            MccIndicator("Heading_Low-D", ind.heading_low_d),
+            MccIndicator("Heading_Medi-D", ind.heading_medi_d),
+            MccIndicator("4K camera S-D", ind.camera_4k_s_d),
+            MccIndicator("HD Camera S1-D", ind.hd_camera_s1_d),
+            MccIndicator("SD Camera S4-D", ind.sd_camera_s4_d),
+            MccIndicator("Dissolved O2-D", ind.dissolved_o2_d),
+            Div(
+                Div("Data Receiving Mode", cls="mcc-disabled-label"),
+                Div(st.data_receiving_mode, cls="mcc-disabled-box"),
+                cls="mcc-disabled-wrap"
+            ),
+            cls="mcc-col"
+        )
+
+        col3 = Div(
+            MccIndicator("LED Light S2-D", ind.led_light_s2_d),
+            MccIndicator("LED Light S3-D", ind.led_light_s3_d),
+            MccIndicator("LED Light S4-D", ind.led_light_s4_d),
+            MccIndicator("INS-D", ind.ins_d),
+            MccIndicator("DVL-D", ind.dvl_d),
+            MccIndicator("Depth Sensor Pri-D", ind.depth_sensor_pri_d),
+            MccIndicator("Altimeter-D", ind.altimeter_d),
+            MccIndicator("LED Light P2-D", ind.led_light_p2_d),
+            MccIndicator("LED Light P3-D", ind.led_light_p3_d),
+            MccIndicator("LED Light P4-D", ind.led_light_p4_d),
+            cls="mcc-col"
+        )
+        
+        col4_center = Div(
+            Div(
+                MccStatusBox("Modem Ready Status", st.modem_ready_status, "mcc-bg-green"),
+                MccStatusBox("Read/ Write", st.read_write, "mcc-bg-gray"),
+                MccStatusBox("Data Sending Mode", st.data_sending_mode, "mcc-bg-gray"),
+                cls="mcc-center-top"
+            ),
+            Div(
+                ToggleSwitch("Acoustic comm Auto", st.acoustic_comm_auto),
+                cls="mcc-center-toggle"
+            ),
+            Div(
+                Div("MCC message", cls="mcc-msg-title"),
+                Div(st.mcc_message, cls="mcc-msg-box"),
+                Div("Pilot message", cls="mcc-msg-title"),
+                Div(st.pilot_message, cls="mcc-msg-box"),
+                cls="mcc-center-msg"
+            ),
+            Div(
+                MccShipData("Ship Latitude", st.ship_latitude),
+                MccShipData("Ship Longitude", st.ship_longitude),
+                MccShipData("Ship Heading", st.ship_heading),
+                MccShipData("Ship Time", st.ship_time),
+                cls="mcc-center-ship"
+            ),
+            cls="mcc-col mcc-col-center"
+        )
+        
+        col5_right = Div(
+            MccRadioGroup(st.power_status),
+            Div(
+                MccCrewStatus("PILOT", st.pilot_ok),
+                MccCrewStatus("CO-PILOT", st.copilot_ok),
+                MccCrewStatus("OBSERVER", st.observer_ok),
+                cls="mcc-crew-group"
+            ),
+            MccPowerDropdown(st.power_dropdown),
+            Div(
+                ToggleSwitch("data mode", st.data_mode),
+                cls="mcc-right-toggle"
+            ),
+            cls="mcc-col mcc-col-right"
+        )
+
+        mcc_panel = Div(
+            Div("Data from MCC", cls="mcc-panel-title"),
+            Div(col1, col2, col3, col4_center, col5_right, cls="mcc-grid"),
+            cls="mcc-panel"
+        )
+
+        main_content_area = Div(
+            Div(
+                mcc_panel,
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
         )
 
     else:
@@ -650,6 +1291,51 @@ def get_ballast():
 def get_propulsion():
     return Title("MATSYA 6000 View - Propulsion"), Div(
         AppLayout(active_tab="Propulsion"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+
+@rt("/power")
+def get_power():
+    return Title("MATSYA 6000 View - POWER"), Div(
+        AppLayout(active_tab="POWER"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+
+@rt("/imaging")
+def get_imaging():
+    return Title("MATSYA 6000 View - Imaging"), Div(
+        AppLayout(active_tab="Imaging"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+
+@rt("/sensors")
+def get_sensors():
+    return Title("MATSYA 6000 View - Sensors"), Div(
+        AppLayout(active_tab="Sensors"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/logging")
+def get_logging():
+    return Title("MATSYA 6000 View - Logging"), Div(
+        AppLayout(active_tab="Logging"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/status")
+def get_status():
+    return Title("MATSYA 6000 View - Status"), Div(
+        AppLayout(active_tab="Status"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/50-kwh")
+def get_50kwh():
+    return Title("MATSYA 6000 View - 50 Kwh"), Div(
+        AppLayout(active_tab="50 Kwh"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/mcc")
+def get_mcc():
+    return Title("MATSYA 6000 View - MCC"), Div(
+        AppLayout(active_tab="MCC"), id="ws-container", hx_ext="ws", ws_connect="/ws"
     )
 
 
@@ -728,18 +1414,36 @@ async def simulate_data():
             s.environment.pressure.value + random.uniform(-1, 1), 1
         )
 
-        # Sidebar (less frequent toggle)
-        if random.random() < 0.05:
-            s.sidebar.joystick = not s.sidebar.joystick
-        if random.random() < 0.05:
-            s.sidebar.thrusters_enable = not s.sidebar.thrusters_enable
-        if random.random() < 0.05:
-            s.sidebar.high_speed = not s.sidebar.high_speed
+        # Sidebar (less frequent toggle) (Removed for interactivity)
+        # Leds (less frequent toggle) (Removed for interactivity)
+        # Logging (Removed for interactivity)
+        
+        # 50 KWH
+        kwh = s.kwh
+        for k in ["bat1", "bat2", "bat3", "bat4", "bat5"]:
+            b = getattr(kwh.port, k)
+            b.cur = max(0, b.cur + random.uniform(-1, 1))
+            b.vot = max(0, b.vot + random.uniform(-1, 1))
+            b.temp = max(0, b.temp + random.uniform(-0.5, 0.5))
+            b.soc = min(100, max(0, b.soc + random.uniform(-0.1, 0.1)))
+        
+        for k in ["bat6", "bat7", "bat8", "bat9", "bat10"]:
+            b = getattr(kwh.stbd, k)
+            b.cur = max(0, b.cur + random.uniform(-1, 1))
+            b.vot = max(0, b.vot + random.uniform(-1, 1))
+            b.temp = max(0, b.temp + random.uniform(-0.5, 0.5))
+            b.soc = min(100, max(0, b.soc + random.uniform(-0.1, 0.1)))
+            
+        # (KWH toggles removed for interactivity)
+        kwh.port_gauges.vol = min(170, max(100, kwh.port_gauges.vol + random.uniform(-2, 2)))
+        kwh.port_gauges.temp = min(50, max(0, kwh.port_gauges.temp + random.uniform(-1, 1)))
+        kwh.port_gauges.soc = min(200, max(0, kwh.port_gauges.soc + random.uniform(-2, 2)))
+        kwh.port_gauges.cur = min(100, max(0, kwh.port_gauges.cur + random.uniform(-1, 1)))
 
-        # Leds (less frequent toggle)
-        for attr in ["pss", "pds", "ids", "psp", "pdp", "idp"]:
-            if random.random() < 0.05:
-                setattr(s.leds, attr, not getattr(s.leds, attr))
+        kwh.stbd_gauges.vol = min(170, max(100, kwh.stbd_gauges.vol + random.uniform(-2, 2)))
+        kwh.stbd_gauges.temp = min(50, max(0, kwh.stbd_gauges.temp + random.uniform(-1, 1)))
+        kwh.stbd_gauges.soc = min(200, max(0, kwh.stbd_gauges.soc + random.uniform(-2, 2)))
+        kwh.stbd_gauges.cur = min(100, max(0, kwh.stbd_gauges.cur + random.uniform(-1, 1)))
 
         # HSSS Panel Simulation
         for side in [s.hsss.p, s.hsss.s]:
@@ -797,22 +1501,90 @@ async def simulate_data():
             t.current = round(max(0, min(30, t.current + random.uniform(-0.05, 0.05))), 2)
             t.temp = round(max(0, min(120, t.temp + random.uniform(-0.2, 0.2))), 1)
             t.ctrl = round(max(-100, min(100, t.ctrl + random.uniform(-1, 1))), 1)
-            if random.random() < 0.02:
-                t.power = not t.power
-            if random.random() < 0.02:
-                t.enable = not t.enable
+            # (power/enable toggles removed for interactivity)
         pd.heading_ctrl = round(max(-180, min(180, pd.heading_ctrl + random.uniform(-0.5, 0.5))), 1)
         pd.fwd_ctrl = round(max(-100, min(100, pd.fwd_ctrl + random.uniform(-0.5, 0.5))), 1)
         pd.lat_ctrl = round(max(-100, min(100, pd.lat_ctrl + random.uniform(-0.5, 0.5))), 1)
         pd.vertical_ctrl = round(max(-100, min(100, pd.vertical_ctrl + random.uniform(-0.5, 0.5))), 1)
+        
+        # Power Simulation
+        p = s.power
+        for bat in [p.mb_p, p.mb_s]:
+            bat.voltage.value = round(max(100, min(180, bat.voltage.value + random.uniform(-1, 1))), 1)
+            bat.current.value = round(max(0, bat.current.value + random.uniform(-0.5, 0.5)), 1)
+            bat.power.value = round(max(0, bat.power.value + random.uniform(-0.1, 0.1)), 2)
+            bat.soc.value = round(max(0, min(100, bat.soc.value + random.uniform(-0.1, 0.1))), 2)
+            bat.temp.value = round(max(0, bat.temp.value + random.uniform(-0.2, 0.2)), 2)
+            
+        for bat in [p.aux_p, p.aux_s]:
+            bat.voltage.value = round(max(0, min(40, bat.voltage.value + random.uniform(-0.5, 0.5))), 1)
+            bat.current.value = round(max(0, bat.current.value + random.uniform(-0.5, 0.5)), 1)
+            bat.power.value = round(max(0, bat.power.value + random.uniform(-0.1, 0.1)), 2)
+            bat.soc.value = round(max(0, min(100, bat.soc.value + random.uniform(-0.1, 0.1))), 2)
+            bat.temp.value = round(max(0, bat.temp.value + random.uniform(-0.2, 0.2)), 2)
+
+        for enc in [p.pde_p, p.pde_s]:
+            enc.voltage.value = round(max(0, enc.voltage.value + random.uniform(-0.5, 0.5)), 1)
+            enc.current.value = round(max(0, enc.current.value + random.uniform(-0.5, 0.5)), 1)
+            enc.temp.value = round(max(0, enc.temp.value + random.uniform(-0.2, 0.2)), 2)
+            enc.ir_24.value = round(max(0, enc.ir_24.value + random.uniform(-0.1, 0.1)), 2)
+            enc.ir_ext.value = round(max(0, enc.ir_ext.value + random.uniform(-0.1, 0.1)), 2)
+            enc.ir_148.value = round(max(0, enc.ir_148.value + random.uniform(-0.1, 0.1)), 2)
+
+        for enc in [p.ide_p, p.ide_s]:
+            enc.voltage.value = round(max(0, enc.voltage.value + random.uniform(-0.5, 0.5)), 2)
+            enc.current.value = round(max(0, enc.current.value + random.uniform(-0.5, 0.5)), 1)
+            enc.temp.value = round(max(0, enc.temp.value + random.uniform(-0.2, 0.2)), 2)
+            enc.ir.value = round(max(0, enc.ir.value + random.uniform(-0.1, 0.1)), 2)
+
+        for ub in [p.ub_port, p.ub_stbd]:
+            ub.voltage.value = round(max(0, ub.voltage.value + random.uniform(-0.5, 0.5)), 1)
+            ub.current.value = round(max(0, ub.current.value + random.uniform(-0.5, 0.5)), 2)
+            ub.temp.value = round(max(0, ub.temp.value + random.uniform(-0.2, 0.2)), 2)
+            ub.ir.value = round(max(0, ub.ir.value + random.uniform(-0.1, 0.1)), 2)
+
+        # Imaging Simulation
+        img = s.imaging
+        for l in [img.led_p1, img.led_p2, img.led_p3, img.led_s1, img.led_s2, img.led_s3]:
+            # (power toggles removed for interactivity)
+            l.dim = round(max(0, min(10, l.dim + random.uniform(-0.5, 0.5))), 1)
+
+        # (Camera toggles removed for interactivity)
+
+        for pt in [img.pt_p1, img.pt_s1, img.pt_s2]:
+            pt.pan = round(max(-170, min(170, pt.pan + random.uniform(-5, 5))), 1)
+            pt.tilt = round(max(-50, min(110, pt.tilt + random.uniform(-5, 5))), 1)
+
+        # Sensors Simulation
+        sens = s.sensors
+        sci = sens.scientific
+        for sensor in [sci.conductivity, sci.salinity, sci.water_density, sci.turbidity, sci.ph, sci.ctd_temp, sci.pressure, sci.dissolved_oxygen, sci.orp]:
+            sensor.port = round(max(0, sensor.port + random.uniform(-0.1, 0.1)), 2)
+            sensor.stbd = round(max(0, sensor.stbd + random.uniform(-0.1, 0.1)), 2)
+            
+        surf = sens.surface_ins
+        surf.s_roll = round(surf.s_roll + random.uniform(-0.5, 0.5), 1)
+        surf.s_pitch = round(surf.s_pitch + random.uniform(-0.5, 0.5), 1)
+        surf.s_heading = round((surf.s_heading + random.uniform(-1, 1)) % 360, 1)
+        
+        ssg = sens.subsea_gps
+        ssg.gps_latitude = round(ssg.gps_latitude + random.uniform(-0.0001, 0.0001), 4)
+        ssg.gps_longitude = round(ssg.gps_longitude + random.uniform(-0.0001, 0.0001), 4)
+
+        sens.redt_depth.s_depth = round(max(0, sens.redt_depth.s_depth + random.uniform(-0.1, 0.1)), 1)
 
         # Broadcast rebuilt layouts to support clients on all routes
         await broadcast(AppLayout(active_tab="Main"))
         await broadcast(AppLayout(active_tab="HSSS"))
         await broadcast(AppLayout(active_tab="Ballast"))
         await broadcast(AppLayout(active_tab="Propulsion"))
-
-        # 1 Hz refresh rate
+        await broadcast(AppLayout(active_tab="POWER"))
+        await broadcast(AppLayout(active_tab="Imaging"))
+        await broadcast(AppLayout(active_tab="Sensors"))
+        await broadcast(AppLayout(active_tab="Logging"))
+        await broadcast(AppLayout(active_tab="Status"))
+        await broadcast(AppLayout(active_tab="50 Kwh"))
+        await broadcast(AppLayout(active_tab="MCC"))
         await asyncio.sleep(1)
 
 
@@ -834,7 +1606,68 @@ async def toggle_power():
     await broadcast(AppLayout(active_tab="HSSS"))
     await broadcast(AppLayout(active_tab="Ballast"))
     await broadcast(AppLayout(active_tab="Propulsion"))
+    await broadcast(AppLayout(active_tab="POWER"))
+    await broadcast(AppLayout(active_tab="Imaging"))
+    await broadcast(AppLayout(active_tab="Sensors"))
+    await broadcast(AppLayout(active_tab="Logging"))
+    await broadcast(AppLayout(active_tab="Status"))
+    await broadcast(AppLayout(active_tab="50 Kwh"))
+    await broadcast(AppLayout(active_tab="MCC"))
     return ""
+
+
+@rt("/api/toggle_joystick", methods=["POST"])
+async def toggle_joystick():
+    s = app_state.sidebar
+    s.joystick = not s.joystick
+    comp = ToggleSwitch("Joystick", s.joystick, id_key="toggle-joystick", toggle_url="/api/toggle_joystick")
+    await broadcast(comp)
+    return ""
+
+
+@rt("/api/toggle_thrusters_enable", methods=["POST"])
+async def toggle_thrusters_enable():
+    s = app_state.sidebar
+    s.thrusters_enable = not s.thrusters_enable
+    comp = ToggleSwitch("Thrusters Enable", s.thrusters_enable, id_key="toggle-thrusters", toggle_url="/api/toggle_thrusters_enable")
+    await broadcast(comp)
+    return ""
+
+
+@rt("/api/toggle_high_speed", methods=["POST"])
+async def toggle_high_speed():
+    s = app_state.sidebar
+    s.high_speed = not s.high_speed
+    comp = ToggleSwitch("High Speed", s.high_speed, id_key="toggle-high-speed", toggle_url="/api/toggle_high_speed")
+    await broadcast(comp)
+    return ""
+
+
+@rt("/api/toggle/{state_path:path}", methods=["POST"])
+async def generic_toggle(state_path: str):
+    """Generic endpoint to toggle booleans anywhere in app_state by dot-separated path."""
+    parts = state_path.split(".")
+    obj = app_state
+    for p in parts[:-1]:
+        obj = getattr(obj, p)
+    
+    val = getattr(obj, parts[-1])
+    setattr(obj, parts[-1], not val)
+
+    # Broadcast updated layouts
+    await broadcast(AppLayout(active_tab="Main"))
+    await broadcast(AppLayout(active_tab="HSSS"))
+    await broadcast(AppLayout(active_tab="Ballast"))
+    await broadcast(AppLayout(active_tab="Propulsion"))
+    await broadcast(AppLayout(active_tab="POWER"))
+    await broadcast(AppLayout(active_tab="Imaging"))
+    await broadcast(AppLayout(active_tab="Sensors"))
+    await broadcast(AppLayout(active_tab="Logging"))
+    await broadcast(AppLayout(active_tab="Status"))
+    await broadcast(AppLayout(active_tab="50 Kwh"))
+    await broadcast(AppLayout(active_tab="MCC"))
+    return ""
+
 
 
 @rt("/api/start_sim", methods=["GET", "POST"])

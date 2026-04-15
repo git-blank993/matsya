@@ -15,6 +15,18 @@ def IconPower():
     )
 
 
+def IconHome():
+    return NotStr(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>'
+    )
+
+
+def IconChevronDown():
+    return NotStr(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'
+    )
+
+
 # ----------------- WIDGETS -----------------
 
 
@@ -134,10 +146,19 @@ def StatusPill(label, is_ok, ok_text="OK", err_text="ERR", id_key=None):
     )
 
 
-def ToggleSwitch(label, is_on, id_key=None):
+def ToggleSwitch(label, is_on, id_key=None, toggle_url=None):
     """Vercel styled pill toggle for right sidebar"""
     toggle_cls = "toggle-on" if is_on else "toggle-off"
     dot_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+    
+    attrs = {"cls": "toggle-switch"}
+    if id_key:
+        attrs["id"] = id_key
+        attrs["hx_swap_oob"] = "true"
+    if toggle_url:
+        attrs["hx_post"] = toggle_url
+        attrs["hx_swap"] = "none"
+        
     return Div(
         Span(label, cls="toggle-label"),
         Div(
@@ -145,9 +166,7 @@ def ToggleSwitch(label, is_on, id_key=None):
             Div(Div(cls=f"toggle-dot {dot_cls}"), cls=f"toggle-track {toggle_cls}"),
             cls="toggle-controls",
         ),
-        cls="toggle-switch",
-        id=id_key,
-        hx_swap_oob="true" if id_key else None,
+        **attrs
     )
 
 
@@ -156,7 +175,30 @@ def BottomTabsNav(tabs, active_tab="Main"):
     nav_links = []
     for t in tabs:
         active_cls = "tab-active" if t == active_tab else "tab-inactive"
-        url = "/" if t == "Main" else ("/hsss" if t == "HSSS" else ("/ballast" if t == "Ballast" else ("/propulsion" if t == "Propulsion" else "#")))
+        if t == "Main":
+            url = "/"
+        elif t == "HSSS":
+            url = "/hsss"
+        elif t == "Ballast":
+            url = "/ballast"
+        elif t == "Propulsion":
+            url = "/propulsion"
+        elif t == "POWER":
+            url = "/power"
+        elif t == "Imaging":
+            url = "/imaging"
+        elif t == "Sensors":
+            url = "/sensors"
+        elif t == "Logging":
+            url = "/logging"
+        elif t == "Status":
+            url = "/status"
+        elif t == "50 Kwh":
+            url = "/50-kwh"
+        elif t == "MCC":
+            url = "/mcc"
+        else:
+            url = "#"
         nav_links.append(
             A(
                 t,
@@ -316,10 +358,19 @@ def BallastActionButton(label):
     return Div(label, cls="ballast-btn")
 
 
-def BallastPressureRead(label, value, is_enabled):
+def BallastPressureRead(label, value, is_enabled, id_key=None, toggle_url=None):
     """Pressure read row: label + value box + mini toggle switch"""
     toggle_cls = "toggle-on" if is_enabled else "toggle-off"
     dot_cls = "toggle-dot-on" if is_enabled else "toggle-dot-off"
+    
+    attrs = {"cls": "ballast-pressure-read"}
+    if id_key:
+        attrs["id"] = id_key
+        attrs["hx_swap_oob"] = "true"
+    if toggle_url:
+        attrs["hx_post"] = toggle_url
+        attrs["hx_swap"] = "none"
+
     return Div(
         Span(label, cls="ballast-pressure-label"),
         Div(
@@ -334,7 +385,7 @@ def BallastPressureRead(label, value, is_enabled):
             ),
             cls="ballast-pressure-right",
         ),
-        cls="ballast-pressure-read",
+        **attrs
     )
 
 
@@ -456,10 +507,19 @@ def SpeedControlSlider(value, min_val=1, max_val=7):
     )
 
 
-def OIMToggleRow(label, is_on):
+def OIMToggleRow(label, is_on, id_key=None, toggle_url=None):
     """Horizontal OIM reset row: label ........ toggle"""
     toggle_cls = "toggle-on" if is_on else "toggle-off"
     dot_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+
+    attrs = {"cls": "oim-toggle-row"}
+    if id_key:
+        attrs["id"] = id_key
+        attrs["hx_swap_oob"] = "true"
+    if toggle_url:
+        attrs["hx_post"] = toggle_url
+        attrs["hx_swap"] = "none"
+
     return Div(
         Span(label, cls="oim-toggle-label"),
         Div(
@@ -470,7 +530,7 @@ def OIMToggleRow(label, is_on):
             ),
             cls="toggle-controls",
         ),
-        cls="oim-toggle-row",
+        **attrs
     )
 
 
@@ -518,11 +578,20 @@ def ThrusterRPMGauge(label, rpm, max_rpm=1600):
     )
 
 
-def ThrusterPowerEnableToggles(thruster_id, power, enable):
+def ThrusterPowerEnableToggles(thruster_id, power, enable, toggle_url_p=None, toggle_url_e=None):
     """Compact vertical pair of Power/Enable toggles for Propulsion center column"""
-    def mini_toggle(label, is_on):
+    def mini_toggle(label, is_on, suffix_id, url):
         t_cls = "toggle-on" if is_on else "toggle-off"
         d_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+        
+        attrs = {"cls": "prop-toggle-row"}
+        if suffix_id:
+            attrs["id"] = f"tpet-{thruster_id}-{suffix_id}"
+            attrs["hx_swap_oob"] = "true"
+        if url:
+            attrs["hx_post"] = url
+            attrs["hx_swap"] = "none"
+
         return Div(
             Span(label, cls="prop-toggle-label"),
             Div(
@@ -533,12 +602,12 @@ def ThrusterPowerEnableToggles(thruster_id, power, enable):
                 Span("ON" if is_on else "OFF", cls="prop-toggle-state"),
                 cls="prop-toggle-controls",
             ),
-            cls="prop-toggle-row",
+            **attrs
         )
 
     return Div(
-        mini_toggle(f"T{thruster_id}_Power", power),
-        mini_toggle(f"T{thruster_id}_Enable", enable),
+        mini_toggle(f"T{thruster_id}_Power", power, "power", toggle_url_p),
+        mini_toggle(f"T{thruster_id}_Enable", enable, "enable", toggle_url_e),
         cls="prop-toggle-pair",
     )
 
@@ -578,11 +647,20 @@ def ThrusterPanel(thruster_id, t):
     )
 
 
-def PropCenterToggleBlock(thruster_id, power, enable):
+def PropCenterToggleBlock(thruster_id, power, enable, toggle_url_p=None, toggle_url_e=None):
     """Power + Enable toggle pair with label for the center column"""
-    def tiny_tog(label, is_on):
+    def tiny_tog(label, is_on, suffix_id, url):
         t_cls = "toggle-on" if is_on else "toggle-off"
         d_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+        
+        attrs = {"cls": "prop-center-tog-row"}
+        if suffix_id:
+            attrs["id"] = f"pctb-{thruster_id}-{suffix_id}"
+            attrs["hx_swap_oob"] = "true"
+        if url:
+            attrs["hx_post"] = url
+            attrs["hx_swap"] = "none"
+
         return Div(
             Span(label, cls="prop-center-tog-label"),
             Div(
@@ -593,12 +671,12 @@ def PropCenterToggleBlock(thruster_id, power, enable):
                 Span("ON" if is_on else "OFF", cls="prop-center-tog-state"),
                 cls="prop-center-tog-controls",
             ),
-            cls="prop-center-tog-row",
+            **attrs
         )
 
     return Div(
-        tiny_tog(f"T{thruster_id}_Power", power),
-        tiny_tog(f"T{thruster_id}_Enable", enable),
+        tiny_tog(f"T{thruster_id}_Power", power, "power", toggle_url_p),
+        tiny_tog(f"T{thruster_id}_Enable", enable, "enable", toggle_url_e),
         cls="prop-center-block",
     )
 
@@ -609,4 +687,559 @@ def PropAxisControl(label, value):
         Span(label, cls="prop-axis-label"),
         Div(str(int(value)), cls="prop-axis-value"),
         cls="prop-axis-ctrl",
+    )
+
+
+# ----------------- POWER SCREEN SPECIFIC WIDGETS -----------------
+
+
+def PowerMetricRow(label, value, unit=None):
+    """Grey label, white box value row for power metrics."""
+    return Div(
+        Span(label, cls="power-metric-label"),
+        Div(
+            Span(str(value), cls="power-metric-value"),
+            Span(unit, cls="power-metric-unit") if unit else None,
+            cls="power-metric-box",
+        ),
+        cls="power-metric-row",
+    )
+
+
+def PowerLinearGauge(label, value, min_val, max_val, scale_labels):
+    """Horizontal visual bar with ticks used for battery voltage."""
+    percent = max(0, min(100, ((value - min_val) / (max_val - min_val)) * 100))
+    scale_items = [Span(str(sl), cls="power-gauge-scale-label") for sl in scale_labels]
+    
+    return Div(
+        Span(label, cls="power-gauge-title"),
+        Div(
+            Div(
+                Div(cls="power-gauge-fill", style=f"width: {percent}%;"),
+                cls="power-gauge-track",
+            ),
+            Div(*scale_items, cls="power-gauge-scale-row"),
+            cls="power-gauge-wrap",
+        ),
+        Div(str(value), cls="power-gauge-value"),
+        cls="power-linear-gauge",
+    )
+
+
+def PowerStatusPill(label, status_text, is_ok):
+    """Rectangular red/green indicator for IR and leaks."""
+    bg_cls = "power-status-ok" if is_ok else "power-status-err"
+    if label:
+        return Div(
+            Span(label, cls="power-status-label"),
+            Div(status_text, cls=f"power-status-box {bg_cls}"),
+            cls="power-status-container"
+        )
+    else:
+        return Div(
+            status_text, 
+            cls=f"power-status-box {bg_cls}"
+        )
+
+
+def BatteryPanel(title, prefix, battery, scale_labels, min_val, max_val):
+    return Div(
+        Div(title, cls="power-panel-title"),
+        PowerLinearGauge(f"{prefix} Volt (V)", battery.voltage.value, min_val, max_val, scale_labels),
+        PowerMetricRow(f"{prefix} Current (A)", battery.current.value),
+        PowerMetricRow(f"{prefix} Power (kW)", battery.power.value),
+        PowerMetricRow(f"{prefix} SOC (%)", battery.soc.value),
+        PowerMetricRow(f"{prefix} Temp (deg C)", battery.temp.value),
+        cls="power-panel battery-panel"
+    )
+
+
+def PDEPanel(title, prefix, enclosure):
+    return Div(
+        Div(title, cls="power-panel-title"),
+        PowerMetricRow(f"{prefix} Voltage (V)", enclosure.voltage.value),
+        PowerMetricRow(f"{prefix} Current (A)", enclosure.current.value),
+        PowerMetricRow(f"{prefix} Temp (degC)", enclosure.temp.value),
+        PowerMetricRow(f"{prefix} IR_24 (Kohm)", enclosure.ir_24.value),
+        PowerMetricRow(f"{prefix}_IR_Ext (Kohm)", enclosure.ir_ext.value),
+        PowerMetricRow(f"{prefix}_148 IR (Kohm)", enclosure.ir_148.value),
+        PowerStatusPill(f"{prefix} IR Status", enclosure.ir_status, is_ok=(enclosure.ir_status != "LOW IR")),
+        PowerStatusPill(f"{prefix} Water Leak", enclosure.water_leak, is_ok=(enclosure.water_leak == "No Leak")),
+        cls="power-panel pde-panel"
+    )
+
+
+def IDEPanel(title, prefix, enclosure):
+    return Div(
+        Div(title, cls="power-panel-title"),
+        PowerMetricRow(f"{prefix} Voltage (V)", enclosure.voltage.value),
+        PowerMetricRow(f"{prefix} Current (A)", enclosure.current.value),
+        PowerMetricRow(f"{prefix} Temp (degC)", enclosure.temp.value),
+        PowerMetricRow(f"{prefix} IR (kohm)", enclosure.ir.value),
+        PowerStatusPill(f"{prefix} IR Status", enclosure.ir_status, is_ok=(enclosure.ir_status != "LOW IR")),
+        PowerStatusPill(f"{prefix} Water Leak", enclosure.water_leak, is_ok=(enclosure.water_leak == "No Leak")),
+        cls="power-panel ide-panel"
+    )
+
+
+def UmbilicalPanel(title, prefix, umbilical):
+    # Has a 3 column layout for metrics and pills
+    return Div(
+        Div(title, cls="power-panel-title"),
+        Div(
+            Div(
+                PowerMetricRow(f"{prefix} Voltage (V)", umbilical.voltage.value),
+                PowerMetricRow(f"{prefix} Current (A)", umbilical.current.value),
+                cls="ub-col"
+            ),
+            Div(
+                PowerMetricRow(f"{prefix} Temp (degC)", umbilical.temp.value),
+                PowerMetricRow(f"{prefix} IR (Kohm)", umbilical.ir.value),
+                cls="ub-col"
+            ),
+            Div(
+                PowerStatusPill(None, umbilical.water_leak, is_ok=(umbilical.water_leak == "No Leak")),
+                Div(f"{prefix} IR", cls="power-grey-label"),
+                PowerStatusPill(None, umbilical.ir_status, is_ok=(umbilical.ir_status != "LOW IR")),
+                cls="ub-col ub-col-status"
+            ),
+            cls="ub-row"
+        ),
+        cls="power-panel umb-panel"
+    )
+
+
+# ----------------- IMAGING SCREEN SPECIFIC WIDGETS -----------------
+
+def ImagingToggle(label, is_on, inline=False, id_key=None, toggle_url=None):
+    """Toggle switch specific to imaging screen with optional inline styling"""
+    t_cls = "toggle-on" if is_on else "toggle-off"
+    d_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+    wrapper_cls = "img-toggle-inline" if inline else "img-toggle-block"
+
+    attrs = {"cls": wrapper_cls}
+    if id_key:
+        attrs["id"] = id_key
+        attrs["hx_swap_oob"] = "true"
+    if toggle_url:
+        attrs["hx_post"] = toggle_url
+        attrs["hx_swap"] = "none"
+
+    return Div(
+        Span(label, cls="img-toggle-label"),
+        Div(
+            Div(
+                Div(cls=f"toggle-dot {d_cls}"),
+                cls=f"toggle-track {t_cls}",
+            ),
+            Span("ON" if is_on else "OFF", cls="img-toggle-state"),
+            cls="img-toggle-controls",
+        ),
+        **attrs
+    )
+
+
+def LedDimmerSlider(label, value, min_val=0, max_val=10):
+    """Horizontal slider for LED Dim% (0-10) with text above and scale below"""
+    percent = (value - min_val) / (max_val - min_val) * 100
+    percent = max(0, min(100, percent))
+    scale_labels = ["0", "2", "4", "6", "8", "10"]
+    
+    ticks = []
+    for i in range(21): # 0, 0.5, 1, 1.5 ... 10. (21 ticks)
+        tick_cls = "dim-tick-major" if i % 4 == 0 else "dim-tick-minor"
+        ticks.append(Div(cls=f"dim-tick {tick_cls}"))
+    tick_row = Div(*ticks, cls="dim-tick-row")
+    
+    labels = []
+    for sl in scale_labels:
+        labels.append(Span(sl, cls="dim-scale-label"))
+    label_row = Div(*labels, cls="dim-scale-row")
+
+    return Div(
+        Span(label, cls="dim-label"),
+        Div(
+            Div(
+                Div(cls="dim-thumb", style=f"left: {percent}%;"),
+                Div(cls="dim-fill", style=f"width: {percent}%;"),
+                cls="dim-track",
+            ),
+            tick_row,
+            label_row,
+            cls="dim-slider-wrap"
+        ),
+        cls="led-dimmer-slider"
+    )
+
+
+def CameraActionGrid():
+    """6 button grid for Iris open/close, zoom etc."""
+    return Div(
+        Div("Iris close", cls="cam-btn"),
+        Div("Zoom in", cls="cam-btn"),
+        Div("Iris open", cls="cam-btn"),
+        Div("Zoom out", cls="cam-btn"),
+        Div("Near", cls="cam-btn"),
+        Div("Far", cls="cam-btn"),
+        cls="cam-action-grid"
+    )
+
+
+def PanTiltBar(label, value, min_val, max_val, scale_labels):
+    """Heavy blue/white horizontal sliders for PAN and TILT"""
+    percent = (value - min_val) / (max_val - min_val) * 100
+    percent = max(0, min(100, percent))
+    
+    scale_row = Div(*[Span(sl, cls="pt-scale-label") for sl in scale_labels], cls="pt-scale-row")
+    
+    return Div(
+        Div(
+            Span(label, cls="pt-label"),
+            Div(str(int(value)), cls="pt-value-box"),
+            Span("deg", cls="pt-unit"),
+            Div(cls="pt-indicator-led pt-led-on"),
+            cls="pt-header"
+        ),
+        Div(
+            Div(
+                Div(cls="pt-thumb", style=f"left: {percent}%;"),
+                Div(cls="pt-fill", style=f"width: {percent}%;"),
+                cls="pt-track"
+            ),
+            scale_row,
+            cls="pt-slider-wrap"
+        ),
+        cls="pan-tilt-bar"
+    )
+
+
+def PanTiltPad(pan_val, tilt_val):
+    return Div(
+        Div(
+            Div("T-UP", cls="pt-pad-btn pt-pad-up"),
+            Div("P-LFT", cls="pt-pad-btn pt-pad-left"),
+            Div(IconHome(), cls="pt-pad-home"),
+            Div("P-RGT", cls="pt-pad-btn pt-pad-right"),
+            Div("T-DWN", cls="pt-pad-btn pt-pad-down"),
+            cls="pt-pad-grid"
+        ),
+        Div(
+            Div("manual", cls="pt-manual-btn"),
+            Div(
+                Div(
+                    Span("PAN", cls="pt-manual-label"),
+                    Div(str(int(pan_val)), cls="pt-manual-input"),
+                    Span("Deg", cls="pt-manual-unit"),
+                    cls="pt-manual-row"
+                ),
+                Div(
+                    Span("TILT", cls="pt-manual-label"),
+                    Div(str(int(tilt_val)), cls="pt-manual-input"),
+                    Span("Deg", cls="pt-manual-unit"),
+                    cls="pt-manual-row"
+                ),
+                cls="pt-manual-inputs"
+            ),
+            cls="pt-manual-section"
+        ),
+        cls="pan-tilt-pad"
+    )
+
+# ----------------- SENSORS SCREEN SPECIFIC WIDGETS -----------------
+
+def SensorToggleBlock(label, is_on, id_key=None, toggle_url=None):
+    """Toggle switch with label above"""
+    t_cls = "toggle-on" if is_on else "toggle-off"
+    d_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+    
+    attrs = {"cls": "sens-toggle-block"}
+    if id_key:
+        attrs["id"] = id_key
+        attrs["hx_swap_oob"] = "true"
+    if toggle_url:
+        attrs["hx_post"] = toggle_url
+        attrs["hx_swap"] = "none"
+
+    return Div(
+        Span(label, cls="sens-toggle-label"),
+        Div(
+            Div(
+                Div(cls=f"toggle-dot {d_cls}"),
+                cls=f"toggle-track {t_cls}",
+            ),
+            Span("ON" if is_on else "OFF", cls="sens-toggle-state"),
+            cls="sens-toggle-controls"
+        ),
+        **attrs
+    )
+
+
+def SensorLedStatus(label, is_on):
+    """Label above a green/red LED circle"""
+    dot_cls = "sens-led-on" if is_on else "sens-led-off"
+    return Div(
+        Span(label, cls="sens-led-label"),
+        Div(
+            Div(cls=f"sens-led-dot {dot_cls}"),
+            Div(cls="sens-led-rect") if is_on else Div(cls="sens-led-rect-off"),
+            cls="sens-led-graphic"
+        ),
+        cls="sens-led-container"
+    )
+
+
+def AlarmLedStatus(label, is_on):
+    """Label above a green/red LED circle with NO rect next to it, used for alarms"""
+    dot_cls = "sens-led-on" if is_on else "sens-led-off"
+    return Div(
+        Span(label, cls="sens-led-label"),
+        Div(cls=f"sens-led-dot {dot_cls}"),
+        cls="sens-led-container"
+    )
+
+
+def ScientificSensorRowItem(label, port_val, stbd_val, unit=None):
+    """Row in the central Scientific Sensors section"""
+    return Div(
+        Span(label, cls="sci-sens-label"),
+        Div(str(port_val), cls="sci-sens-value"),
+        Div(str(stbd_val), cls="sci-sens-value"),
+        Span(unit, cls="sci-sens-unit") if unit else None,
+        cls="sci-sens-row"
+    )
+
+
+def SensorBoxMetric(label, value, unit=None):
+    """Right side metrics like Surface INS"""
+    return Div(
+        Span(label, cls="sens-box-label"),
+        Div(str(value), cls="sens-box-value"),
+        Span(unit, cls="sens-box-unit") if unit else None,
+        cls="sens-box-row"
+    )
+
+
+def BuzzerPanel(active):
+    dot_cls = "sens-led-on buzzer-active" if active else "sens-led-off"
+    return Div(
+        Div("Buzzer", cls="buzzer-label"),
+        Div(cls=f"buzzer-light {dot_cls}"),
+        Div("ACK", cls="buzzer-ack-btn"),
+        cls="buzzer-panel"
+    )
+
+
+# ----------------- LOGGING SCREEN SPECIFIC WIDGETS -----------------
+def LogTable(title, is_event, rows):
+    """A scrolling table for Event or Error logging"""
+    headers = ["Date", "Time", "Location", "Event" if is_event else "Error"]
+    
+    header_cells = [Div(h, cls="log-table-th") for h in headers]
+    header_row = Div(*header_cells, cls="log-table-header-row")
+    
+    # We will render 15 empty rows to simulate the grid from the image, filling them as needed
+    rendered_rows = []
+    for i in range(15):
+        if i < len(rows):
+            r = rows[i]
+            cells = [
+                Div(r.date, cls="log-table-td"),
+                Div(r.time, cls="log-table-td"),
+                Div(r.location, cls="log-table-td"),
+                Div(r.message, cls="log-table-td log-table-td-stretch")
+            ]
+            rendered_rows.append(Div(*cells, cls="log-table-row"))
+        else:
+            cells = [
+                Div("", cls="log-table-td empty"),
+                Div("", cls="log-table-td empty"),
+                Div("", cls="log-table-td empty"),
+                Div("", cls="log-table-td log-table-td-stretch empty")
+            ]
+            rendered_rows.append(Div(*cells, cls="log-table-row"))
+            
+    return Div(
+        Div(title, cls="log-table-title"),
+        Div(
+            header_row,
+            Div(*rendered_rows, cls="log-table-body"),
+            cls="log-table-container"
+        ),
+        cls="log-panel"
+    )
+
+
+def HorizontalToggle(label, is_on, id_key=None, toggle_url=None):
+    """Horizontal toggle: Label -> Switch -> ON/OFF"""
+    t_cls = "toggle-on" if is_on else "toggle-off"
+    d_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+    
+    attrs = {"cls": "h-toggle-wrap"}
+    if id_key:
+        attrs["id"] = id_key
+        attrs["hx_swap_oob"] = "true"
+    if toggle_url:
+        attrs["hx_post"] = toggle_url
+        attrs["hx_swap"] = "none"
+
+    return Div(
+        Span(label, cls="h-toggle-label"),
+        Div(
+            Div(cls=f"toggle-dot {d_cls}"),
+            cls=f"toggle-track {t_cls}",
+        ),
+        Span("ON" if is_on else "OFF", cls="h-toggle-state"),
+        **attrs
+    )
+
+
+def RedSignalIndicator(label, is_on):
+    """Red circle indicator with label underneath or above"""
+    cls_dot = "signal-dot-on" if is_on else "signal-dot-off"
+    return Div(
+        Span(label, cls="signal-label"),
+        Div(cls=f"signal-dot {cls_dot}"),
+        cls="signal-indicator"
+    )
+
+# ----------------- STATUS SCREEN SPECIFIC WIDGETS -----------------
+def StatusChartRowComponent(selected_option, y_labels, x_labels):
+    dropdown = Div(
+        Span(selected_option, cls="status-dropdown-text"),
+        Div(IconChevronDown(), cls="status-dropdown-icon"),
+        cls="status-dropdown"
+    )
+    
+    y_axis = Div(*[Span(str(y), cls="status-y-label") for y in reversed(y_labels)], cls="status-y-axis")
+    x_axis = Div(*[Span(str(x), cls="status-x-label") for x in x_labels], cls="status-x-axis")
+    grid_area = Div(cls="status-grid")
+    
+    chart_area = Div(
+        Div("Amplitude", cls="status-y-title"),
+        Div(
+            Div(y_axis, grid_area, cls="status-chart-main"),
+            Div(x_axis, Div("Time", cls="status-x-title"), cls="status-chart-bottom"),
+            cls="status-chart-inner"
+        ),
+        cls="status-chart-container"
+    )
+    
+    return Div(
+        Div(dropdown, cls="status-dropdown-container"),
+        chart_area,
+        cls="status-row-widget"
+    )
+
+
+# ----------------- 50 KWH SCREEN SPECIFIC WIDGETS -----------------
+def KwhDataGrid(title_sub, col_headers, batteries):
+    rows_labels = ["CUR", "VOT", "ID Cell Max", "Max Temp", "ID Cell Min", "Min Temp", "Temp", "SOC", "SOH"]
+    fields = ["cur", "vot", "id_cell_max", "max_temp", "id_cell_min", "min_temp", "temp", "soc", "soh"]
+    
+    header_col = Div(Span(""), *[Span(l, cls="kwh-row-label") for l in rows_labels], cls="kwh-label-col")
+    
+    bat_cols = []
+    for i, bat in enumerate(batteries):
+        cells = [Span(col_headers[i], cls="kwh-col-header")]
+        for f in fields:
+            val = getattr(bat, f)
+            cells.append(Div(str(int(val)), cls="kwh-cell-value"))
+        bat_cols.append(Div(*cells, cls="kwh-data-col"))
+        
+    grid_content = Div(header_col, *bat_cols, cls="kwh-grid-content")
+    
+    return Div(
+        Div(title_sub, cls="kwh-grid-subtitle"),
+        grid_content,
+        cls="kwh-grid-panel"
+    )
+
+
+def KwhVerticalGauge(label, value, min_val, max_val, scale_labels):
+    percent = (value - min_val) / (max_val - min_val) * 100
+    percent = max(0, min(100, percent))
+    
+    # scale labels are arranged vertically
+    scale_items = [Span(str(sl), cls="kwh-vg-scale-label") for sl in reversed(scale_labels)]
+    scale_col = Div(*scale_items, cls="kwh-vg-scale-col")
+    
+    return Div(
+        Span(label, cls="kwh-vg-title"),
+        Div(
+            scale_col,
+            Div(
+                Div(cls="kwh-vg-fill", style=f"height: {percent}%;"),
+                cls="kwh-vg-track"
+            ),
+            cls="kwh-vg-body"
+        ),
+        Div(str(int(value)), cls="kwh-vg-input"),
+        cls="kwh-vg-container"
+    )
+
+# ----------------- MCC SCREEN SPECIFIC WIDGETS -----------------
+def MccIndicator(label, is_on):
+    led_cls = "mcc-led-on" if is_on else "mcc-led-off"
+    return Div(
+        Span(label, cls="mcc-label"),
+        Div(cls=f"mcc-led {led_cls}"),
+        cls="mcc-indicator-row"
+    )
+
+def MccStatusBox(label, value, bg_color_cls):
+    return Div(
+        Span(label, cls="mcc-status-label"),
+        Div(value, cls=f"mcc-status-box {bg_color_cls}"),
+        cls="mcc-status-row"
+    )
+
+def MccMessageInput(label, value):
+    return Div(
+        Span(label, cls="mcc-message-label"),
+        Div(value, cls="mcc-message-value"),
+        cls="mcc-message-row"
+    )
+
+def MccShipData(label, value):
+    return Div(
+        Span(label, cls="mcc-ship-label"),
+        Div(str(value), cls="mcc-ship-value"),
+        cls="mcc-ship-col"
+    )
+
+def MccRadioGroup(selected_val):
+    def radio_item(val):
+        dot_cls = "mcc-radio-dot-on" if val == selected_val else "mcc-radio-dot-off"
+        return Div(
+            Div(cls=f"mcc-radio-circle {dot_cls}"),
+            Span(val, cls="mcc-radio-label"),
+            cls="mcc-radio-item"
+        )
+    return Div(
+        Span("Power Status", cls="mcc-power-title"),
+        radio_item("Low"),
+        radio_item("Medium"),
+        radio_item("High"),
+        radio_item("Very High"),
+        cls="mcc-radio-group"
+    )
+
+def MccCrewStatus(label, is_ok):
+    bg_cls = "mcc-crew-ok" if is_ok else "mcc-crew-err"
+    text = "OK" if is_ok else "ERR"
+    return Div(
+        Span(label, cls="mcc-crew-label"),
+        Div(text, cls=f"mcc-crew-box {bg_cls}"),
+        cls="mcc-crew-row"
+    )
+
+def MccPowerDropdown(val):
+    return Div(
+        Span("Power", cls="mcc-dropdown-label"),
+        Div(
+            Span(val, cls="mcc-dropdown-val"),
+            IconChevronDown(),
+            cls="mcc-dropdown-box"
+        ),
+        cls="mcc-dropdown-wrap"
     )
