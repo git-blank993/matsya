@@ -1,6 +1,13 @@
 from fasthtml.common import Div, Span, NotStr, H3, A
 import math
 
+def fmt_val(val):
+    try:
+        return f"{float(val):.2f}"
+    except (ValueError, TypeError):
+        return str(val)
+
+
 
 # ----------------- ICONS (SVG Placeholders via NotStr) -----------------
 def IconSettings():
@@ -35,7 +42,7 @@ def TopbarInlineMetric(label, value, unit="", id_key=None):
     return Div(
         Span(label, cls="topbar-metric-label"),
         Div(
-            Span(str(value), cls="topbar-metric-value"),
+            Span(fmt_val(value), cls="topbar-metric-value"),
             Span(unit, cls="topbar-metric-unit") if unit else None,
             cls="topbar-metric-box",
         ),
@@ -74,7 +81,7 @@ def VerticalGauge(
         ),
         H3(label, cls="gauge-title"),
         Div(
-            Span(f"{value:.1f}", cls="gauge-value"),
+            Span(fmt_val(value), cls="gauge-value"),
             Span(unit, cls="gauge-unit"),
             cls="gauge-readout",
         ),
@@ -88,7 +95,7 @@ def SimpleRpmBox(label, value, id_key=None):
     """Specific T1-T8 RPM boxes"""
     return Div(
         Span(label, cls="rpm-label"),
-        Div(str(value), cls="rpm-value"),
+        Div(fmt_val(value), cls="rpm-value"),
         cls="rpm-box",
         id=id_key,
         hx_swap_oob="true" if id_key else None,
@@ -99,7 +106,7 @@ def SimpleMetricBox(label, value, unit="", id_key=None):
     """Tiny input-like read-only boxes (used for Roll/Pitch and footers)"""
     return Div(
         Span(label, cls="metric-label"),
-        Div(Span(str(value), cls="metric-value"), cls="metric-input"),
+        Div(Span(fmt_val(value), cls="metric-value"), cls="metric-input"),
         Span(unit, cls="metric-unit") if unit else None,
         cls="metric-box",
         id=id_key,
@@ -124,7 +131,7 @@ def SidebarMetric(label, value, unit="", id_key=None):
     return Div(
         Span(label, cls="sidebar-metric-label"),
         Div(
-            Span(str(value), cls="sidebar-metric-value"),
+            Span(fmt_val(value), cls="sidebar-metric-value"),
             Span(unit, cls="sidebar-metric-unit"),
             cls="sidebar-metric-readout",
         ),
@@ -214,7 +221,7 @@ def BigNumber(label, value, unit=""):
     return Div(
         Span(label, cls="big-number-label"),
         Div(
-            Span(str(value), cls="big-number-value"),
+            Span(fmt_val(value), cls="big-number-value"),
             Span(unit, cls="big-number-unit"),
             cls="big-number-readout",
         ),
@@ -296,7 +303,7 @@ def SemiCircleGauge(
             cls="sc-track",
         ),
         Div(
-            Span(f"{value:.0f}" if not is_oxygen else f"{value:.1f}", cls="sc-value"),
+            Span(fmt_val(value) if not is_oxygen else fmt_val(value), cls="sc-value"),
             Span(label, cls="sc-title"),
             Span(f"({unit})", cls="sc-unit"),
             cls="sc-readout",
@@ -318,7 +325,7 @@ def HorizontalProgressBar(label, value, min_val, max_val, unit, scale_labels=Non
     return Div(
         Div(
             Span(label, cls="hp-title"),
-            Div(str(value), cls="hp-value-box"),
+            Div(fmt_val(value), cls="hp-value-box"),
             cls="hp-header",
         ),
         Div(Div(cls="hp-fill", style=f"width: {percent}%;"), cls="hp-track"),
@@ -342,7 +349,7 @@ def HSSSLabelInput(label, value, unit):
     return Div(
         Span(label, cls="hsss-input-label"),
         Div(
-            Div(str(value), cls="hsss-input-value"),
+            Div(fmt_val(value), cls="hsss-input-value"),
             Span(unit, cls="hsss-input-unit"),
             cls="hsss-input-row",
         ),
@@ -374,7 +381,7 @@ def BallastPressureRead(label, value, is_enabled, id_key=None, toggle_url=None):
     return Div(
         Span(label, cls="ballast-pressure-label"),
         Div(
-            Div(str(value), cls="ballast-pressure-value"),
+            Div(fmt_val(value), cls="ballast-pressure-value"),
             Div(
                 Span("ON" if is_enabled else "OFF", cls="toggle-state-text"),
                 Div(
@@ -431,7 +438,7 @@ def VBSTankGauge(level, max_val=300):
             cls="vbs-tank-body",
         ),
         Div(
-            Span(f"{level:.0f}", cls="vbs-tank-value"),
+            Span(fmt_val(level), cls="vbs-tank-value"),
             Span("L", cls="vbs-tank-unit"),
             cls="vbs-tank-readout",
         ),
@@ -444,7 +451,7 @@ def VBSMetricRow(label, value, unit):
     return Div(
         Span(label, cls="vbs-metric-label"),
         Div(
-            Div(str(value), cls="vbs-metric-value"),
+            Div(fmt_val(value), cls="vbs-metric-value"),
             Span(unit, cls="vbs-metric-unit") if unit else None,
             cls="vbs-metric-right",
         ),
@@ -463,7 +470,7 @@ def VBSSetControl(value):
         Span("VBS SET", cls="vbs-set-label"),
         Div(
             Div("▲", cls="vbs-set-arrow"),
-            Div(str(int(value)), cls="vbs-set-value"),
+            Div(fmt_val(value), cls="vbs-set-value"),
             Div("▼", cls="vbs-set-arrow"),
             cls="vbs-set-spinbox",
         ),
@@ -569,7 +576,7 @@ def ThrusterRPMGauge(label, rpm, max_rpm=1600):
         ),
         # Readout below
         Div(
-            Span(f"{rpm:.0f}", cls="tg-rpm-value"),
+            Span(fmt_val(rpm), cls="tg-rpm-value"),
             cls="tg-readout",
         ),
         Span(label, cls="tg-label"),
@@ -620,19 +627,19 @@ def ThrusterPanel(thruster_id, t):
         Div(
             Div(
                 Span("Voltage", cls="tp-metric-label"),
-                Div(str(t.voltage), cls="tp-metric-value"),
+                Div(fmt_val(t.voltage), cls="tp-metric-value"),
                 Span("V", cls="tp-metric-unit"),
                 cls="tp-metric-row",
             ),
             Div(
                 Span("Current", cls="tp-metric-label"),
-                Div(str(t.current), cls="tp-metric-value"),
+                Div(fmt_val(t.current), cls="tp-metric-value"),
                 Span("A", cls="tp-metric-unit"),
                 cls="tp-metric-row",
             ),
             Div(
                 Span("Temp", cls="tp-metric-label"),
-                Div(str(t.temp), cls="tp-metric-value"),
+                Div(fmt_val(t.temp), cls="tp-metric-value"),
                 Span("°C", cls="tp-metric-unit"),
                 cls="tp-metric-row",
             ),
@@ -640,7 +647,7 @@ def ThrusterPanel(thruster_id, t):
         ),
         Div(
             Span(f"T{thruster_id} ctrl", cls="tp-ctrl-label"),
-            Div(str(int(t.ctrl)), cls="tp-ctrl-value"),
+            Div(fmt_val(t.ctrl), cls="tp-ctrl-value"),
             cls="tp-ctrl-row",
         ),
         cls="thruster-panel",
@@ -685,7 +692,7 @@ def PropAxisControl(label, value):
     """Bottom axis control box: Heading ctrl, Fwd ctrl, etc."""
     return Div(
         Span(label, cls="prop-axis-label"),
-        Div(str(int(value)), cls="prop-axis-value"),
+        Div(fmt_val(value), cls="prop-axis-value"),
         cls="prop-axis-ctrl",
     )
 
@@ -698,7 +705,7 @@ def PowerMetricRow(label, value, unit=None):
     return Div(
         Span(label, cls="power-metric-label"),
         Div(
-            Span(str(value), cls="power-metric-value"),
+            Span(fmt_val(value), cls="power-metric-value"),
             Span(unit, cls="power-metric-unit") if unit else None,
             cls="power-metric-box",
         ),
@@ -721,7 +728,7 @@ def PowerLinearGauge(label, value, min_val, max_val, scale_labels):
             Div(*scale_items, cls="power-gauge-scale-row"),
             cls="power-gauge-wrap",
         ),
-        Div(str(value), cls="power-gauge-value"),
+        Div(fmt_val(value), cls="power-gauge-value"),
         cls="power-linear-gauge",
     )
 
@@ -895,7 +902,7 @@ def PanTiltBar(label, value, min_val, max_val, scale_labels):
     return Div(
         Div(
             Span(label, cls="pt-label"),
-            Div(str(int(value)), cls="pt-value-box"),
+            Div(fmt_val(value), cls="pt-value-box"),
             Span("deg", cls="pt-unit"),
             Div(cls="pt-indicator-led pt-led-on"),
             cls="pt-header"
@@ -928,13 +935,13 @@ def PanTiltPad(pan_val, tilt_val):
             Div(
                 Div(
                     Span("PAN", cls="pt-manual-label"),
-                    Div(str(int(pan_val)), cls="pt-manual-input"),
+                    Div(fmt_val(pan_val), cls="pt-manual-input"),
                     Span("Deg", cls="pt-manual-unit"),
                     cls="pt-manual-row"
                 ),
                 Div(
                     Span("TILT", cls="pt-manual-label"),
-                    Div(str(int(tilt_val)), cls="pt-manual-input"),
+                    Div(fmt_val(tilt_val), cls="pt-manual-input"),
                     Span("Deg", cls="pt-manual-unit"),
                     cls="pt-manual-row"
                 ),
@@ -1013,7 +1020,7 @@ def SensorBoxMetric(label, value, unit=None):
     """Right side metrics like Surface INS"""
     return Div(
         Span(label, cls="sens-box-label"),
-        Div(str(value), cls="sens-box-value"),
+        Div(fmt_val(value), cls="sens-box-value"),
         Span(unit, cls="sens-box-unit") if unit else None,
         cls="sens-box-row"
     )
@@ -1143,7 +1150,7 @@ def KwhDataGrid(title_sub, col_headers, batteries):
         cells = [Span(col_headers[i], cls="kwh-col-header")]
         for f in fields:
             val = getattr(bat, f)
-            cells.append(Div(str(int(val)), cls="kwh-cell-value"))
+            cells.append(Div(fmt_val(val), cls="kwh-cell-value"))
         bat_cols.append(Div(*cells, cls="kwh-data-col"))
         
     grid_content = Div(header_col, *bat_cols, cls="kwh-grid-content")
@@ -1173,7 +1180,7 @@ def KwhVerticalGauge(label, value, min_val, max_val, scale_labels):
             ),
             cls="kwh-vg-body"
         ),
-        Div(str(int(value)), cls="kwh-vg-input"),
+        Div(fmt_val(value), cls="kwh-vg-input"),
         cls="kwh-vg-container"
     )
 
@@ -1203,7 +1210,7 @@ def MccMessageInput(label, value):
 def MccShipData(label, value):
     return Div(
         Span(label, cls="mcc-ship-label"),
-        Div(str(value), cls="mcc-ship-value"),
+        Div(fmt_val(value), cls="mcc-ship-value"),
         cls="mcc-ship-col"
     )
 

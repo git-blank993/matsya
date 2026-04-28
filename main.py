@@ -1,4 +1,4 @@
-from fasthtml.common import Div, Span, Link, H1, to_xml, FastHTML, H2, H3, Title, serve
+from fasthtml.common import Div, Span, Link, H1, to_xml, FastHTML, H2, H3, Title, serve, Form, Input, Select, Option
 from starlette.staticfiles import StaticFiles
 from models import MatsyaUIState
 from components import (
@@ -62,6 +62,10 @@ from components import (
 
 import asyncio
 import random
+import os
+import re
+import json
+import glob
 from datetime import datetime
 
 
@@ -113,7 +117,23 @@ def HeaderArea():
             Div(
                 Div(
                     Span("DIVE #", cls="header-label"),
-                    Span(s.dive_num, cls="header-value-box"),
+                    Form(
+                        Select(
+                            Option("Dive 1", value="1", selected=(s.dive_num == 1)),
+                            Option("Dive 2", value="2", selected=(s.dive_num == 2)),
+                            Option("Dive 3", value="3", selected=(s.dive_num == 3)),
+                            Option("Dive 4", value="4", selected=(s.dive_num == 4)),
+                            Option("Dive 5", value="5", selected=(s.dive_num == 5)),
+                            Option("Dive 6", value="6", selected=(s.dive_num == 6)),
+                            Option("Dive 7", value="7", selected=(s.dive_num == 7)),
+                            Option("Dive 8", value="8", selected=(s.dive_num == 8)),
+                            Option("Dive 9", value="9", selected=(s.dive_num == 9)),
+                            name="dive_num",
+                            style="width: 80px; background: transparent; border: 1px solid #333; color: white; text-align: center; font-weight: bold; padding: 2px;",
+                            hx_post="/api/sim/set_dive", hx_trigger="change"
+                        ),
+                        style="display: inline-block; margin: 0;"
+                    ),
                     cls="header-metric",
                 ),
                 Div(
@@ -127,7 +147,24 @@ def HeaderArea():
             Div(
                 Span("Present Time", cls="header-label"),
                 Span(s.present_time, cls="header-value-box mono"),
+                # Playback controls
+                Div(
+                    Span("⏮", hx_post="/api/sim/start", style="cursor: pointer; user-select: none; margin-right: 5px;"),
+                    Form(
+                        Select(
+                            Option("1x Speed", value="1", selected=(sim_global.speed == "1")),
+                            Option("Max Speed", value="max", selected=(sim_global.speed == "max")),
+                            name="speed",
+                            style="background: transparent; border: 1px solid #333; color: white; font-size: 12px; cursor: pointer; padding: 2px;",
+                            hx_post="/api/sim/set_speed", hx_trigger="change"
+                        ),
+                        style="display: inline-block; margin: 0; margin-right: 5px;"
+                    ),
+                    Span("⏭", hx_post="/api/sim/end", style="cursor: pointer; user-select: none;"),
+                    style="display: flex; gap: 5px; margin-top: 5px; font-size: 14px; justify-content: center; background: #111; padding: 2px 10px; border-radius: 4px; border: 1px solid #333; align-items: center;"
+                ),
                 cls="header-metric",
+                style="display: flex; flex-direction: column; align-items: center;"
             ),
             cls="header-top",
         ),
@@ -1267,7 +1304,15 @@ def AppLayout(active_tab="Main"):
 
 
 @rt("/")
-def get():
+async def get(dive_num: int = 1):
+    global simulator_task
+    if simulator_task is None or simulator_task.done():
+        app_state.is_powered_on = True
+        sim_global.target_dive = dive_num
+        simulator_task = asyncio.create_task(simulate_data())
+    elif dive_num != 1:
+        sim_global.target_dive = dive_num
+
     return Title("MATSYA 6000 View"), Div(
         AppLayout(active_tab="Main"), id="ws-container", hx_ext="ws", ws_connect="/ws"
     )
@@ -1343,237 +1388,121 @@ def get_mcc():
 
 simulator_task = None
 
+class SimState:
+    command: str = None
+    target_dive: int = None
+    speed: str = "1"
+    
+sim_global = SimState()
 
 async def simulate_data():
     s = app_state
+    
+    data_dir = "sim_data_processed"
+    if not os.path.exists(data_dir):
+        print(f"Data directory {data_dir} not found. Simulation stopped.")
+        return
+        
+    json_files = glob.glob(os.path.join(data_dir, "*.json"))
+    if not json_files:
+        print(f"No JSON files found in {data_dir}. Simulation stopped.")
+        return
+        
+    json_files.sort()
+    
+    current_file = json_files[0]
+    for jf in json_files:
+        m = re.search(r'(?i)dive[_\s]*(\d+)', jf)
+        if m and int(m.group(1)) == s.header.dive_num:
+            current_file = jf
+            break
+            
+    m = re.search(r'(?i)dive[_\s]*(\d+)', current_file)
+    if m:
+        s.header.dive_num = int(m.group(1))
+        
+    print(f"Loading simulation data from {current_file} (Dive {s.header.dive_num})")
+    
+    try:
+        with open(current_file, 'r') as f:
+            records = json.load(f)
+    except Exception as e:
+        print(f"Failed to load JSON: {e}")
+        return
+        
+    if not records:
+        return
+
+    idx = 0
     while True:
-        # Header
-        s.header.mission_time = datetime.now().strftime("%H:%M:%S")
-        s.header.present_time = datetime.now().strftime("%H:%M:%S")
-        s.header.heading.value = round(
-            (s.header.heading.value + random.uniform(-1, 1)) % 360, 1
-        )
-        s.header.depth.value = round(
-            max(0, s.header.depth.value + random.uniform(-0.5, 0.5)), 1
-        )
-        s.header.altitude.value = round(
-            max(0, s.header.altitude.value + random.uniform(-0.2, 0.2)), 1
-        )
-        s.header.mb_p_soc.value = round(
-            max(0, min(100, s.header.mb_p_soc.value + random.uniform(-0.1, 0.1))), 1
-        )
-        s.header.mb_s_soc.value = round(
-            max(0, min(100, s.header.mb_s_soc.value + random.uniform(-0.1, 0.1))), 1
-        )
-
-        # IMU
-        s.imu.roll.value = round(s.imu.roll.value + random.uniform(-1, 1), 1)
-        s.imu.pitch.value = round(s.imu.pitch.value + random.uniform(-1, 1), 1)
-        s.imu.heading_p.value = s.header.heading.value
-
-        # Bottom Strip
-        s.bottom.east_speed.value = round(
-            s.bottom.east_speed.value + random.uniform(-0.1, 0.1), 2
-        )
-        s.bottom.vert_speed.value = round(
-            s.bottom.vert_speed.value + random.uniform(-0.1, 0.1), 2
-        )
-        s.bottom.north_speed.value = round(
-            s.bottom.north_speed.value + random.uniform(-0.1, 0.1), 2
-        )
-        s.bottom.ship_heading.value = round(
-            (s.bottom.ship_heading.value + random.uniform(-1, 1)) % 360, 1
-        )
-
-        # Propulsion
-        for i in range(1, 9):
-            current = getattr(s.propulsion, f"t{i}_rpm")
-            setattr(
-                s.propulsion,
-                f"t{i}_rpm",
-                round(max(0, current + random.uniform(-20, 20)), 0),
-            )
-        s.propulsion.latitude.value = round(
-            s.propulsion.latitude.value + random.uniform(-0.0001, 0.0001), 4
-        )
-        s.propulsion.longitude.value = round(
-            s.propulsion.longitude.value + random.uniform(-0.0001, 0.0001), 4
-        )
-
-        # Environment
-        s.environment.o2.value = round(
-            max(0, s.environment.o2.value + random.uniform(-0.01, 0.01)), 2
-        )
-        s.environment.co2.value = round(
-            max(0, s.environment.co2.value + random.uniform(-0.5, 0.5)), 1
-        )
-        s.environment.temp.value = round(
-            s.environment.temp.value + random.uniform(-0.1, 0.1), 1
-        )
-        s.environment.pressure.value = round(
-            s.environment.pressure.value + random.uniform(-1, 1), 1
-        )
-
-        # Sidebar (less frequent toggle) (Removed for interactivity)
-        # Leds (less frequent toggle) (Removed for interactivity)
-        # Logging (Removed for interactivity)
+        cmd = sim_global.command
+        sim_global.command = None
         
-        # 50 KWH
-        kwh = s.kwh
-        for k in ["bat1", "bat2", "bat3", "bat4", "bat5"]:
-            b = getattr(kwh.port, k)
-            b.cur = max(0, b.cur + random.uniform(-1, 1))
-            b.vot = max(0, b.vot + random.uniform(-1, 1))
-            b.temp = max(0, b.temp + random.uniform(-0.5, 0.5))
-            b.soc = min(100, max(0, b.soc + random.uniform(-0.1, 0.1)))
-        
-        for k in ["bat6", "bat7", "bat8", "bat9", "bat10"]:
-            b = getattr(kwh.stbd, k)
-            b.cur = max(0, b.cur + random.uniform(-1, 1))
-            b.vot = max(0, b.vot + random.uniform(-1, 1))
-            b.temp = max(0, b.temp + random.uniform(-0.5, 0.5))
-            b.soc = min(100, max(0, b.soc + random.uniform(-0.1, 0.1)))
+        if sim_global.target_dive is not None:
+            t_dive = sim_global.target_dive
+            sim_global.target_dive = None
+            for jf in json_files:
+                m = re.search(r'(?i)dive[_\s]*(\d+)', jf)
+                if m and int(m.group(1)) == t_dive:
+                    current_file = jf
+                    s.header.dive_num = t_dive
+                    try:
+                        with open(current_file, 'r') as f:
+                            records = json.load(f)
+                        idx = 0
+                        print(f"Switched to {current_file}")
+                    except Exception:
+                        pass
+                    break
+                    
+        if cmd == "rewind":
+            idx = max(0, idx - 10)
+        elif cmd == "forward":
+            idx = min(len(records) - 1, idx + 10)
+        elif cmd == "start":
+            idx = 0
+        elif cmd == "end":
+            idx = max(0, len(records) - 1)
             
-        # (KWH toggles removed for interactivity)
-        kwh.port_gauges.vol = min(170, max(100, kwh.port_gauges.vol + random.uniform(-2, 2)))
-        kwh.port_gauges.temp = min(50, max(0, kwh.port_gauges.temp + random.uniform(-1, 1)))
-        kwh.port_gauges.soc = min(200, max(0, kwh.port_gauges.soc + random.uniform(-2, 2)))
-        kwh.port_gauges.cur = min(100, max(0, kwh.port_gauges.cur + random.uniform(-1, 1)))
-
-        kwh.stbd_gauges.vol = min(170, max(100, kwh.stbd_gauges.vol + random.uniform(-2, 2)))
-        kwh.stbd_gauges.temp = min(50, max(0, kwh.stbd_gauges.temp + random.uniform(-1, 1)))
-        kwh.stbd_gauges.soc = min(200, max(0, kwh.stbd_gauges.soc + random.uniform(-2, 2)))
-        kwh.stbd_gauges.cur = min(100, max(0, kwh.stbd_gauges.cur + random.uniform(-1, 1)))
-
-        # HSSS Panel Simulation
-        for side in [s.hsss.p, s.hsss.s]:
-            side.co2.value = round(max(0, side.co2.value + random.uniform(-10, 10)), 1)
-            side.oxygen.value = round(
-                max(19, min(25, side.oxygen.value + random.uniform(-0.05, 0.05))), 1
-            )
-            side.pressure.value = round(
-                max(0, side.pressure.value + random.uniform(-1, 1)), 1
-            )
-            side.temp.value = round(
-                max(0, side.temp.value + random.uniform(-0.2, 0.2)), 1
-            )
-            side.humidity.value = round(
-                max(0, min(100, side.humidity.value + random.uniform(-0.5, 0.5))), 1
-            )
-            side.hydrogen.value = round(
-                max(0, side.hydrogen.value + random.uniform(-0.1, 0.1)), 1
-            )
-            side.lp_l_pressure.value = round(
-                max(0, side.lp_l_pressure.value + random.uniform(-0.1, 0.1)), 1
-            )
-            side.hp_b1_pressure.value = round(
-                max(0, side.hp_b1_pressure.value + random.uniform(-0.1, 0.1)), 1
-            )
-            side.hp_b2_pressure.value = round(
-                max(0, side.hp_b2_pressure.value + random.uniform(-0.1, 0.1)), 1
-            )
-            side.hp_b3_pressure.value = round(
-                max(0, side.hp_b3_pressure.value + random.uniform(-0.1, 0.1)), 1
-            )
-
-        # Ballast Simulation
-        b = s.ballast
-        for attr in ["act3_pos", "act3_pos2", "act3_pos3"]:
-            current = getattr(b.main_ballast, attr)
-            setattr(b.main_ballast, attr, round(max(-150, min(150, current + random.uniform(-2, 2))), 1))
-        b.main_ballast.read_pressure_s = round(max(0, b.main_ballast.read_pressure_s + random.uniform(-0.5, 0.5)), 1)
-        b.main_ballast.read_pressure_p = round(max(0, b.main_ballast.read_pressure_p + random.uniform(-0.5, 0.5)), 1)
-        b.vbs.hpu_pressure.value = round(max(0, b.vbs.hpu_pressure.value + random.uniform(-1, 1)), 1)
-        b.vbs.hpu_temp.value = round(max(0, b.vbs.hpu_temp.value + random.uniform(-0.2, 0.2)), 1)
-        b.vbs.tank_level = round(max(0, min(300, b.vbs.tank_level + random.uniform(-1, 1))), 1)
-        b.trim.position_mm = round(max(0, min(4500, b.trim.position_mm + random.uniform(-10, 10))), 1)
-        b.trim.voltage.value = round(max(0, b.trim.voltage.value + random.uniform(-0.1, 0.1)), 1)
-        b.trim.current.value = round(max(0, b.trim.current.value + random.uniform(-0.05, 0.05)), 2)
-        b.trim.temp.value = round(max(0, b.trim.temp.value + random.uniform(-0.1, 0.1)), 1)
-        b.trim.speed.value = round(max(0, b.trim.speed.value + random.uniform(-1, 1)), 1)
-
-        # Propulsion detail simulation
-        pd = s.propulsion_detail
-        for tid in ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"]:
-            t = getattr(pd, tid)
-            t.rpm = round(max(0, min(1600, t.rpm + random.uniform(-30, 30))), 0)
-            t.voltage = round(max(0, min(50, t.voltage + random.uniform(-0.1, 0.1))), 1)
-            t.current = round(max(0, min(30, t.current + random.uniform(-0.05, 0.05))), 2)
-            t.temp = round(max(0, min(120, t.temp + random.uniform(-0.2, 0.2))), 1)
-            t.ctrl = round(max(-100, min(100, t.ctrl + random.uniform(-1, 1))), 1)
-            # (power/enable toggles removed for interactivity)
-        pd.heading_ctrl = round(max(-180, min(180, pd.heading_ctrl + random.uniform(-0.5, 0.5))), 1)
-        pd.fwd_ctrl = round(max(-100, min(100, pd.fwd_ctrl + random.uniform(-0.5, 0.5))), 1)
-        pd.lat_ctrl = round(max(-100, min(100, pd.lat_ctrl + random.uniform(-0.5, 0.5))), 1)
-        pd.vertical_ctrl = round(max(-100, min(100, pd.vertical_ctrl + random.uniform(-0.5, 0.5))), 1)
-        
-        # Power Simulation
-        p = s.power
-        for bat in [p.mb_p, p.mb_s]:
-            bat.voltage.value = round(max(100, min(180, bat.voltage.value + random.uniform(-1, 1))), 1)
-            bat.current.value = round(max(0, bat.current.value + random.uniform(-0.5, 0.5)), 1)
-            bat.power.value = round(max(0, bat.power.value + random.uniform(-0.1, 0.1)), 2)
-            bat.soc.value = round(max(0, min(100, bat.soc.value + random.uniform(-0.1, 0.1))), 2)
-            bat.temp.value = round(max(0, bat.temp.value + random.uniform(-0.2, 0.2)), 2)
+        if idx >= len(records):
+            idx = 0 
             
-        for bat in [p.aux_p, p.aux_s]:
-            bat.voltage.value = round(max(0, min(40, bat.voltage.value + random.uniform(-0.5, 0.5))), 1)
-            bat.current.value = round(max(0, bat.current.value + random.uniform(-0.5, 0.5)), 1)
-            bat.power.value = round(max(0, bat.power.value + random.uniform(-0.1, 0.1)), 2)
-            bat.soc.value = round(max(0, min(100, bat.soc.value + random.uniform(-0.1, 0.1))), 2)
-            bat.temp.value = round(max(0, bat.temp.value + random.uniform(-0.2, 0.2)), 2)
-
-        for enc in [p.pde_p, p.pde_s]:
-            enc.voltage.value = round(max(0, enc.voltage.value + random.uniform(-0.5, 0.5)), 1)
-            enc.current.value = round(max(0, enc.current.value + random.uniform(-0.5, 0.5)), 1)
-            enc.temp.value = round(max(0, enc.temp.value + random.uniform(-0.2, 0.2)), 2)
-            enc.ir_24.value = round(max(0, enc.ir_24.value + random.uniform(-0.1, 0.1)), 2)
-            enc.ir_ext.value = round(max(0, enc.ir_ext.value + random.uniform(-0.1, 0.1)), 2)
-            enc.ir_148.value = round(max(0, enc.ir_148.value + random.uniform(-0.1, 0.1)), 2)
-
-        for enc in [p.ide_p, p.ide_s]:
-            enc.voltage.value = round(max(0, enc.voltage.value + random.uniform(-0.5, 0.5)), 2)
-            enc.current.value = round(max(0, enc.current.value + random.uniform(-0.5, 0.5)), 1)
-            enc.temp.value = round(max(0, enc.temp.value + random.uniform(-0.2, 0.2)), 2)
-            enc.ir.value = round(max(0, enc.ir.value + random.uniform(-0.1, 0.1)), 2)
-
-        for ub in [p.ub_port, p.ub_stbd]:
-            ub.voltage.value = round(max(0, ub.voltage.value + random.uniform(-0.5, 0.5)), 1)
-            ub.current.value = round(max(0, ub.current.value + random.uniform(-0.5, 0.5)), 2)
-            ub.temp.value = round(max(0, ub.temp.value + random.uniform(-0.2, 0.2)), 2)
-            ub.ir.value = round(max(0, ub.ir.value + random.uniform(-0.1, 0.1)), 2)
-
-        # Imaging Simulation
-        img = s.imaging
-        for l in [img.led_p1, img.led_p2, img.led_p3, img.led_s1, img.led_s2, img.led_s3]:
-            # (power toggles removed for interactivity)
-            l.dim = round(max(0, min(10, l.dim + random.uniform(-0.5, 0.5))), 1)
-
-        # (Camera toggles removed for interactivity)
-
-        for pt in [img.pt_p1, img.pt_s1, img.pt_s2]:
-            pt.pan = round(max(-170, min(170, pt.pan + random.uniform(-5, 5))), 1)
-            pt.tilt = round(max(-50, min(110, pt.tilt + random.uniform(-5, 5))), 1)
-
-        # Sensors Simulation
-        sens = s.sensors
-        sci = sens.scientific
-        for sensor in [sci.conductivity, sci.salinity, sci.water_density, sci.turbidity, sci.ph, sci.ctd_temp, sci.pressure, sci.dissolved_oxygen, sci.orp]:
-            sensor.port = round(max(0, sensor.port + random.uniform(-0.1, 0.1)), 2)
-            sensor.stbd = round(max(0, sensor.stbd + random.uniform(-0.1, 0.1)), 2)
-            
-        surf = sens.surface_ins
-        surf.s_roll = round(surf.s_roll + random.uniform(-0.5, 0.5), 1)
-        surf.s_pitch = round(surf.s_pitch + random.uniform(-0.5, 0.5), 1)
-        surf.s_heading = round((surf.s_heading + random.uniform(-1, 1)) % 360, 1)
+        record = records[idx]
         
-        ssg = sens.subsea_gps
-        ssg.gps_latitude = round(ssg.gps_latitude + random.uniform(-0.0001, 0.0001), 4)
-        ssg.gps_longitude = round(ssg.gps_longitude + random.uniform(-0.0001, 0.0001), 4)
-
-        sens.redt_depth.s_depth = round(max(0, sens.redt_depth.s_depth + random.uniform(-0.1, 0.1)), 1)
-
-        # Broadcast rebuilt layouts to support clients on all routes
+        for var_path, value in record.items():
+            if value is None:
+                continue
+                
+            parts = var_path.split('.')
+            obj = s
+            try:
+                for p in parts[:-1]:
+                    obj = getattr(obj, p)
+                
+                leaf = parts[-1]
+                target = getattr(obj, leaf)
+                
+                if hasattr(target, 'value'):
+                    try:
+                        target.value = float(value)
+                    except ValueError:
+                        pass
+                else:
+                    setattr(obj, leaf, value)
+            except AttributeError:
+                pass
+                
+        if "header.present_time" in record and record["header.present_time"]:
+             time_str = str(record["header.present_time"])
+             time_str = time_str.replace("_", ":").split(".")[0]
+             s.header.present_time = time_str
+        else:
+             s.header.present_time = datetime.now().strftime("%H:%M:%S")
+             
+        if "header.mission_time" not in record or not record["header.mission_time"]:
+             s.header.mission_time = datetime.now().strftime("%H:%M:%S")
+             
+        # Broadcast rebuilt layouts
         await broadcast(AppLayout(active_tab="Main"))
         await broadcast(AppLayout(active_tab="HSSS"))
         await broadcast(AppLayout(active_tab="Ballast"))
@@ -1585,7 +1514,12 @@ async def simulate_data():
         await broadcast(AppLayout(active_tab="Status"))
         await broadcast(AppLayout(active_tab="50 Kwh"))
         await broadcast(AppLayout(active_tab="MCC"))
-        await asyncio.sleep(1)
+        
+        idx += 1
+        sleep_dur = 1.0
+        if sim_global.speed == "max":
+            sleep_dur = 0.008
+        await asyncio.sleep(sleep_dur)
 
 
 @rt("/api/toggle_power", methods=["POST"])
@@ -1690,6 +1624,21 @@ async def stop_sim():
         return {"status": "Simulation stopped"}
     return {"status": "Simulation not running"}
 
+@rt("/api/sim/set_dive", methods=["POST"])
+async def set_dive(dive_num: int):
+    sim_global.target_dive = dive_num
+    return ""
+
+@rt("/api/sim/set_speed", methods=["POST"])
+async def set_speed(speed: str):
+    sim_global.speed = speed
+    return ""
+
+@rt("/api/sim/{cmd}", methods=["POST"])
+async def sim_command(cmd: str):
+    if cmd in ["start", "end"]:
+        sim_global.command = cmd
+    return ""
 
 @rt("/api/test", methods=["POST", "GET"])
 async def test_update():
