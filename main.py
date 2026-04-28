@@ -129,8 +129,8 @@ def HeaderArea():
                             Option("Dive 8", value="8", selected=(s.dive_num == 8)),
                             Option("Dive 9", value="9", selected=(s.dive_num == 9)),
                             name="dive_num",
-                            style="width: 80px; background: transparent; border: 1px solid #333; color: white; text-align: center; font-weight: bold; padding: 2px;",
-                            hx_post="/api/sim/set_dive", hx_trigger="change"
+                            style="width: 80px; background: transparent; border: 1px solid #333; color: black; text-align: center; font-weight: bold; padding: 2px;",
+                            hx_post="/api/sim/set_dive", hx_trigger="change", hx_swap="none"
                         ),
                         style="display: inline-block; margin: 0;"
                     ),
@@ -149,18 +149,19 @@ def HeaderArea():
                 Span(s.present_time, cls="header-value-box mono"),
                 # Playback controls
                 Div(
-                    Span("⏮", hx_post="/api/sim/start", style="cursor: pointer; user-select: none; margin-right: 5px;"),
+                    Span("⏮", hx_post="/api/sim/start", hx_swap="none", style="cursor: pointer; user-select: none; margin-right: 5px;"),
+                    Span("⏸" if not sim_global.paused else "▶️", hx_post="/api/sim/toggle_pause", hx_swap="none", style="cursor: pointer; user-select: none; margin-right: 5px;", id="play-pause-btn"),
                     Form(
                         Select(
                             Option("1x Speed", value="1", selected=(sim_global.speed == "1")),
                             Option("Max Speed", value="max", selected=(sim_global.speed == "max")),
                             name="speed",
                             style="background: transparent; border: 1px solid #333; color: white; font-size: 12px; cursor: pointer; padding: 2px;",
-                            hx_post="/api/sim/set_speed", hx_trigger="change"
+                            hx_post="/api/sim/set_speed", hx_trigger="change", hx_swap="none"
                         ),
                         style="display: inline-block; margin: 0; margin-right: 5px;"
                     ),
-                    Span("⏭", hx_post="/api/sim/end", style="cursor: pointer; user-select: none;"),
+                    Span("⏭", hx_post="/api/sim/end", hx_swap="none", style="cursor: pointer; user-select: none;"),
                     style="display: flex; gap: 5px; margin-top: 5px; font-size: 14px; justify-content: center; background: #111; padding: 2px 10px; border-radius: 4px; border: 1px solid #333; align-items: center;"
                 ),
                 cls="header-metric",
@@ -1392,6 +1393,7 @@ class SimState:
     command: str = None
     target_dive: int = None
     speed: str = "1"
+    paused: bool = False
     
 sim_global = SimState()
 
@@ -1435,6 +1437,7 @@ async def simulate_data():
 
     idx = 0
     while True:
+        state_changed = False
         cmd = sim_global.command
         sim_global.command = None
         
@@ -1450,6 +1453,7 @@ async def simulate_data():
                         with open(current_file, 'r') as f:
                             records = json.load(f)
                         idx = 0
+                        state_changed = True
                         print(f"Switched to {current_file}")
                     except Exception:
                         pass
@@ -1457,12 +1461,20 @@ async def simulate_data():
                     
         if cmd == "rewind":
             idx = max(0, idx - 10)
+            state_changed = True
         elif cmd == "forward":
             idx = min(len(records) - 1, idx + 10)
+            state_changed = True
         elif cmd == "start":
             idx = 0
+            state_changed = True
         elif cmd == "end":
             idx = max(0, len(records) - 1)
+            state_changed = True
+            
+        if sim_global.paused and not state_changed:
+            await asyncio.sleep(0.1)
+            continue
             
         if idx >= len(records):
             idx = 0 
@@ -1515,11 +1527,14 @@ async def simulate_data():
         await broadcast(AppLayout(active_tab="50 Kwh"))
         await broadcast(AppLayout(active_tab="MCC"))
         
-        idx += 1
-        sleep_dur = 1.0
-        if sim_global.speed == "max":
-            sleep_dur = 0.008
-        await asyncio.sleep(sleep_dur)
+        if not sim_global.paused:
+            idx += 1
+            sleep_dur = 1.0
+            if sim_global.speed == "max":
+                sleep_dur = 0.008
+            await asyncio.sleep(sleep_dur)
+        else:
+            await asyncio.sleep(0.1)
 
 
 @rt("/api/toggle_power", methods=["POST"])
@@ -1627,6 +1642,13 @@ async def stop_sim():
 @rt("/api/sim/set_dive", methods=["POST"])
 async def set_dive(dive_num: int):
     sim_global.target_dive = dive_num
+    return ""
+
+@rt("/api/sim/toggle_pause", methods=["POST"])
+async def toggle_pause():
+    sim_global.paused = not sim_global.paused
+    comp = Span("⏸" if not sim_global.paused else "▶️", hx_post="/api/sim/toggle_pause", hx_swap="none", style="cursor: pointer; user-select: none; margin-right: 5px;", id="play-pause-btn", hx_swap_oob="true")
+    await broadcast(comp)
     return ""
 
 @rt("/api/sim/set_speed", methods=["POST"])
