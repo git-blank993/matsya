@@ -204,6 +204,8 @@ def BottomTabsNav(tabs, active_tab="Main"):
             url = "/50-kwh"
         elif t == "MCC":
             url = "/mcc"
+        elif t == "Switches":
+            url = "/switches"
         else:
             url = "#"
         nav_links.append(

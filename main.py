@@ -1268,6 +1268,127 @@ def AppLayout(active_tab="Main"):
             cls="main-content-wrapper"
         )
 
+    elif active_tab == "Switches":
+        sw = s.switches.state
+        
+        def ToggleBlock(label, is_on, state_key):
+            t_cls = "toggle-on" if is_on else "toggle-off"
+            d_cls = "toggle-dot-on" if is_on else "toggle-dot-off"
+            return Div(
+                Span(label, style="font-size: 12px; font-weight: 500;"),
+                Div(
+                    Span("ON" if is_on else "OFF", style="font-size: 10px; margin-right: 6px; color: var(--color-text-muted);"),
+                    Div(Div(cls=f"toggle-dot {d_cls}"), cls=f"toggle-track {t_cls}", style="transform: scale(0.8); transform-origin: right center;"),
+                    style="display: flex; align-items: center;"
+                ),
+                style="display: flex; justify-content: space-between; align-items: center; padding: 4px 6px; background: rgba(0,0,0,0.2); border-radius: 4px; margin-bottom: 2px;",
+                id=f"tog-sw-{state_key.replace('_', '-')}",
+                hx_post=f"/api/toggle/switches.state.{state_key}",
+                hx_swap="none",
+                hx_swap_oob="true"
+            )
+        
+        col1 = Div(
+            Div("Thruster Controls", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
+            ToggleBlock("Speed Control", sw.speed_control, "speed_control"),
+            ToggleBlock("Heading trim", sw.heading_trim, "heading_trim"),
+            ToggleBlock("Depth trim", sw.depth_trim, "depth_trim"),
+            ToggleBlock("lateral trim", sw.lateral_trim, "lateral_trim"),
+            Div("BATS Control", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-top: 10px;"),
+            ToggleBlock("HP_AP_ON/OFF", sw.hp_ap_on_off, "hp_ap_on_off"),
+            ToggleBlock("HP_BP_ON/OFF", sw.hp_bp_on_off, "hp_bp_on_off"),
+            ToggleBlock("HP_Reg_set", sw.hp_reg_set, "hp_reg_set"),
+            ToggleBlock("Pitch ON/OFF", sw.pitch_on_off, "pitch_on_off"),
+            ToggleBlock("VBT_Set value", sw.vbt_set_value, "vbt_set_value"),
+            ToggleBlock("Pitch up & Down _Analog", sw.pitch_up_down_analog, "pitch_up_down_analog"),
+            ToggleBlock("FreeBoard_P", sw.freeboard_p, "freeboard_p"),
+            ToggleBlock("Dive in", sw.dive_in, "dive_in"),
+            ToggleBlock("Water OUT_ON/OFF", sw.water_out_on_off, "water_out_on_off"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col2 = Div(
+            Div("General control Switches", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
+            ToggleBlock("Co2 scrubber_P", sw.co2_scrubber_p, "co2_scrubber_p"),
+            ToggleBlock("Joystick Enable", sw.joystick_enable, "joystick_enable"),
+            ToggleBlock("Pilot selection", sw.pilot_selection, "pilot_selection"),
+            ToggleBlock("Copilot selection", sw.copilot_selection, "copilot_selection"),
+            ToggleBlock("VHS_Power_P", sw.vhs_power_p, "vhs_power_p"),
+            ToggleBlock("LED_Emegency_Port", sw.led_emergency_port, "led_emergency_port"),
+            ToggleBlock("UW Camera _P", sw.uw_camera_p, "uw_camera_p"),
+            ToggleBlock("SONAR", sw.sonar, "sonar"),
+            ToggleBlock("Surface_INS", sw.surface_ins, "surface_ins"),
+            Div("POWER DIRECT CONTROL_PORT", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-top: 10px;"),
+            ToggleBlock("MB_P_1*", sw.mb_p_1, "mb_p_1"),
+            ToggleBlock("MB_P_2*", sw.mb_p_2, "mb_p_2"),
+            ToggleBlock("MB_P_3*", sw.mb_p_3, "mb_p_3"),
+            ToggleBlock("MB_P_4*", sw.mb_p_4, "mb_p_4"),
+            ToggleBlock("MB_P_5*", sw.mb_p_5, "mb_p_5"),
+            ToggleBlock("AB_P_BMS*", sw.ab_p_bms, "ab_p_bms"),
+            ToggleBlock("MB_P_BMS*", sw.mb_p_bms, "mb_p_bms"),
+            ToggleBlock("AB_P Power selection*", sw.ab_p_power_selection, "ab_p_power_selection"),
+            ToggleBlock("MB_P-PDE_P*", sw.mb_p_pde_p, "mb_p_pde_p"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+        
+        col3 = Div(
+            Div("Service Drop Weight Switches", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
+            ToggleBlock("Port side SDW 1", sw.port_side_sdw_1, "port_side_sdw_1"),
+            ToggleBlock("Port side SDW 2", sw.port_side_sdw_2, "port_side_sdw_2"),
+            ToggleBlock("Port side SDW 3", sw.port_side_sdw_3, "port_side_sdw_3"),
+            ToggleBlock("Port side SDW 4", sw.port_side_sdw_4, "port_side_sdw_4"),
+            ToggleBlock("Port side SDW 5", sw.port_side_sdw_5, "port_side_sdw_5"),
+            ToggleBlock("Starboard side SDW 1", sw.starboard_side_sdw_1, "starboard_side_sdw_1"),
+            ToggleBlock("Starboard side SDW 2", sw.starboard_side_sdw_2, "starboard_side_sdw_2"),
+            ToggleBlock("Starboard side SDW 3", sw.starboard_side_sdw_3, "starboard_side_sdw_3"),
+            ToggleBlock("Starboard side SDW 4", sw.starboard_side_sdw_4, "starboard_side_sdw_4"),
+            ToggleBlock("Starboard side SDW 5", sw.starboard_side_sdw_5, "starboard_side_sdw_5"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col4 = Div(
+            Div("Emergency Jettisoning_P (1/2)", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
+            ToggleBlock("Emergency Jettisoning of Manipulator_1", sw.ej_manipulator_1, "ej_manipulator_1"),
+            ToggleBlock("Emergency Jettisoning of Manipulator_2", sw.ej_manipulator_2, "ej_manipulator_2"),
+            ToggleBlock("Emergency Jettisoning of Manipulator_3", sw.ej_manipulator_3, "ej_manipulator_3"),
+            ToggleBlock("Emergency Jettisoning of Manipulator_4", sw.ej_manipulator_4, "ej_manipulator_4"),
+            ToggleBlock("Emergency Jettisoning of Trim System_1", sw.ej_trim_system_1, "ej_trim_system_1"),
+            ToggleBlock("Emergency Jettisoning of Trim System_2", sw.ej_trim_system_2, "ej_trim_system_2"),
+            ToggleBlock("Emergency Jettisoning of Trim System_3", sw.ej_trim_system_3, "ej_trim_system_3"),
+            ToggleBlock("Emergency Jettisoning of Trim System_4", sw.ej_trim_system_4, "ej_trim_system_4"),
+            ToggleBlock("Emergency Marker Buoy Release_1", sw.em_buoy_release_1, "em_buoy_release_1"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col5 = Div(
+            Div("Emergency Jettisoning_P (2/2)", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
+            ToggleBlock("Emergency Marker Buoy Release_2", sw.em_buoy_release_2, "em_buoy_release_2"),
+            ToggleBlock("Emergency Marker Buoy Release_3", sw.em_buoy_release_3, "em_buoy_release_3"),
+            ToggleBlock("Emergency Marker Buoy Release_4", sw.em_buoy_release_4, "em_buoy_release_4"),
+            ToggleBlock("Emergency Jettisoning of Sampling Basket_1", sw.ej_sampling_basket_1, "ej_sampling_basket_1"),
+            ToggleBlock("Emergency Jettisoning of Sampling Basket_2", sw.ej_sampling_basket_2, "ej_sampling_basket_2"),
+            ToggleBlock("Emergency Jettisoning of Sampling Basket_3", sw.ej_sampling_basket_3, "ej_sampling_basket_3"),
+            ToggleBlock("Emergency Jettisoning of Sampling Basket_4", sw.ej_sampling_basket_4, "ej_sampling_basket_4"),
+            ToggleBlock("Emergency Drop Weight_P1(SC)", sw.em_drop_weight_p1_sc, "em_drop_weight_p1_sc"),
+            ToggleBlock("Emergency Drop Weight_P2(PC)", sw.em_drop_weight_p2_pc, "em_drop_weight_p2_pc"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+        
+        switches_panel = Div(
+            Div(col1, col2, col3, col4, col5, style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1;"),
+            cls="mcc-panel",
+            style="display: flex; flex-direction: column;"
+        )
+
+        main_content_area = Div(
+            Div(
+                switches_panel,
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
     else:
         main_content_area = Div(
             Div(
@@ -1295,6 +1416,7 @@ def AppLayout(active_tab="Main"):
                 "Status",
                 "50 Kwh",
                 "MCC",
+                "Switches",
             ],
             active_tab=active_tab,
         ),
@@ -1382,6 +1504,12 @@ def get_50kwh():
 def get_mcc():
     return Title("MATSYA 6000 View - MCC"), Div(
         AppLayout(active_tab="MCC"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/switches")
+def get_switches():
+    return Title("MATSYA 6000 View - Switches"), Div(
+        AppLayout(active_tab="Switches"), id="ws-container", hx_ext="ws", ws_connect="/ws"
     )
 
 
@@ -1526,6 +1654,7 @@ async def simulate_data():
         await broadcast(AppLayout(active_tab="Status"))
         await broadcast(AppLayout(active_tab="50 Kwh"))
         await broadcast(AppLayout(active_tab="MCC"))
+        await broadcast(AppLayout(active_tab="Switches"))
         
         if not sim_global.paused:
             idx += 1
@@ -1562,6 +1691,7 @@ async def toggle_power():
     await broadcast(AppLayout(active_tab="Status"))
     await broadcast(AppLayout(active_tab="50 Kwh"))
     await broadcast(AppLayout(active_tab="MCC"))
+    await broadcast(AppLayout(active_tab="Switches"))
     return ""
 
 
@@ -1615,6 +1745,7 @@ async def generic_toggle(state_path: str):
     await broadcast(AppLayout(active_tab="Status"))
     await broadcast(AppLayout(active_tab="50 Kwh"))
     await broadcast(AppLayout(active_tab="MCC"))
+    await broadcast(AppLayout(active_tab="Switches"))
     return ""
 
 
