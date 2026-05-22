@@ -1375,7 +1375,7 @@ def AppLayout(active_tab="Main"):
         )
         
         switches_panel = Div(
-            Div(col1, col2, col3, col4, col5, style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1;"),
+            Div(col1, col2, col3, col4, col5, style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
             cls="mcc-panel",
             style="display: flex; flex-direction: column;"
         )
