@@ -565,6 +565,14 @@ class SwitchesCategory_P(BaseModel):
     ab_p_power_selection: bool = False
     mb_p_pde_p: bool = False
 
+    # New additions
+    ib_insulation: float = 0.0
+    eb_b_status: float = 0.0
+    ub_voltage: float = 0.0
+    power_selection_eb: str = "1"
+    power_selection_ub: str = "1"
+    ub_mcb: bool = False
+
 class SwitchesCategory_S(BaseModel):
     # Thruster Controls
     speed_control: bool = False
@@ -636,6 +644,14 @@ class SwitchesCategory_S(BaseModel):
     mb_s_bms: bool = False
     ab_s_power_selection: bool = False
     mb_s_pde_s: bool = False
+
+    # New additions
+    ib_insulation: float = 0.0
+    eb_b_status: float = 0.0
+    ub_voltage: float = 0.0
+    power_selection_eb: str = "1"
+    power_selection_ub: str = "1"
+    ub_mcb: bool = False
 
 class SwitchesState(BaseModel):
     p: SwitchesCategory_P = SwitchesCategory_P()

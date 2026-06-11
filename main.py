@@ -59,6 +59,11 @@ from components import (
     MccCrewStatus,
     MccPowerDropdown,
     MetalSwitch,
+    VoltageDisplay,
+    RotarySwitch,
+    InsulationDisplay,
+    BattManDisplay,
+    RedVoltageDisplay,
 )
 
 import asyncio
@@ -1270,7 +1275,7 @@ def AppLayout(active_tab="Main"):
             cls="main-content-wrapper"
         )
 
-    elif active_tab == "Switches_P":
+    elif active_tab == "Switches_P1":
         sw = s.switches.p
         
         def ToggleBlock(label, is_on, state_key):
@@ -1290,7 +1295,11 @@ def AppLayout(active_tab="Main"):
             ToggleBlock("Heading trim", sw.heading_trim, "heading_trim"),
             ToggleBlock("Depth trim", sw.depth_trim, "depth_trim"),
             ToggleBlock("lateral trim", sw.lateral_trim, "lateral_trim"),
-            Div("BATS Control", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-top: 10px;"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col2 = Div(
+            Div("BATS Control", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("HP_AP_ON/OFF", sw.hp_ap_on_off, "hp_ap_on_off"),
             ToggleBlock("HP_BP_ON/OFF", sw.hp_bp_on_off, "hp_bp_on_off"),
             ToggleBlock("HP_Reg_set", sw.hp_reg_set, "hp_reg_set"),
@@ -1303,7 +1312,7 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
 
-        col2 = Div(
+        col3 = Div(
             Div("General control Switches", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Co2 scrubber_P", sw.co2_scrubber_p, "co2_scrubber_p"),
             ToggleBlock("Joystick Enable", sw.joystick_enable, "joystick_enable"),
@@ -1314,7 +1323,11 @@ def AppLayout(active_tab="Main"):
             ToggleBlock("UW Camera _P", sw.uw_camera_p, "uw_camera_p"),
             ToggleBlock("SONAR", sw.sonar, "sonar"),
             ToggleBlock("Surface_INS", sw.surface_ins, "surface_ins"),
-            Div("POWER DIRECT CONTROL_PORT", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-top: 10px;"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col4 = Div(
+            Div("POWER DIRECT CONTROL_PORT", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("MB_P_1*", sw.mb_p_1, "mb_p_1"),
             ToggleBlock("MB_P_2*", sw.mb_p_2, "mb_p_2"),
             ToggleBlock("MB_P_3*", sw.mb_p_3, "mb_p_3"),
@@ -1327,7 +1340,37 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
         
-        col3 = Div(
+        switches_panel = Div(
+            Div(col1, col2, col3, col4, style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
+            cls="mcc-panel",
+            style="display: flex; flex-direction: column;"
+        )
+
+        main_content_area = Div(
+            Div(
+                switches_panel,
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "Switches_P2":
+    
+        sw = s.switches.p
+        
+        def ToggleBlock(label, is_on, state_key):
+            return Div(
+                MetalSwitch(
+                    label=label,
+                    is_on=is_on,
+                    id_key=f"tog-sw-p-{state_key.replace('_', '-')}",
+                    toggle_url=f"/api/toggle/switches.p.{state_key}"
+                ),
+                style="display: flex; justify-content: center; align-items: center; padding: 4px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 2px;"
+            )
+        
+        col5 = Div(
             Div("Service Drop Weight Switches", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Port side SDW 1", sw.port_side_sdw_1, "port_side_sdw_1"),
             ToggleBlock("Port side SDW 2", sw.port_side_sdw_2, "port_side_sdw_2"),
@@ -1342,7 +1385,7 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
 
-        col4 = Div(
+        col6 = Div(
             Div("Emergency Jettisoning_P (1/2)", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Emergency Jettisoning of Manipulator_1", sw.ej_manipulator_1, "ej_manipulator_1"),
             ToggleBlock("Emergency Jettisoning of Manipulator_2", sw.ej_manipulator_2, "ej_manipulator_2"),
@@ -1356,7 +1399,7 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
 
-        col5 = Div(
+        col7 = Div(
             Div("Emergency Jettisoning_P (2/2)", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Emergency Marker Buoy Release_2", sw.em_buoy_release_2, "em_buoy_release_2"),
             ToggleBlock("Emergency Marker Buoy Release_3", sw.em_buoy_release_3, "em_buoy_release_3"),
@@ -1371,7 +1414,7 @@ def AppLayout(active_tab="Main"):
         )
         
         switches_panel = Div(
-            Div(col1, col2, col3, col4, col5, style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
+            Div(col5, col6, col7, style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
             cls="mcc-panel",
             style="display: flex; flex-direction: column;"
         )
@@ -1385,7 +1428,55 @@ def AppLayout(active_tab="Main"):
             cls="main-content-wrapper"
         )
 
-    elif active_tab == "Switches_S":
+    elif active_tab == "Switches_P3":
+        sw = s.switches.p
+        
+        def ToggleBlock(label, is_on, state_key):
+            return Div(
+                MetalSwitch(
+                    label=label,
+                    is_on=is_on,
+                    id_key=f"tog-sw-p-{state_key.replace('_', '-')}",
+                    toggle_url=f"/api/toggle/switches.p.{state_key}"
+                ),
+                style="display: flex; justify-content: center; align-items: center; padding: 4px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 2px;"
+            )
+            
+        top_row = Div(
+            InsulationDisplay("EB_P INSULATION", sw.ib_insulation, "k ohm", id_key="disp-sw-p-ib-ins"),
+            BattManDisplay("EB_P STATUS", sw.eb_b_status, "V", id_key="disp-sw-p-eb-b-status"),
+            RedVoltageDisplay("UB_P VOLTAGE", sw.ub_voltage, "V", id_key="disp-sw-p-ub-voltage"),
+            style="display: flex; gap: 40px; align-items: flex-end; padding: 20px; background: #c0c0c0; border: 1px solid #aaa; border-radius: 8px; margin-bottom: 20px; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);"
+        )
+        
+        col1 = Div(
+            Div("Power Status & Selection", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-bottom: 15px;"),
+            top_row,
+            Div(
+                RotarySwitch("Power selection EB_", ["UB_", "E_Batts"], sw.power_selection_eb, id_key="rot-sw-p-power-eb", toggle_url="/api/toggle/switches.p.power_selection_eb"),
+                RotarySwitch("Power selection UB", ["AB", "MB"], sw.power_selection_ub, id_key="rot-sw-p-power-ub", toggle_url="/api/toggle/switches.p.power_selection_ub"),
+                ToggleBlock("UB MCB", sw.ub_mcb, "ub_mcb"),
+                style="display:flex; flex-direction:column; gap:8px; align-items: center;"
+            ),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px; grid-column: span 4;"
+        )
+
+        switches_panel = Div(
+            Div(col1, style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
+            cls="mcc-panel",
+            style="display: flex; flex-direction: column;"
+        )
+
+        main_content_area = Div(
+            Div(
+                switches_panel,
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "Switches_S1":
         sw = s.switches.s
         
         def ToggleBlock(label, is_on, state_key):
@@ -1405,7 +1496,11 @@ def AppLayout(active_tab="Main"):
             ToggleBlock("Heading trim", sw.heading_trim, "heading_trim"),
             ToggleBlock("Depth trim", sw.depth_trim, "depth_trim"),
             ToggleBlock("lateral trim", sw.lateral_trim, "lateral_trim"),
-            Div("BATS Control", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-top: 10px;"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col2 = Div(
+            Div("BATS Control", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("HP_AS_ON/OFF", sw.hp_as_on_off, "hp_as_on_off"),
             ToggleBlock("HP_BS_ON/OFF", sw.hp_bs_on_off, "hp_bs_on_off"),
             ToggleBlock("HP_Reg_set", sw.hp_reg_set, "hp_reg_set"),
@@ -1418,7 +1513,7 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
 
-        col2 = Div(
+        col3 = Div(
             Div("General control Switches", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Co2 scrubber_S", sw.co2_scrubber_s, "co2_scrubber_s"),
             ToggleBlock("Joystick Enable", sw.joystick_enable, "joystick_enable"),
@@ -1429,7 +1524,11 @@ def AppLayout(active_tab="Main"):
             ToggleBlock("UW Camera _S", sw.uw_camera_s, "uw_camera_s"),
             ToggleBlock("SONAR", sw.sonar, "sonar"),
             ToggleBlock("Surface_INS", sw.surface_ins, "surface_ins"),
-            Div("POWER DIRECT CONTROL_STARBOARD", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-top: 10px;"),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
+        )
+
+        col4 = Div(
+            Div("POWER DIRECT CONTROL_STARBOARD", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("MB_S_1*", sw.mb_s_1, "mb_s_1"),
             ToggleBlock("MB_S_2*", sw.mb_s_2, "mb_s_2"),
             ToggleBlock("MB_S_3*", sw.mb_s_3, "mb_s_3"),
@@ -1442,7 +1541,37 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
         
-        col3 = Div(
+        switches_panel = Div(
+            Div(col1, col2, col3, col4, style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
+            cls="mcc-panel",
+            style="display: flex; flex-direction: column;"
+        )
+
+        main_content_area = Div(
+            Div(
+                switches_panel,
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
+
+    elif active_tab == "Switches_S2":
+    
+        sw = s.switches.s
+        
+        def ToggleBlock(label, is_on, state_key):
+            return Div(
+                MetalSwitch(
+                    label=label,
+                    is_on=is_on,
+                    id_key=f"tog-sw-s-{state_key.replace('_', '-')}",
+                    toggle_url=f"/api/toggle/switches.s.{state_key}"
+                ),
+                style="display: flex; justify-content: center; align-items: center; padding: 4px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 2px;"
+            )
+        
+        col5 = Div(
             Div("Service Drop Weight Switches", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Port side SDW 1", sw.port_side_sdw_1, "port_side_sdw_1"),
             ToggleBlock("Port side SDW 2", sw.port_side_sdw_2, "port_side_sdw_2"),
@@ -1457,7 +1586,7 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
 
-        col4 = Div(
+        col6 = Div(
             Div("Emergency Jettisoning_S (1/2)", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Emergency Jettisoning of Manipulator_1", sw.ej_manipulator_1, "ej_manipulator_1"),
             ToggleBlock("Emergency Jettisoning of Manipulator_2", sw.ej_manipulator_2, "ej_manipulator_2"),
@@ -1471,7 +1600,7 @@ def AppLayout(active_tab="Main"):
             cls="mcc-col", style="display:flex; flex-direction:column; gap:4px;"
         )
 
-        col5 = Div(
+        col7 = Div(
             Div("Emergency Jettisoning_S (2/2)", cls="mcc-panel-title", style="background:#ffea00; color:black;"),
             ToggleBlock("Emergency Marker Buoy Release_2", sw.em_buoy_release_2, "em_buoy_release_2"),
             ToggleBlock("Emergency Marker Buoy Release_3", sw.em_buoy_release_3, "em_buoy_release_3"),
@@ -1486,7 +1615,7 @@ def AppLayout(active_tab="Main"):
         )
         
         switches_panel = Div(
-            Div(col1, col2, col3, col4, col5, style="display:grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
+            Div(col5, col6, col7, style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
             cls="mcc-panel",
             style="display: flex; flex-direction: column;"
         )
@@ -1500,6 +1629,53 @@ def AppLayout(active_tab="Main"):
             cls="main-content-wrapper"
         )
 
+    elif active_tab == "Switches_S3":
+        sw = s.switches.s
+        
+        def ToggleBlock(label, is_on, state_key):
+            return Div(
+                MetalSwitch(
+                    label=label,
+                    is_on=is_on,
+                    id_key=f"tog-sw-s-{state_key.replace('_', '-')}",
+                    toggle_url=f"/api/toggle/switches.s.{state_key}"
+                ),
+                style="display: flex; justify-content: center; align-items: center; padding: 4px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 2px;"
+            )
+            
+        top_row = Div(
+            InsulationDisplay("EB_S INSULATION", sw.ib_insulation, "k ohm", id_key="disp-sw-s-ib-ins"),
+            BattManDisplay("EB_S STATUS", sw.eb_b_status, "V", id_key="disp-sw-s-eb-b-status"),
+            RedVoltageDisplay("UB_S VOLTAGE", sw.ub_voltage, "V", id_key="disp-sw-s-ub-voltage"),
+            style="display: flex; gap: 40px; align-items: flex-end; padding: 20px; background: #c0c0c0; border: 1px solid #aaa; border-radius: 8px; margin-bottom: 20px; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);"
+        )
+        
+        col1 = Div(
+            Div("Power Status & Selection", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-bottom: 15px;"),
+            top_row,
+            Div(
+                RotarySwitch("Power selection EB_", ["UB_", "E_Batts"], sw.power_selection_eb, id_key="rot-sw-s-power-eb", toggle_url="/api/toggle/switches.s.power_selection_eb"),
+                RotarySwitch("Power selection UB", ["AB", "MB"], sw.power_selection_ub, id_key="rot-sw-s-power-ub", toggle_url="/api/toggle/switches.s.power_selection_ub"),
+                ToggleBlock("UB MCB", sw.ub_mcb, "ub_mcb"),
+                style="display:flex; flex-direction:column; gap:8px; align-items: center;"
+            ),
+            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px; grid-column: span 4;"
+        )
+
+        switches_panel = Div(
+            Div(col1, style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
+            cls="mcc-panel",
+            style="display: flex; flex-direction: column;"
+        )
+
+        main_content_area = Div(
+            Div(
+                switches_panel,
+                sidebar_col,
+                cls="main-content"
+            ),
+            cls="main-content-wrapper"
+        )
     else:
         main_content_area = Div(
             Div(
@@ -1527,8 +1703,12 @@ def AppLayout(active_tab="Main"):
                 "Status",
                 "50 Kwh",
                 "MCC",
-                "Switches_P",
-                "Switches_S",
+                "Switches_P1",
+                "Switches_P2",
+                "Switches_P3",
+                "Switches_S1",
+                "Switches_S2",
+                "Switches_S3",
             ],
             active_tab=active_tab,
         ),
@@ -1618,16 +1798,40 @@ def get_mcc():
         AppLayout(active_tab="MCC"), id="ws-container", hx_ext="ws", ws_connect="/ws"
     )
 
-@rt("/switches-p")
-def get_switches_p():
-    return Title("MATSYA 6000 View - Switches_P"), Div(
-        AppLayout(active_tab="Switches_P"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+@rt("/switches-p1")
+def get_switches_p1():
+    return Title("MATSYA 6000 View - Switches_P1"), Div(
+        AppLayout(active_tab="Switches_P1"), id="ws-container", hx_ext="ws", ws_connect="/ws"
     )
 
-@rt("/switches-s")
-def get_switches_s():
-    return Title("MATSYA 6000 View - Switches_S"), Div(
-        AppLayout(active_tab="Switches_S"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+@rt("/switches-p2")
+def get_switches_p2():
+    return Title("MATSYA 6000 View - Switches_P2"), Div(
+        AppLayout(active_tab="Switches_P2"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/switches-p3")
+def get_switches_p3():
+    return Title("MATSYA 6000 View - Switches_P3"), Div(
+        AppLayout(active_tab="Switches_P3"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/switches-s1")
+def get_switches_s1():
+    return Title("MATSYA 6000 View - Switches_S1"), Div(
+        AppLayout(active_tab="Switches_S1"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/switches-s2")
+def get_switches_s2():
+    return Title("MATSYA 6000 View - Switches_S2"), Div(
+        AppLayout(active_tab="Switches_S2"), id="ws-container", hx_ext="ws", ws_connect="/ws"
+    )
+
+@rt("/switches-s3")
+def get_switches_s3():
+    return Title("MATSYA 6000 View - Switches_S3"), Div(
+        AppLayout(active_tab="Switches_S3"), id="ws-container", hx_ext="ws", ws_connect="/ws"
     )
 
 
@@ -1772,8 +1976,12 @@ async def simulate_data():
         await broadcast(AppLayout(active_tab="Status"))
         await broadcast(AppLayout(active_tab="50 Kwh"))
         await broadcast(AppLayout(active_tab="MCC"))
-        await broadcast(AppLayout(active_tab="Switches_P"))
-        await broadcast(AppLayout(active_tab="Switches_S"))
+        await broadcast(AppLayout(active_tab="Switches_P1"))
+        await broadcast(AppLayout(active_tab="Switches_P2"))
+        await broadcast(AppLayout(active_tab="Switches_P3"))
+        await broadcast(AppLayout(active_tab="Switches_S1"))
+        await broadcast(AppLayout(active_tab="Switches_S2"))
+        await broadcast(AppLayout(active_tab="Switches_S3"))
         
         if not sim_global.paused:
             idx += 1
@@ -1810,8 +2018,12 @@ async def toggle_power():
     await broadcast(AppLayout(active_tab="Status"))
     await broadcast(AppLayout(active_tab="50 Kwh"))
     await broadcast(AppLayout(active_tab="MCC"))
-    await broadcast(AppLayout(active_tab="Switches_P"))
-    await broadcast(AppLayout(active_tab="Switches_S"))
+    await broadcast(AppLayout(active_tab="Switches_P1"))
+    await broadcast(AppLayout(active_tab="Switches_P2"))
+    await broadcast(AppLayout(active_tab="Switches_P3"))
+    await broadcast(AppLayout(active_tab="Switches_S1"))
+    await broadcast(AppLayout(active_tab="Switches_S2"))
+    await broadcast(AppLayout(active_tab="Switches_S3"))
     return ""
 
 
@@ -1843,15 +2055,18 @@ async def toggle_high_speed():
 
 
 @rt("/api/toggle/{state_path:path}", methods=["POST"])
-async def generic_toggle(state_path: str):
-    """Generic endpoint to toggle booleans anywhere in app_state by dot-separated path."""
+async def generic_toggle(state_path: str, val: str = None):
+    """Generic endpoint to toggle booleans or set string values anywhere in app_state by dot-separated path."""
     parts = state_path.split(".")
     obj = app_state
     for p in parts[:-1]:
         obj = getattr(obj, p)
     
-    val = getattr(obj, parts[-1])
-    setattr(obj, parts[-1], not val)
+    if val is not None:
+        setattr(obj, parts[-1], val)
+    else:
+        current_val = getattr(obj, parts[-1])
+        setattr(obj, parts[-1], not current_val)
 
     # Broadcast updated layouts
     await broadcast(AppLayout(active_tab="Main"))
@@ -1865,8 +2080,12 @@ async def generic_toggle(state_path: str):
     await broadcast(AppLayout(active_tab="Status"))
     await broadcast(AppLayout(active_tab="50 Kwh"))
     await broadcast(AppLayout(active_tab="MCC"))
-    await broadcast(AppLayout(active_tab="Switches_P"))
-    await broadcast(AppLayout(active_tab="Switches_S"))
+    await broadcast(AppLayout(active_tab="Switches_P1"))
+    await broadcast(AppLayout(active_tab="Switches_P2"))
+    await broadcast(AppLayout(active_tab="Switches_P3"))
+    await broadcast(AppLayout(active_tab="Switches_S1"))
+    await broadcast(AppLayout(active_tab="Switches_S2"))
+    await broadcast(AppLayout(active_tab="Switches_S3"))
     return ""
 
 

@@ -4384,3 +4384,308 @@ body {
     transform: translateY(10px);
     box-shadow: 0 -2px 3px rgba(0,0,0,0.4);
 }
+
+/* ==========================
+   VOLTAGE DISPLAY
+   ========================== */
+.voltage-display-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin-bottom: 2px;
+}
+
+.voltage-display-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-subtext);
+    text-align: center;
+}
+
+.voltage-display-box {
+    display: flex;
+    align-items: baseline;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 4px 12px;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.voltage-display-value {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.voltage-display-unit {
+    font-size: 11px;
+    color: var(--color-muted);
+    margin-left: 4px;
+}
+
+/* ==========================
+   ROTARY SWITCH
+   ========================== */
+.rotary-switch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    margin-bottom: 2px;
+}
+
+.rotary-switch-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-subtext);
+    text-align: center;
+}
+
+.rotary-switch-body {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.rotary-labels-row {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.rotary-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--color-subtext);
+}
+
+.rotary-lbl-sel {
+    color: var(--color-green);
+    text-shadow: 0 0 2px var(--color-green-soft);
+}
+
+.rotary-knob {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #444, #222);
+    border-radius: 50%;
+    border: 2px solid #555;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.2);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.rotary-knob-indicator {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 10px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(255,255,255,0.8);
+}
+
+/* ==========================
+   CUSTOM POWER INSTRUMENTS
+   ========================== */
+
+.tape-label {
+    background: #fdfdfd;
+    color: #222;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 2px 6px;
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    transform: rotate(-1deg);
+    display: inline-block;
+    text-transform: uppercase;
+}
+.bottom-label {
+    margin-top: 10px;
+}
+.side-label {
+    margin-left: 10px;
+    vertical-align: top;
+}
+
+/* 1. Insulation Display */
+.insulation-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 10px;
+}
+.iso-yellow-box {
+    background: #ffd600;
+    width: 80px;
+    height: 100px;
+    border-radius: 4px;
+    box-shadow: inset -2px -2px 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 1px solid #bba000;
+}
+.iso-led-row {
+    display: flex;
+    gap: 8px;
+}
+.iso-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #333;
+    border: 1px solid #111;
+}
+.iso-lcd {
+    width: 60px;
+    height: 35px;
+    background: #2a2c26;
+    border: 2px solid #111;
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 3px #000;
+    color: #8b9977;
+    font-family: monospace;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.iso-btn-row {
+    display: flex;
+    gap: 8px;
+}
+.iso-btn {
+    width: 10px;
+    height: 10px;
+    background: #1e3a8a;
+    border-radius: 50%;
+    box-shadow: inset -1px -1px 2px #000, 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 2. BattMan Pro Display */
+.battman-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+.battman-gauge {
+    background: #3a3c40;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 6px solid #222;
+    box-shadow: inset 2px 2px 10px rgba(255,255,255,0.1), 3px 3px 8px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-top: 15px;
+}
+.battman-brand {
+    color: #fff;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+.battman-lcd {
+    background: #8b9977;
+    width: 80px;
+    height: 35px;
+    border: 2px solid #111;
+    border-radius: 4px;
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.5);
+    color: #111;
+    font-family: 'SF Mono', monospace;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.battman-btn-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.battman-btn {
+    background: #222;
+    border: 1px solid #555;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+.battman-arrow {
+    width: 18px;
+    height: 18px;
+}
+.battman-menu {
+    width: 30px;
+    height: 18px;
+    border-radius: 10px;
+    font-size: 8px;
+}
+.battman-model {
+    color: #bbb;
+    font-size: 8px;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* 3. Red LED Voltage */
+.red-led-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+.red-led-lcd {
+    background: #1a0505;
+    width: 75px;
+    height: 45px;
+    border: 3px solid #333;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.8), 2px 2px 4px rgba(0,0,0,0.3);
+    color: #ff1111;
+    font-family: 'SF Mono', monospace;
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 0 5px #ff1111, 0 0 10px #ff1111;
+}
