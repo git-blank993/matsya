@@ -4689,3 +4689,38 @@ body {
     justify-content: center;
     text-shadow: 0 0 5px #ff1111, 0 0 10px #ff1111;
 }
+
+/* ==========================
+   SYSTEM OFF STATE
+   ========================== */
+.dashboard-root.system-off .header-area {
+    pointer-events: none;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.dashboard-root.system-off .bottom-tabs .tab-link:not([href^="/switches-"]) {
+    pointer-events: none;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+/* Disable main content parts EXCEPT sidebar on non-switches tabs */
+.dashboard-root.system-off:not([id^="dashboard-content-switches"]) .main-content > *:not(.col-sidebar) {
+    pointer-events: none;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.dashboard-root.system-off:not([id^="dashboard-content-switches"]) .main-content-wrapper > *:not(.main-content) {
+    pointer-events: none;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+/* Sidebar parts disabled EXCEPT the footer which has the ON button */
+.dashboard-root.system-off .col-sidebar > *:not(.sidebar-footer) {
+    pointer-events: none;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}

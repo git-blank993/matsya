@@ -1687,6 +1687,10 @@ def AppLayout(active_tab="Main"):
         )
 
     # Combine everything
+    root_cls = "dashboard-root"
+    if not s.is_powered_on:
+        root_cls += " system-off"
+
     return Div(
         HeaderArea(),
         main_content_area,
@@ -1713,7 +1717,7 @@ def AppLayout(active_tab="Main"):
             active_tab=active_tab,
         ),
         id=f"dashboard-content-{active_tab.lower()}",
-        cls="dashboard-root",
+        cls=root_cls,
         hx_swap_oob="true",
     )
 
@@ -1721,11 +1725,7 @@ def AppLayout(active_tab="Main"):
 @rt("/")
 async def get(dive_num: int = 1):
     global simulator_task
-    if simulator_task is None or simulator_task.done():
-        app_state.is_powered_on = True
-        sim_global.target_dive = dive_num
-        simulator_task = asyncio.create_task(simulate_data())
-    elif dive_num != 1:
+    if dive_num != 1:
         sim_global.target_dive = dive_num
 
     return Title("MATSYA 6000 View"), Div(
