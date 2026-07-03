@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './index.css'
 import { HeaderArea, AppLayout } from './components/MainLayout'
 import { BottomTabsNav } from './components/Layout'
-import { SwitchesPLayout, SwitchesSLayout } from './components/SwitchesLayout'
+import { SwitchesPLayout, SwitchesSLayout, Switches3Layout } from './components/SwitchesLayout'
 import {
   HsssLayout, BallastLayout, PropulsionLayout, PowerLayout,
   ImagingLayout, SensorsLayout, LoggingLayout, StatusLayout,
@@ -12,10 +12,10 @@ import {
 const TABS = [
   "Main", "HSSS", "Ballast", "Propulsion", "POWER", "Imaging", 
   "Sensors", "Logging", "Status", "50 Kwh", "MCC", 
-  "Switches_P", "Switches_S"
+  "Switches_P", "Switches_S", "SW-3"
 ]
 
-const SWITCHES_ONLY_TABS = ["Main", "Switches_P", "Switches_S"]
+const SWITCHES_ONLY_TABS = ["Main", "Switches_P", "Switches_S", "SW-3"]
 
 function App() {
   const [appState, setAppState] = useState(null)
@@ -84,6 +84,7 @@ function App() {
       {activeTab === "Main" ? <AppLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Switches_P" ? <SwitchesPLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Switches_S" ? <SwitchesSLayout appState={appState} apiCall={apiCall} />
+      : activeTab === "SW-3" ? <Switches3Layout appState={appState} apiCall={apiCall} />
       : activeTab === "HSSS" ? <HsssLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Ballast" ? <BallastLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Propulsion" ? <PropulsionLayout appState={appState} apiCall={apiCall} />

@@ -653,9 +653,80 @@ class SwitchesCategory_S(BaseModel):
     power_selection_ub: str = "1"
     ub_mcb: bool = False
 
+class SwitchesSW3(BaseModel):
+    # Emergency Jettisoning - Trim
+    trim_p1: bool = False
+    trim_p2: bool = False
+    trim_p3: bool = False
+    trim_p4: bool = False
+
+    # Emergency Jettisoning - Marker Buoy
+    mb_p1: bool = False
+    mb_p2: bool = False
+    mb_p3: bool = False
+    mb_p4: bool = False
+
+    # Emergency Jettisoning - Manipulator
+    mani_p1: bool = False
+    mani_p2: bool = False
+    mani_p3: bool = False
+    mani_p4: bool = False
+
+    # Emergency Jettisoning - Sample Basket
+    samp_p1: bool = False
+    samp_p2: bool = False
+    ejx_p1: bool = False
+    ejx_p2: bool = False
+
+    # Emergency Drop Weights
+    edw_p1: bool = False
+    edw_p2: bool = False
+    edw_p3: bool = False
+    edw_p4: bool = False
+
+    # Bottom controls
+    fb_p: bool = False
+    dive_in: bool = False
+    hp_ap: bool = False
+    hp_bp: bool = False
+
+    # Water Leak - Port
+    wl_ps_p: bool = False
+    wl_ide_p: bool = False
+    wl_pde_p: bool = False
+    wl_pjb_p: bool = False
+    wl_tjb_p: bool = False
+    wl_bat_p: bool = False
+
+    # Water Leak - Starboard
+    wl_ps_s: bool = False
+    wl_ide_s: bool = False
+    wl_pde_s: bool = False
+    wl_pjb_s: bool = False
+    wl_tjb_s: bool = False
+    wl_bat_s: bool = False
+
+    # Insulation - Port
+    ins_ps_p: bool = False
+    ins_ide_p: bool = False
+    ins_pde_p: bool = False
+    ins_148_p: bool = False
+    ins_pseb_p: bool = False
+    ins_sp1_p: bool = False
+
+    # Insulation - Starboard
+    ins_ps_s: bool = False
+    ins_ide_s: bool = False
+    ins_pde_s: bool = False
+    ins_148_s: bool = False
+    ins_pseb_s: bool = False
+    ins_sp1_s: bool = False
+
 class SwitchesState(BaseModel):
     p: SwitchesCategory_P = SwitchesCategory_P()
     s: SwitchesCategory_S = SwitchesCategory_S()
+    sw3: SwitchesSW3 = SwitchesSW3()
+
 
 # ----------------- ROOT STATE -----------------
 class MatsyaUIState(BaseModel):
