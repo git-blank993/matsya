@@ -249,6 +249,73 @@ export function RotarySwitch({ label, value, onChange, idKey = null }) {
   );
 }
 
+export function KnobSwitch({ label, value = 50, onChange, idKey = null }) {
+  // For a continuous look, map a value (0-100) to an angle (-135 to 135)
+  // If value isn't provided or is just a dummy (like 1), we'll default to 0deg (center)
+  const angle = typeof value === 'number' && value > 1 ? -135 + (value / 100) * 270 : 0;
+
+  return (
+    <div
+      id={idKey}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
+      }}
+    >
+      <div
+        onClick={onChange}
+        style={{
+          position: 'relative',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          background: 'linear-gradient(145deg, #3a3b3b, #1a1a1a)',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.3)',
+          cursor: 'pointer',
+          transform: `rotate(${angle}deg)`,
+          transition: 'transform 0.1s linear',
+        }}
+      >
+        {/* Grip indents around the edge for a realistic knob look */}
+        <div style={{
+          position: 'absolute',
+          top: '0', left: '0', width: '100%', height: '100%',
+          borderRadius: '50%',
+          background: 'repeating-conic-gradient(from 0deg, transparent 0deg 10deg, rgba(0,0,0,0.15) 10deg 15deg)',
+          pointerEvents: 'none',
+        }}></div>
+
+        {/* Pointer Line */}
+        <div style={{
+          position: 'absolute',
+          top: '6px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '4px',
+          height: '14px',
+          borderRadius: '2px',
+          background: '#e8e8e0',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.5)',
+        }}></div>
+      </div>
+      
+      <div style={{
+        fontSize: '10px',
+        fontWeight: 'bold',
+        color: '#111',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        textAlign: 'center',
+        marginTop: '4px',
+      }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
 
 
 export function CircuitBreaker({ labelTop, labelBottom, isOn, onToggle, idKey = null }) {

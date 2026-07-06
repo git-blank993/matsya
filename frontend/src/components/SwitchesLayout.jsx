@@ -2,6 +2,7 @@ import React from 'react';
 import { 
   MetalSwitch, 
   RotarySwitch, 
+  KnobSwitch,
   CircuitBreaker, 
   LcdScreen, 
   BlackPushButton, 
@@ -413,13 +414,13 @@ export function Switches3Layout({ appState, apiCall }) {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', paddingBottom: '10px' }}>
-              <RotarySwitch label="FWD CTRL" value={1} onChange={() => {}} />
-              <RotarySwitch label="HEAD TRIM" value={1} onChange={() => {}} />
-              <RotarySwitch label="DEP TRIM" value={1} onChange={() => {}} />
-              <RotarySwitch label="LAT TRIM" value={1} onChange={() => {}} />
-              <RotarySwitch label="HP REG" value={1} onChange={() => {}} />
-              <RotarySwitch label="VBT CTRL" value={1} onChange={() => {}} />
-              <RotarySwitch label="PITCH CTRL" value={1} onChange={() => {}} />
+              <KnobSwitch label="FWD CTRL" value={1} onChange={() => {}} />
+              <KnobSwitch label="HEAD TRIM" value={1} onChange={() => {}} />
+              <KnobSwitch label="DEP TRIM" value={1} onChange={() => {}} />
+              <KnobSwitch label="LAT TRIM" value={1} onChange={() => {}} />
+              <KnobSwitch label="HP REG" value={1} onChange={() => {}} />
+              <KnobSwitch label="VBT CTRL" value={1} onChange={() => {}} />
+              <KnobSwitch label="PITCH CTRL" value={1} onChange={() => {}} />
             </div>
           </div>
 
