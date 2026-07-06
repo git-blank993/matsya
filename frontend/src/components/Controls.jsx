@@ -115,22 +115,141 @@ export function Buzzer({ label, isOn, idKey = null }) {
 
 // Custom Hardware Components for New Layouts
 
-export function RotarySwitch({ label, value, options, onChange, idKey = null }) {
-  // Simple representation of a rotary switch
+export function RotarySwitch({ label, value, onChange, idKey = null }) {
+  // value: 1 = points up (0deg), 2 = points right (90deg)
+  const rotation = value === 1 ? 0 : 90;
+
   return (
-    <div className="rotary-switch-container" id={idKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '8px' }}>
-      <div style={{ fontSize: '10px', color: '#000', marginBottom: '4px', fontWeight: 'bold' }}>{label}</div>
-      <div style={{ width: '40px', height: '40px', background: '#ccc', borderRadius: '4px', border: '2px solid #888', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} onClick={onChange}>
-        <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#333', position: 'relative', transform: `rotate(${value === 1 ? -45 : 45}deg)`, transition: 'transform 0.2s' }}>
-          <div style={{ width: '4px', height: '15px', background: '#fff', position: 'absolute', top: '2px', left: '13px', borderRadius: '2px' }}></div>
+    <div
+      id={idKey}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
+      }}
+    >
+      {/* Square gray faceplate */}
+      <div
+        onClick={onChange}
+        style={{
+          position: 'relative',
+          width: '130px',
+          height: '130px',
+          borderRadius: '10px',
+          background: '#6b6a67',
+          boxShadow: 'inset 0 0 4px rgba(255,255,255,0.1), inset 0 0 8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.4)',
+          border: '2px solid #2a2a2a',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+      >
+        {/* Position indicator: "1" top-center */}
+        <div style={{
+          position: 'absolute',
+          top: '6px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: '18px',
+          fontWeight: '600',
+          color: '#1a1a1a',
+          fontFamily: 'sans-serif',
+          lineHeight: 1,
+        }}>1</div>
+
+        {/* Position indicator: "2" right-center */}
+        <div style={{
+          position: 'absolute',
+          right: '8px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          fontSize: '18px',
+          fontWeight: '600',
+          color: '#1a1a1a',
+          fontFamily: 'sans-serif',
+          lineHeight: 1,
+        }}>2</div>
+
+        {/* Knob */}
+        <div style={{
+          position: 'relative',
+          width: '76px',
+          height: '76px',
+          transform: `rotate(${rotation}deg)`,
+          transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}>
+          {/* Circular base */}
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            background: 'linear-gradient(145deg, #4a4b4b, #222323)',
+            boxShadow: '3px 5px 8px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(0,0,0,0.3), inset 2px 2px 5px rgba(255,255,255,0.1)',
+          }}></div>
+
+          {/* Raised Handle pointing UP (when rotation=0) */}
+          <div style={{
+            position: 'absolute',
+            bottom: '40%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '24px',
+            height: '42px',
+            borderRadius: '12px',
+            background: 'linear-gradient(145deg, #3a3a3a, #1a1a1a)',
+            boxShadow: '1px 2px 5px rgba(0,0,0,0.5)',
+          }}></div>
+
+          {/* White Indicator Line */}
+          <div style={{
+            position: 'absolute',
+            bottom: '48%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '6px',
+            height: '30px',
+            borderRadius: '3px',
+            background: '#e8e8e0',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
+          }}></div>
+          
+          {/* White Indicator Base (Dot at center) */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            background: '#e8e8e0',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
+          }}></div>
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '40px', marginTop: '4px', fontSize: '10px', color: '#000' }}>
-        <span>1</span><span>2</span>
+
+      {/* Label below the switch */}
+      <div style={{
+        fontSize: '11px',
+        fontWeight: '700',
+        color: '#111',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        textAlign: 'center',
+      }}>
+        {label}
       </div>
     </div>
   );
 }
+
+
 
 export function CircuitBreaker({ labelTop, labelBottom, isOn, onToggle, idKey = null }) {
   return (

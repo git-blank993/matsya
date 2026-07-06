@@ -572,6 +572,12 @@ class SwitchesCategory_P(BaseModel):
     power_selection_eb: str = "1"
     power_selection_ub: str = "1"
     ub_mcb: bool = False
+    
+    # Frontend aliases
+    ab_p: bool = False
+    e_batts: bool = False
+    ub_p_mcb: bool = False
+    ub_p_mcb2: bool = False
 
 class SwitchesCategory_S(BaseModel):
     # Thruster Controls
@@ -652,6 +658,13 @@ class SwitchesCategory_S(BaseModel):
     power_selection_eb: str = "1"
     power_selection_ub: str = "1"
     ub_mcb: bool = False
+    
+    # Frontend aliases
+    ab_s: bool = False
+    e_batts: bool = False
+    ub_s_mcb: bool = False
+    ub_s_mcb2: bool = False
+    ub_s: bool = False
 
 class SwitchesSW3(BaseModel):
     # Emergency Jettisoning - Trim

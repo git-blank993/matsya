@@ -19,22 +19,22 @@ export function SwitchesPLayout({ appState, apiCall }) {
   
   const tc = (labelTop, labelBottom, isOn, stateKey, customPath = null) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '4px' }}>
-      {labelTop && <div style={{ fontSize: '9px', color: '#000', fontWeight: 'bold', marginBottom: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelTop}</div>}
+      {labelTop && <div style={{ fontSize: '12px', color: '#000', fontWeight: 'bold', marginBottom: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelTop}</div>}
       <MetalSwitch 
         isOn={isOn} 
         onToggle={() => apiCall(customPath || `/api/toggle/switches.p.${stateKey}`)} 
         idKey={`tog-p-${stateKey}`} 
         label="" 
       />
-      {labelBottom && <div style={{ fontSize: '9px', color: '#000', fontWeight: 'bold', marginTop: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelBottom}</div>}
+      {labelBottom && <div style={{ fontSize: '12px', color: '#000', fontWeight: 'bold', marginTop: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelBottom}</div>}
     </div>
   );
 
   return (
     <div className="main-content-wrapper" style={{ padding: '8px', overflowY: 'auto', background: 'var(--color-bg)' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100%' }}>
+      <div style={{ width: '100%', boxSizing: 'border-box' }}>
         
-        <div style={{ width: '850px', background: '#ccc', border: '1px solid #aaa', padding: '20px', borderRadius: '4px', position: 'relative', marginBottom: '20px' }}>
+        <div style={{ width: '100%', background: '#ccc', border: '1px solid #aaa', padding: '20px', borderRadius: '4px', position: 'relative', marginBottom: '20px', boxSizing: 'border-box' }}>
           
           {/* Top rotary switches — centered */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '60px' }}>
@@ -83,7 +83,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
           </div>
 
           {/* Bottom switch row — centered */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
             {tc("PDE-P\n24V CONTROL", "SECONDARY\nPRIMARY", sw.pde_p_24v, "pde_p_24v")}
             {tc("MB_P_BMS", "ON", sw.mb_p_bms, "mb_p_bms")}
             {tc("MB_P_1", "ON", sw.mb_1, "mb_1")}
@@ -97,16 +97,16 @@ export function SwitchesPLayout({ appState, apiCall }) {
 
           <div style={{ marginTop: '30px', background: '#ddd', border: '1px solid #aaa', padding: '15px', borderRadius: '4px' }}>
             <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#000', marginBottom: '15px', textAlign: 'center' }}>SERVICE DROP WEIGHT SWITCHES</div>
-            <div style={{ display: 'flex', gap: '40px' }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '50px', justifyContent: 'center' }}>
+              <div>
                 <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>PORT SIDE-SDW</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {[1,2,3,4,5].map(i => tc(`SDWP_${i}\nON`, "OFF", sw[`port_side_sdw_${i}`], `port_side_sdw_${i}`))}
                 </div>
               </div>
-              <div style={{ flex: 1 }}>
+              <div>
                 <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>STBD_SIDE-SDW</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {[1,2,3,4,5].map(i => tc(`SDWS_${i}\nON`, "OFF", sw_s[`starboard_side_sdw_${i}`], `starboard_side_sdw_${i}`, `/api/toggle/switches.s.starboard_side_sdw_${i}`))}
                 </div>
               </div>
@@ -125,33 +125,42 @@ export function SwitchesSLayout({ appState, apiCall }) {
   
   const tc = (labelTop, labelBottom, isOn, stateKey) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '4px' }}>
-      {labelTop && <div style={{ fontSize: '9px', color: '#000', fontWeight: 'bold', marginBottom: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelTop}</div>}
+      {labelTop && <div style={{ fontSize: '12px', color: '#000', fontWeight: 'bold', marginBottom: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelTop}</div>}
       <MetalSwitch 
         isOn={isOn} 
         onToggle={() => apiCall(`/api/toggle/switches.s.${stateKey}`)} 
         idKey={`tog-s-${stateKey}`} 
         label="" 
       />
-      {labelBottom && <div style={{ fontSize: '9px', color: '#000', fontWeight: 'bold', marginTop: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelBottom}</div>}
+      {labelBottom && <div style={{ fontSize: '12px', color: '#000', fontWeight: 'bold', marginTop: '4px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelBottom}</div>}
     </div>
   );
 
   return (
     <div className="main-content-wrapper" style={{ padding: '8px', overflowY: 'auto', background: 'var(--color-bg)' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100%' }}>
+      <div style={{ width: '100%', boxSizing: 'border-box' }}>
         
-        <div style={{ width: '850px', background: '#ccc', border: '1px solid #aaa', padding: '20px', borderRadius: '4px', position: 'relative', marginBottom: '20px' }}>
+        <div style={{ width: '100%', background: '#ccc', border: '1px solid #aaa', padding: '20px', borderRadius: '4px', position: 'relative', marginBottom: '20px', boxSizing: 'border-box' }}>
           
-          {/* Top rotary + displays — centered */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '40px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <RotarySwitch label="UB S" value={sw.ub_s ? 2 : 1} onChange={() => apiCall('/api/toggle/switches.s.ub_s')} />
-              <div style={{ background: '#ddd', padding: '2px 4px', fontSize: '10px', fontWeight: 'bold', border: '1px solid #aaa', marginTop: '4px', textAlign: 'center' }}>POWER SELECTION<br/>EB S</div>
-            </div>
-            <YellowLedDisplay label="EB S INSULATION" value={sw.ib_insulation} />
-            <MastervoltDisplay label="EB S STATUS" value={sw.eb_b_status} />
+          {/* Top rotary switches — centered */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '60px' }}>
+            <RotarySwitch label="AB S" value={sw.ab_s ? 2 : 1} onChange={() => apiCall('/api/toggle/switches.s.ab_s')} />
+            <RotarySwitch label="E_BATT_S" value={sw.e_batts ? 2 : 1} onChange={() => apiCall('/api/toggle/switches.s.e_batts')} />
           </div>
 
+          {/* MCB + displays row — centered */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '30px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '5px' }}>
+                <CircuitBreaker isOn={sw.ub_s_mcb} onToggle={() => apiCall('/api/toggle/switches.s.ub_s_mcb')} />
+                <CircuitBreaker isOn={sw.ub_s_mcb2} onToggle={() => apiCall('/api/toggle/switches.s.ub_s_mcb2')} />
+              </div>
+              <div style={{ fontSize: '10px', color: '#000', fontWeight: 'bold', background: '#ccc', border: '1px solid #aaa', padding: '1px 4px', marginTop: '4px' }}>UB_S MCB</div>
+            </div>
+            <DigitalVoltageDisplay label="UB S VOLTAGE" value={sw.ub_voltage} />
+            <MastervoltDisplay label="EB S STATUS" value={sw.eb_b_status} />
+            <YellowLedDisplay label="EB S INSULATION" value={sw.ib_insulation} />
+          </div>
           {/* LCD + switch columns — centered */}
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', gap: '40px' }}>
             <LcdScreen />
@@ -178,7 +187,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
           </div>
 
           {/* Bottom switch row — centered */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
             {tc("SECONDARY", "PRIMARY\n24V CONTROL", sw.pde_s_24v, "pde_s_24v")}
             {tc("ON", "MB_S_BMS", sw.mb_s_bms, "mb_s_bms")}
             {tc("ON", "MB_S_1", sw.mb_1_s, "mb_1_s")}
@@ -192,7 +201,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
 
           <div style={{ marginTop: '40px', background: '#ddd', border: '1px solid #aaa', padding: '15px', borderRadius: '4px' }}>
             <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#000', marginBottom: '15px', textAlign: 'center' }}>GENERAL CONTROL SWITCHES</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
               {tc("CO2_SCRUB_P", "PORT_PWR", sw.co2_p, "co2_p")}
               {tc("CO2_SCRUB_S", "STBD_PWR", sw.co2_s, "co2_s")}
               {tc("EMG_LED_S", "ON", sw.emg_led, "emg_led")}
@@ -215,14 +224,14 @@ export function Switches3Layout({ appState, apiCall }) {
   
   const tc = (labelTop, labelBottom, isOn, stateKey) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '2px' }}>
-      {labelTop && <div style={{ fontSize: '8px', color: '#000', fontWeight: 'bold', marginBottom: '2px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelTop}</div>}
+      {labelTop && <div style={{ fontSize: '11px', color: '#000', fontWeight: 'bold', marginBottom: '2px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelTop}</div>}
       <MetalSwitch 
         isOn={isOn} 
         onToggle={() => apiCall(`/api/toggle/switches.sw3.${stateKey}`)} 
         idKey={`tog-sw3-${stateKey}`} 
         label="" 
       />
-      {labelBottom && <div style={{ fontSize: '8px', color: '#000', fontWeight: 'bold', marginTop: '2px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelBottom}</div>}
+      {labelBottom && <div style={{ fontSize: '11px', color: '#000', fontWeight: 'bold', marginTop: '2px', whiteSpace: 'pre-wrap', textAlign: 'center' }}>{labelBottom}</div>}
     </div>
   );
 
@@ -235,21 +244,21 @@ export function Switches3Layout({ appState, apiCall }) {
         idKey={`tog-sw3-${stateKey}`}
         label=""
       />
-      {label && <div style={{ fontSize: '8px', fontWeight: 'bold', color: '#000', whiteSpace: 'nowrap' }}>{label}</div>}
+      {label && <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#000', whiteSpace: 'nowrap' }}>{label}</div>}
     </div>
   );
 
   return (
     <div className="main-content-wrapper" style={{ padding: '8px', overflowY: 'auto', background: 'var(--color-bg)' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100%' }}>
+      <div style={{ width: '100%', boxSizing: 'border-box' }}>
         
-        <div style={{ width: '850px', background: '#ccc', border: '1px solid #aaa', padding: '20px', borderRadius: '4px', position: 'relative', marginBottom: '20px' }}>
+        <div style={{ width: '100%', background: '#ccc', border: '1px solid #aaa', padding: '20px', borderRadius: '4px', position: 'relative', marginBottom: '20px', boxSizing: 'border-box' }}>
           
           <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#000', textAlign: 'center', marginBottom: '20px' }}>EMERGENCY JETTISONING SWITCHES</div>
 
           {/* Top Section */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
-            <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '60px' }}>
+            <div>
               <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '10px', borderBottom: '1px solid #999', paddingBottom: '4px' }}>TRIM-EMG JET-STBD</div>
               <div style={{ display: 'flex', gap: '15px' }}>
                 {tc("T-EJ-P1", "T-EJ-S1", sw3.trim_p1, "trim_p1")}
@@ -259,7 +268,7 @@ export function Switches3Layout({ appState, apiCall }) {
               </div>
             </div>
             
-            <div style={{ flex: 1 }}>
+            <div>
               <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '10px', borderBottom: '1px solid #999', paddingBottom: '4px' }}>MARKER BUOY</div>
               <div style={{ display: 'flex', gap: '15px' }}>
                 {tc("MB-EJ-P1", "MB-EJ-S1", sw3.mb_p1, "mb_p1")}
@@ -271,9 +280,9 @@ export function Switches3Layout({ appState, apiCall }) {
           </div>
 
           {/* Middle Section */}
-          <div style={{ display: 'flex', marginTop: '20px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', marginTop: '20px', alignItems: 'center', justifyContent: 'center', gap: '40px' }}>
             
-            <div style={{ flex: 1 }}>
+            <div>
               <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>MANIPULATOR</div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 {tc("EJM-P1", "EJM-S1", sw3.mani_p1, "mani_p1")}
@@ -295,7 +304,7 @@ export function Switches3Layout({ appState, apiCall }) {
               <div style={{ fontSize: '8px', color: '#555', marginTop: 'auto', fontWeight: 'bold' }}>AXIS</div>
             </div>
 
-            <div style={{ flex: 1, paddingLeft: '20px' }}>
+            <div style={{ paddingLeft: '0' }}>
               <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>SAMPLE BASKET</div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 {tc("EJS-P1", "EJS-S1", sw3.samp_p1, "samp_p1")}
@@ -393,7 +402,7 @@ export function Switches3Layout({ appState, apiCall }) {
 
           {/* Bottom Section Controls */}
           <div style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
               <BlackPushButton labelBottom="SUBMERSIBLE CTRL" onClick={() => {}} />
               <BlackPushButton labelBottom="WATER OUT" onClick={() => {}} />
               <BlackPushButton labelBottom="TRIM" onClick={() => {}} />
@@ -403,7 +412,7 @@ export function Switches3Layout({ appState, apiCall }) {
               {tc("HP-BP-ON", "HP-BP-OFF", sw3.hp_bp, "hp_bp")}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', flexWrap: 'wrap', paddingBottom: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', paddingBottom: '10px' }}>
               <RotarySwitch label="FWD CTRL" value={1} onChange={() => {}} />
               <RotarySwitch label="HEAD TRIM" value={1} onChange={() => {}} />
               <RotarySwitch label="DEP TRIM" value={1} onChange={() => {}} />

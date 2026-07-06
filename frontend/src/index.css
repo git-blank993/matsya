@@ -4296,8 +4296,8 @@ body {
 
 .metal-switch-body {
     position: relative;
-    width: 32px;
-    height: 48px;
+    width: 44px;
+    height: 66px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4307,15 +4307,15 @@ body {
 /* Base (Round panel nut) */
 .metal-switch-base {
     position: relative;
-    width: 24px;
-    height: 24px;
+    width: 34px;
+    height: 34px;
     background: radial-gradient(circle at 50% 50%, #dcdcdc, #999 80%, #666);
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), 
-                inset 0 1px 2px rgba(255,255,255,0.9), 
-                inset 0 -1px 2px rgba(0,0,0,0.5),
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3), 
+                inset 0 1px 3px rgba(255,255,255,0.9), 
+                inset 0 -1px 3px rgba(0,0,0,0.5),
                 0 0 0 1px #888,
-                0 0 0 2px #ccc;
+                0 0 0 3px #ccc;
     z-index: 1;
     display: flex;
     align-items: center;
@@ -4325,11 +4325,11 @@ body {
 /* Inner threaded hole */
 .metal-switch-neck {
     position: relative;
-    width: 12px;
-    height: 12px;
+    width: 17px;
+    height: 17px;
     background: radial-gradient(circle at center, #111, #333 80%, #000);
     border-radius: 50%;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.9), 0 1px 1px rgba(255,255,255,0.6);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.9), 0 1px 2px rgba(255,255,255,0.6);
     z-index: 2;
     display: flex;
     align-items: center;
@@ -4339,17 +4339,17 @@ body {
 /* Lever */
 .metal-switch-lever {
     position: absolute;
-    width: 8px;
-    height: 18px;
+    width: 11px;
+    height: 26px;
     background: linear-gradient(to right, #999, #fff 40%, #ccc 60%, #777);
-    border-radius: 4px;
+    border-radius: 5px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 3;
     cursor: pointer;
     top: 50%;
     left: 50%;
-    margin-top: -9px;
-    margin-left: -4px;
+    margin-top: -13px;
+    margin-left: -5.5px;
 }
 
 /* Tip */
@@ -4358,8 +4358,8 @@ body {
     position: absolute;
     left: 0;
     top: 0;
-    width: 8px;
-    height: 8px;
+    width: 11px;
+    height: 11px;
     background: radial-gradient(circle at 35% 35%, #ffffff, #b3b3b3 60%, #555555);
     border-radius: 50%;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -4367,22 +4367,22 @@ body {
 
 /* ON State */
 .metal-switch-on {
-    transform: translateY(-8px);
-    box-shadow: 2px 3px 4px rgba(0,0,0,0.4), inset 0 0 1px rgba(255,255,255,0.8);
+    transform: translateY(-11px);
+    box-shadow: 2px 3px 5px rgba(0,0,0,0.4), inset 0 0 1px rgba(255,255,255,0.8);
 }
 .metal-switch-on::after {
     transform: translateY(0);
-    box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
 /* OFF State */
 .metal-switch-off {
-    transform: translateY(8px);
-    box-shadow: 2px -3px 4px rgba(0,0,0,0.4), inset 0 0 1px rgba(255,255,255,0.8);
+    transform: translateY(11px);
+    box-shadow: 2px -3px 5px rgba(0,0,0,0.4), inset 0 0 1px rgba(255,255,255,0.8);
 }
 .metal-switch-off::after {
-    transform: translateY(10px);
-    box-shadow: 0 -2px 3px rgba(0,0,0,0.4);
+    transform: translateY(15px);
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.4);
 }
 
 /* ==========================
