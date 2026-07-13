@@ -25,6 +25,7 @@ app.add_middleware(
 app_state = MatsyaUIState()
 connected_clients: Set[WebSocket] = set()
 
+
 # ----------------- WEBSOCKETS -----------------
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -56,49 +57,52 @@ async def broadcast():
 # ----------------- APIs & SIMULATION -----------------
 simulator_task = None
 
+
 class SimState:
     command: str = None
     target_dive: int = None
     speed: str = "1"
     paused: bool = False
-    
+
+
 sim_global = SimState()
+
 
 async def simulate_data():
     s = app_state
-    
+
     data_dir = "sim_data_processed"
     if not os.path.exists(data_dir):
         print(f"Data directory {data_dir} not found. Simulation stopped.")
         return
-        
+
     json_files = glob.glob(os.path.join(data_dir, "*.json"))
     if not json_files:
         print(f"No JSON files found in {data_dir}. Simulation stopped.")
         return
-        
+
     json_files.sort()
-    
+
     current_file = json_files[0]
     for jf in json_files:
-        m = re.search(r'(?i)dive[_\s]*(\d+)', jf)
+        m = re.search(r"(?i)dive[_\s]*(\d+)", jf)
         if m and int(m.group(1)) == s.header.dive_num:
             current_file = jf
             break
-            
-    m = re.search(r'(?i)dive[_\s]*(\d+)', current_file)
+
+    m = re.search(r"(?i)dive[_\s]*(\d+)", current_file)
     if m:
         s.header.dive_num = int(m.group(1))
-        
+
     print(f"Loading simulation data from {current_file} (Dive {s.header.dive_num})")
-    
+
     try:
-        with open(current_file, 'r') as f:
+        with open(current_file, "r") as f:
             records = json.load(f)
     except Exception as e:
         print(f"Failed to load JSON: {e}")
         return
-        
+
     if not records:
         return
 
@@ -107,17 +111,17 @@ async def simulate_data():
         state_changed = False
         cmd = sim_global.command
         sim_global.command = None
-        
+
         if sim_global.target_dive is not None:
             t_dive = sim_global.target_dive
             sim_global.target_dive = None
             for jf in json_files:
-                m = re.search(r'(?i)dive[_\s]*(\d+)', jf)
+                m = re.search(r"(?i)dive[_\s]*(\d+)", jf)
                 if m and int(m.group(1)) == t_dive:
                     current_file = jf
                     s.header.dive_num = t_dive
                     try:
-                        with open(current_file, 'r') as f:
+                        with open(current_file, "r") as f:
                             records = json.load(f)
                         idx = 0
                         state_changed = True
@@ -125,7 +129,7 @@ async def simulate_data():
                     except Exception:
                         pass
                     break
-                    
+
         if cmd == "rewind":
             idx = max(0, idx - 10)
             state_changed = True
@@ -138,30 +142,30 @@ async def simulate_data():
         elif cmd == "end":
             idx = max(0, len(records) - 1)
             state_changed = True
-            
+
         if sim_global.paused and not state_changed:
             await asyncio.sleep(0.1)
             continue
-            
+
         if idx >= len(records):
-            idx = 0 
-            
+            idx = 0
+
         record = records[idx]
-        
+
         for var_path, value in record.items():
             if value is None:
                 continue
-                
-            parts = var_path.split('.')
+
+            parts = var_path.split(".")
             obj = s
             try:
                 for p in parts[:-1]:
                     obj = getattr(obj, p)
-                
+
                 leaf = parts[-1]
                 target = getattr(obj, leaf)
-                
-                if hasattr(target, 'value'):
+
+                if hasattr(target, "value"):
                     try:
                         target.value = float(value)
                     except ValueError:
@@ -170,19 +174,19 @@ async def simulate_data():
                     setattr(obj, leaf, value)
             except AttributeError:
                 pass
-                
+
         if "header.present_time" in record and record["header.present_time"]:
-             time_str = str(record["header.present_time"])
-             time_str = time_str.replace("_", ":").split(".")[0]
-             s.header.present_time = time_str
+            time_str = str(record["header.present_time"])
+            time_str = time_str.replace("_", ":").split(".")[0]
+            s.header.present_time = time_str
         else:
-             s.header.present_time = datetime.now().strftime("%H:%M:%S")
-             
+            s.header.present_time = datetime.now().strftime("%H:%M:%S")
+
         if "header.mission_time" not in record or not record["header.mission_time"]:
-             s.header.mission_time = datetime.now().strftime("%H:%M:%S")
-             
+            s.header.mission_time = datetime.now().strftime("%H:%M:%S")
+
         await broadcast()
-        
+
         if not sim_global.paused:
             idx += 1
             sleep_dur = 1.0
@@ -239,7 +243,7 @@ async def generic_toggle(state_path: str, val: Optional[str] = Form(None)):
     obj = app_state
     for p in parts[:-1]:
         obj = getattr(obj, p)
-    
+
     if val is not None:
         setattr(obj, parts[-1], val)
     else:
@@ -268,6 +272,7 @@ async def stop_sim():
         return {"status": "Simulation stopped"}
     return {"status": "Simulation not running"}
 
+
 @app.post("/api/sim/set_dive")
 async def set_dive(dive_num: int = Form(...)):
     sim_global.target_dive = dive_num
@@ -275,16 +280,19 @@ async def set_dive(dive_num: int = Form(...)):
     await broadcast()
     return {"status": "ok"}
 
+
 @app.post("/api/sim/toggle_pause")
 async def toggle_pause():
     sim_global.paused = not sim_global.paused
     await broadcast()
     return {"status": "ok"}
 
+
 @app.post("/api/sim/set_speed")
 async def set_speed(speed: str = Form(...)):
     sim_global.speed = speed
     return {"status": "ok"}
+
 
 @app.post("/api/sim/{cmd}")
 async def sim_command(cmd: str):

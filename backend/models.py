@@ -672,6 +672,15 @@ class SwitchesSW3(BaseModel):
     trim_p2: bool = False
     trim_p3: bool = False
     trim_p4: bool = False
+    
+    t_ej_p1: bool = False
+    t_ej_p2: bool = False
+    t_ej_p3: bool = False
+    t_ej_p4: bool = False
+    t_ej_s1: bool = False
+    t_ej_s2: bool = False
+    t_ej_s3: bool = False
+    t_ej_s4: bool = False
 
     # Emergency Jettisoning - Marker Buoy
     mb_p1: bool = False
@@ -679,23 +688,50 @@ class SwitchesSW3(BaseModel):
     mb_p3: bool = False
     mb_p4: bool = False
 
+    mb_ej_p1: bool = False
+    mb_ej_p2: bool = False
+    mb_ej_p3: bool = False
+    mb_ej_p4: bool = False
+    mb_ej_s1: bool = False
+    mb_ej_s2: bool = False
+    mb_ej_s3: bool = False
+    mb_ej_s4: bool = False
+
     # Emergency Jettisoning - Manipulator
     mani_p1: bool = False
     mani_p2: bool = False
     mani_p3: bool = False
     mani_p4: bool = False
+    
+    ejm_p1: bool = False
+    ejm_p2: bool = False
+    ejm_p3: bool = False
+    ejm_p4: bool = False
+    ejm_s1: bool = False
+    ejm_s2: bool = False
+    ejm_s3: bool = False
+    ejm_s4: bool = False
 
     # Emergency Jettisoning - Sample Basket
     samp_p1: bool = False
     samp_p2: bool = False
     ejx_p1: bool = False
     ejx_p2: bool = False
+    
+    ejs_p1: bool = False
+    ejs_p2: bool = False
+    ejs_s1: bool = False
+    ejs_s2: bool = False
 
     # Emergency Drop Weights
     edw_p1: bool = False
     edw_p2: bool = False
     edw_p3: bool = False
     edw_p4: bool = False
+    edw_s1: bool = False
+    edw_s2: bool = False
+    edw_s3: bool = False
+    edw_s4: bool = False
 
     # Bottom controls
     fb_p: bool = False
