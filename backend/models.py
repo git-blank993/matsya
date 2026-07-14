@@ -665,6 +665,22 @@ class SwitchesCategory_S(BaseModel):
     ub_s_mcb: bool = False
     ub_s_mcb2: bool = False
     ub_s: bool = False
+    
+    # Custom layout fields
+    pde_s_olr_rst: bool = False
+    oim_s_reset: bool = False
+    pde_s_oim: bool = False
+    ab_s_power: bool = False
+    spare_2: bool = False
+    ide_2: bool = False
+    ide_s_1: bool = False
+    wago: bool = False
+    xx: bool = False
+    oim: bool = False
+    secondary: bool = False
+    pde_s_olr: bool = False
+    mb_s_pde_s: bool = False
+    main_24_s: bool = False
 
 class SwitchesSW3(BaseModel):
     # Emergency Jettisoning - Trim

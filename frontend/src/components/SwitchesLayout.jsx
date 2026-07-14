@@ -601,124 +601,81 @@ export function SwitchesSLayout({ appState, apiCall }) {
           <div style={{ display: "flex", gap: "15px" }}>
             <BlackPushButton
               labelTop=""
-              labelBottom="OIM_S_RESET"
-              onClick={() => apiCall("/api/toggle/switches.s.oim_s_reset")}
-            />
-            <BlackPushButton
-              labelTop=""
               labelBottom="PDE_S_OLR_RESET"
               onClick={() => apiCall("/api/toggle/switches.s.pde_s_olr_rst")}
             />
+            <BlackPushButton
+              labelTop=""
+              labelBottom="OIM_S_RESET"
+              onClick={() => apiCall("/api/toggle/switches.s.oim_s_reset")}
+            />
           </div>
           <div style={{ display: "flex", gap: "15px" }}>
-            {tc("PDE_S_OIM", "", sw.pde_s_oim, () =>
-              apiCall("/api/toggle/switches.s.pde_s_oim"),
+            {tc("AB_S_BMS", "", sw.ab_s_bms, () =>
+              apiCall("/api/toggle/switches.s.ab_s_bms"),
             )}
             {tc("AB_S", "", sw.ab_s_power, () =>
               apiCall("/api/toggle/switches.s.ab_s_power"),
             )}
-            {tc("AB_S_BMS", "", sw.ab_s_bms, () =>
-              apiCall("/api/toggle/switches.s.ab_s_bms"),
+            {tc("PDE_S_OIM", "", sw.pde_s_oim, () =>
+              apiCall("/api/toggle/switches.s.pde_s_oim"),
             )}
           </div>
           <div style={{ display: "flex", gap: "15px" }}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  color: "red",
-                  fontWeight: "bold",
-                  fontSize: "12px",
-                  marginBottom: "5px",
-                }}
-              >
-                Wago
-              </div>
-              {tc(
-                "SPARE-2\nKEEP IN ON",
-                "",
-                sw.spare_2,
-                () => apiCall("/api/toggle/switches.s.spare_2"),
-                null,
-                "black",
-                true,
-              )}
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  color: "red",
-                  fontWeight: "bold",
-                  fontSize: "12px",
-                  marginBottom: "5px",
-                }}
-              >
-                Spare
-              </div>
-              {tc("IDE2", "", sw.ide_2, () =>
-                apiCall("/api/toggle/switches.s.ide_2"),
-              )}
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  color: "#ff1493",
-                  fontWeight: "bold",
-                  fontSize: "12px",
-                  marginBottom: "5px",
-                }}
-              >
-                OIM
-              </div>
-              {tc("IDE1_S", "", sw.ide_s_1, () =>
-                apiCall("/api/toggle/switches.s.ide_s_1"),
-              )}
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: "15px" }}>
-            {tc("MB_S_1", "", sw.mb_s_1, () =>
-              apiCall("/api/toggle/switches.s.mb_s_1"),
-            )}
-            {tc("MB_S_BMS", "", sw.mb_s_bms, () =>
-              apiCall("/api/toggle/switches.s.mb_s_bms"),
-            )}
             {tc(
-              "SECONDARY\nPWR_S",
-              "PRIMARY PDE-S\n24V CONTROL",
-              sw.secondary,
-              () => apiCall("/api/toggle/switches.s.secondary"),
+              "SPARE-2\nKEEP IN ON",
+              "",
+              sw.spare_2,
+              () => apiCall("/api/toggle/switches.s.spare_2"),
+              null,
+              "black",
+              true,
+            )}
+            {tc("IDE2", "", sw.ide_2, () =>
+              apiCall("/api/toggle/switches.s.ide_2"),
+            )}
+            {tc("IDE1_S", "", sw.ide_s_1, () =>
+              apiCall("/api/toggle/switches.s.ide_s_1"),
             )}
           </div>
           <div style={{ display: "flex", gap: "15px" }}>
-            {tc("OIM", "", sw.oim, () => apiCall("/api/toggle/switches.s.oim"))}
+            {tc("Wago", "", sw.wago, () => apiCall("/api/toggle/switches.s.wago"))}
             {tc("XX", "", sw.xx, () => apiCall("/api/toggle/switches.s.xx"))}
+            {tc("OIM", "", sw.oim, () => apiCall("/api/toggle/switches.s.oim"))}
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+      <div style={{ display: "flex", gap: "10px", marginTop: "40px", justifyContent: "space-between" }}>
         {tc(
-          "24_MAIN_S",
-          "PDE-S PL\nSTATUS",
-          sw.main_24_s,
-          () => apiCall("/api/toggle/switches.s.main_24_s"),
+          "SECONDARY\nPWR_S",
+          "PRIMARY PDE-S\n24V CONTROL",
+          sw.secondary,
+          () => apiCall("/api/toggle/switches.s.secondary"),
+        )}
+        {tc("MB_S_BMS", "", sw.mb_s_bms, () =>
+          apiCall("/api/toggle/switches.s.mb_s_bms"),
+        )}
+        {tc("MB_S_1", "", sw.mb_s_1, () =>
+          apiCall("/api/toggle/switches.s.mb_s_1"),
+        )}
+        {tc("MB_S_2", "", sw.mb_s_2, () =>
+          apiCall("/api/toggle/switches.s.mb_s_2"),
+        )}
+        {tc("MB_S_3", "", sw.mb_s_3, () =>
+          apiCall("/api/toggle/switches.s.mb_s_3"),
+        )}
+        {tc("MB_S_4", "", sw.mb_s_4, () =>
+          apiCall("/api/toggle/switches.s.mb_s_4"),
+        )}
+        {tc("MB_S_5", "", sw.mb_s_5, () =>
+          apiCall("/api/toggle/switches.s.mb_s_5"),
+        )}
+        {tc(
+          "PDE-S-OLR",
+          "PDE-S OLR\nSTATUS",
+          sw.pde_s_olr,
+          () => apiCall("/api/toggle/switches.s.pde_s_olr"),
           null,
           "black",
           false,
@@ -735,26 +692,14 @@ export function SwitchesSLayout({ appState, apiCall }) {
           true,
         )}
         {tc(
-          "PDE-S-OLR",
-          "PDE-S OLR\nSTATUS",
-          sw.pde_s_olr,
-          () => apiCall("/api/toggle/switches.s.pde_s_olr"),
+          "24_MAIN_S",
+          "PDE-S PL\nSTATUS",
+          sw.main_24_s,
+          () => apiCall("/api/toggle/switches.s.main_24_s"),
           null,
           "black",
           false,
           true,
-        )}
-        {tc("MB_S_5", "", sw.mb_s_5, () =>
-          apiCall("/api/toggle/switches.s.mb_s_5"),
-        )}
-        {tc("MB_S_4", "", sw.mb_s_4, () =>
-          apiCall("/api/toggle/switches.s.mb_s_4"),
-        )}
-        {tc("MB_S_3", "", sw.mb_s_3, () =>
-          apiCall("/api/toggle/switches.s.mb_s_3"),
-        )}
-        {tc("MB_S_2", "", sw.mb_s_2, () =>
-          apiCall("/api/toggle/switches.s.mb_s_2"),
         )}
       </div>
 
