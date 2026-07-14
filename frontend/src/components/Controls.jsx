@@ -572,7 +572,9 @@ export function RotarySwitch({ label, value, onChange, idKey = null, topLabel="1
   const rotation = value === 1 ? -45 : 45;
   return (
     <div id={idKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', position: 'relative' }}>
-      <div className="tape-label-real" style={{ position: 'absolute', top: '-25px', left: '-30px', ...getTapeStyle(label) }}>{label}</div>
+      <div style={{ position: 'absolute', top: '-25px', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 10 }}>
+        <div className="tape-label-real" style={getTapeStyle(label)}>{label}</div>
+      </div>
       
       {/* Square gray faceplate */}
       <div
@@ -584,7 +586,7 @@ export function RotarySwitch({ label, value, onChange, idKey = null, topLabel="1
         }}
       >
         <div style={{ position: 'absolute', top: '8px', left: '12px', fontSize: '14px', fontWeight: 'bold', color: '#111', fontFamily: 'sans-serif' }}>{topLabel}</div>
-        <div style={{ position: 'absolute', right: '12px', bottom: '8px', fontSize: '14px', fontWeight: 'bold', color: '#111', fontFamily: 'sans-serif' }}>{rightLabel}</div>
+        <div style={{ position: 'absolute', top: '8px', right: '12px', fontSize: '14px', fontWeight: 'bold', color: '#111', fontFamily: 'sans-serif' }}>{rightLabel}</div>
 
         {/* Knob */}
         <div style={{
@@ -623,13 +625,130 @@ export function KnobSwitch({ label, value = 50, onChange, idKey = null }) {
 }
 
 export function CircuitBreaker({ isOn, onToggle, idKey = null }) {
+  // Realistic double-pole MCB (CHINT NB1-63 style)
+  const poleStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '34px',
+  };
+
+  const screwStyle = {
+    width: '18px',
+    height: '18px',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle at 35% 35%, #555, #1a1a1a)',
+    border: '2px solid #111',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.15)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  };
+
+  const screwSlotStyle = {
+    width: '10px',
+    height: '2px',
+    background: '#111',
+    transform: 'rotate(45deg)',
+    borderRadius: '1px',
+  };
+
+  const indicatorStyle = {
+    width: '8px',
+    height: '8px',
+    borderRadius: '1px',
+    background: isOn ? '#00cc44' : '#004411',
+    border: '1px solid #003309',
+    boxShadow: isOn ? '0 0 4px #00ff55' : 'none',
+    flexShrink: 0,
+  };
+
+  const handleStyle = {
+    width: '18px',
+    height: '38px',
+    borderRadius: '3px 3px 5px 5px',
+    background: isOn
+      ? 'linear-gradient(180deg, #1a6fcc 0%, #0d4fa3 40%, #0a3d80 100%)'
+      : 'linear-gradient(180deg, #1a6fcc 0%, #0d4fa3 40%, #0a3d80 100%)',
+    border: '1px solid #083060',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.2)',
+    cursor: 'pointer',
+    transition: 'transform 0.12s ease',
+    transform: isOn ? 'translateY(-5px)' : 'translateY(5px)',
+    position: 'relative',
+    flexShrink: 0,
+  };
+
+  // The "nub" on top of each handle
+  const nubStyle = {
+    position: 'absolute',
+    top: '-6px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '10px',
+    height: '8px',
+    borderRadius: '2px 2px 0 0',
+    background: 'linear-gradient(180deg, #2080e0 0%, #1060b0 100%)',
+    border: '1px solid #083060',
+    borderBottom: 'none',
+  };
+
   return (
-    <div className="circuit-breaker" id={idKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '4px', background: '#e0e0e0', padding: '10px 5px', borderRadius: '4px', border: '1px solid #aaa', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
-      <div style={{ width: '40px', height: '60px', background: '#ccc', border: '1px solid #999', borderRadius: '2px', display: 'flex', alignItems: 'center', justifyItems: 'center', cursor: 'pointer', boxShadow: 'inset 0 4px 8px rgba(0,0,0,0.2)' }} onClick={onToggle}>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', padding: '0 4px' }}>
-          <div style={{ width: '12px', height: '24px', background: isOn ? '#222' : '#555', borderRadius: '2px', transform: isOn ? 'translateY(-10px)' : 'translateY(10px)', transition: 'all 0.1s', boxShadow: '0 2px 2px rgba(0,0,0,0.5)' }}></div>
-          <div style={{ width: '12px', height: '24px', background: isOn ? '#222' : '#555', borderRadius: '2px', transform: isOn ? 'translateY(-10px)' : 'translateY(10px)', transition: 'all 0.1s', boxShadow: '0 2px 2px rgba(0,0,0,0.5)' }}></div>
+    <div
+      id={idKey}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        background: 'linear-gradient(180deg, #d8dce0 0%, #c8ccd0 50%, #d0d4d8 100%)',
+        borderRadius: '6px',
+        border: '1.5px solid #999',
+        boxShadow: '2px 4px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6)',
+        padding: '8px 6px',
+        width: '82px',
+        userSelect: 'none',
+      }}
+    >
+      {/* Top screw terminals */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '6px' }}>
+        <div style={screwStyle}><div style={screwSlotStyle} /></div>
+        <div style={screwStyle}><div style={screwSlotStyle} /></div>
+      </div>
+
+      {/* Indicator row */}
+      <div style={{ display: 'flex', gap: '18px', marginBottom: '4px' }}>
+        <div style={indicatorStyle} />
+        <div style={indicatorStyle} />
+      </div>
+
+      {/* Handle area */}
+      <div
+        style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '4px', position: 'relative', height: '52px', cursor: 'pointer' }}
+        onClick={onToggle}
+      >
+        <div style={{ ...poleStyle, justifyContent: 'center', height: '100%' }}>
+          <div style={handleStyle}>
+            <div style={nubStyle} />
+          </div>
         </div>
+        <div style={{ ...poleStyle, justifyContent: 'center', height: '100%' }}>
+          <div style={handleStyle}>
+            <div style={nubStyle} />
+          </div>
+        </div>
+      </div>
+
+      {/* Indicator row (bottom, mirrored) */}
+      <div style={{ display: 'flex', gap: '18px', marginTop: '4px', marginBottom: '6px' }}>
+        <div style={indicatorStyle} />
+        <div style={indicatorStyle} />
+      </div>
+
+      {/* Bottom screw terminals */}
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={screwStyle}><div style={screwSlotStyle} /></div>
+        <div style={screwStyle}><div style={screwSlotStyle} /></div>
       </div>
     </div>
   );
@@ -637,7 +756,7 @@ export function CircuitBreaker({ isOn, onToggle, idKey = null }) {
 
 export function LcdScreen({ idKey = null }) {
   return (
-    <div id={idKey} style={{ width: '240px', height: '190px', background: '#b8b9ba', border: '1px solid #888', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 12px rgba(0,0,0,0.4)', position: 'relative' }}>
+    <div id={idKey} style={{ width: '324px', height: '228px', background: '#b8b9ba', border: '1px solid #888', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 12px rgba(0,0,0,0.4)', position: 'relative' }}>
       {/* black bevel */}
       <div style={{ flex: 1, background: '#111', borderRadius: '4px', border: '4px solid #222', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)' }}></div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '12px' }}>

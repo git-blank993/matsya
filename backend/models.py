@@ -739,6 +739,15 @@ class SwitchesSW3(BaseModel):
     hp_ap: bool = False
     hp_bp: bool = False
 
+    # Rotary controls
+    fwd_ctrl: bool = False
+    heading_ctrl: bool = False
+    depth_ctrl: bool = False
+    lat_trim: bool = False
+    hp_reg: bool = False
+    vbt_ctrl: bool = False
+    pitch_ctrl: bool = False
+
     # Water Leak - Port
     wl_ps_p: bool = False
     wl_ide_p: bool = False
