@@ -2,6 +2,7 @@ import React from "react";
 import {
   MetalSwitch,
   RotarySwitch,
+  KnobToggleSwitch,
   CircuitBreaker,
   LcdScreen,
   BlackPushButton,
@@ -132,6 +133,23 @@ export function SwitchesPLayout({ appState, apiCall }) {
             )}
           </div>
           <div style={{ display: "flex", gap: "15px" }}>
+            {tc("IDE1_P", "", sw.ide_p_1, () =>
+              apiCall("/api/toggle/switches.p.ide_p_1"),
+            )}
+            {tc("IDE2_P", "", sw.ide_2, () =>
+              apiCall("/api/toggle/switches.p.ide_2"),
+            )}
+            {tc(
+              "SPARE-2\nKEEP IN ON",
+              "",
+              sw.spare_2,
+              () => apiCall("/api/toggle/switches.p.spare_2"),
+              null,
+              "black",
+              true,
+            )}
+          </div>
+          <div style={{ display: "flex", gap: "15px" }}>
             <div
               style={{
                 display: "flex",
@@ -149,8 +167,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
               >
                 OIM
               </div>
-              {tc("IDE1_P", "", sw.ide_p_1, () =>
-                apiCall("/api/toggle/switches.p.ide_p_1"),
+              {tc("", "", sw.oim_p, () =>
+                apiCall("/api/toggle/switches.p.oim_p"),
               )}
             </div>
             <div
@@ -170,8 +188,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
               >
                 Spare
               </div>
-              {tc("IDE2_P", "", sw.ide_2, () =>
-                apiCall("/api/toggle/switches.p.ide_2"),
+              {tc("", "", sw.spare_p, () =>
+                apiCall("/api/toggle/switches.p.spare_p"),
               )}
             </div>
             <div
@@ -183,7 +201,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             >
               <div
                 style={{
-                  color: "red",
+                  color: "#ff1493",
                   fontWeight: "bold",
                   fontSize: "12px",
                   marginBottom: "5px",
@@ -191,30 +209,10 @@ export function SwitchesPLayout({ appState, apiCall }) {
               >
                 Wago
               </div>
-              {tc(
-                "SPARE-2\nKEEP IN ON",
-                "",
-                sw.spare_2,
-                () => apiCall("/api/toggle/switches.p.spare_2"),
-                null,
-                "black",
-                true,
+              {tc("", "", sw.wago_p, () =>
+                apiCall("/api/toggle/switches.p.wago_p"),
               )}
             </div>
-          </div>
-          <div style={{ display: "flex", gap: "15px" }}>
-            {tc(
-              "SECONDARY\nPRIMARY\nPDE-P\n24V CONTROL",
-              "",
-              sw.pde_p_24v,
-              () => apiCall("/api/toggle/switches.p.pde_p_24v"),
-            )}
-            {tc("MB_P_BMS", "", sw.mb_p_bms, () =>
-              apiCall("/api/toggle/switches.p.mb_p_bms"),
-            )}
-            {tc("MB_P1_EN", "", sw.mb_1, () =>
-              apiCall("/api/toggle/switches.p.mb_1"),
-            )}
           </div>
         </div>
 
@@ -224,6 +222,18 @@ export function SwitchesPLayout({ appState, apiCall }) {
       </div>
 
       <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+        {tc(
+          "SECONDARY\nPRIMARY\nPDE-P\n24V CONTROL",
+          "",
+          sw.pde_p_24v,
+          () => apiCall("/api/toggle/switches.p.pde_p_24v"),
+        )}
+        {tc("MB_P_BMS", "", sw.mb_p_bms, () =>
+          apiCall("/api/toggle/switches.p.mb_p_bms"),
+        )}
+        {tc("MB_P1_EN", "", sw.mb_1, () =>
+          apiCall("/api/toggle/switches.p.mb_1"),
+        )}
         {tc("MB_P2_EN", "", sw.mb_2, () =>
           apiCall("/api/toggle/switches.p.mb_2"),
         )}
@@ -1544,13 +1554,13 @@ export function Switches3Layout({ appState, apiCall }) {
       <div
         style={{
           display: "flex",
-          gap: "20px",
+          flexDirection: "column",
+          gap: "16px",
           marginBottom: "10px",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          flexWrap: "wrap",
+          alignItems: "center",
         }}
       >
+        <div style={{ display: "flex", gap: "20px", alignItems: "flex-start", flexWrap: "wrap" }}>
         <div style={{ display: "flex", gap: "8px" }}>
           <BlackPushButton labelTop="SUBMERSIBLE\nCTRL" />
           <BlackPushButton labelTop="WATER OUT" />
@@ -1638,14 +1648,15 @@ export function Switches3Layout({ appState, apiCall }) {
             true,
           )}
         </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-          <RotarySwitch label="FWD CTRL" value={sw.fwd_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.fwd_ctrl")} />
-          <RotarySwitch label="HEADING_CTRL" value={sw.heading_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.heading_ctrl")} />
-          <RotarySwitch label="DEPTH_CTRL" value={sw.depth_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.depth_ctrl")} />
-          <RotarySwitch label="LATERAL TRIM" value={sw.lat_trim ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.lat_trim")} />
-          <RotarySwitch label="HP REG" value={sw.hp_reg ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.hp_reg")} />
-          <RotarySwitch label="VBT CTRL" value={sw.vbt_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.vbt_ctrl")} />
-          <RotarySwitch label="PITCH CTRL" value={sw.pitch_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.pitch_ctrl")} />
+        </div>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <KnobToggleSwitch label="FWD CTRL" value={sw.fwd_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.fwd_ctrl")} />
+          <KnobToggleSwitch label="HEADING_CTRL" value={sw.heading_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.heading_ctrl")} />
+          <KnobToggleSwitch label="DEPTH_CTRL" value={sw.depth_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.depth_ctrl")} />
+          <KnobToggleSwitch label="LATERAL TRIM" value={sw.lat_trim ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.lat_trim")} />
+          <KnobToggleSwitch label="HP REG" value={sw.hp_reg ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.hp_reg")} />
+          <KnobToggleSwitch label="VBT CTRL" value={sw.vbt_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.vbt_ctrl")} />
+          <KnobToggleSwitch label="PITCH CTRL" value={sw.pitch_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.pitch_ctrl")} />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { fmtVal } from '../utils';
 
 // Helper for generating random tape rotations
@@ -624,6 +624,104 @@ export function KnobSwitch({ label, value = 50, onChange, idKey = null }) {
   );
 }
 
+// ── KnobToggleSwitch ─────────────────────────────────────────────────────────
+// Volume-knob style: drag up/right to increase, down/left to decrease.
+export function KnobToggleSwitch({ label, value, onChange, idKey = null }) {
+  // Settled rotation: -135° for pos 1, +135° for pos 2
+  const settledAngle = value === 1 ? -135 : 135;
+  const dragState = useRef(null); // { startY, startAngle, currentAngle }
+  const knobRef = useRef(null);
+
+  const onMouseDown = useCallback((e) => {
+    e.preventDefault();
+    dragState.current = {
+      startY: e.clientY,
+      startX: e.clientX,
+      startAngle: settledAngle,
+      currentAngle: settledAngle,
+      hasFired: false,
+    };
+
+    const onMouseMove = (e) => {
+      if (!dragState.current) return;
+      // Vertical drag: up = positive rotation, down = negative
+      const deltaY = dragState.current.startY - e.clientY;
+      const deltaX = e.clientX - dragState.current.startX;
+      const delta = (deltaY + deltaX) * 1.5; // sensitivity
+      const raw = dragState.current.startAngle + delta;
+      const clamped = Math.max(-135, Math.min(135, raw));
+      dragState.current.currentAngle = clamped;
+
+      // Live-rotate the knob via DOM ref
+      if (knobRef.current) {
+        knobRef.current.style.transform = `rotate(${clamped}deg)`;
+        knobRef.current.style.transition = 'none';
+      }
+
+      // Fire onChange when crossing midpoint (0°)
+      if (!dragState.current.hasFired) {
+        if (value === 1 && clamped > 0) {
+          dragState.current.hasFired = true;
+          onChange();
+        } else if (value === 2 && clamped < 0) {
+          dragState.current.hasFired = true;
+          onChange();
+        }
+      }
+    };
+
+    const onMouseUp = () => {
+      // Snap back to settled position with animation
+      if (knobRef.current) {
+        knobRef.current.style.transition = 'transform 0.2s ease';
+        knobRef.current.style.transform = `rotate(${settledAngle}deg)`;
+      }
+      dragState.current = null;
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }, [settledAngle, value, onChange]);
+
+  return (
+    <div
+      id={idKey}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: '8px', userSelect: 'none',
+      }}
+    >
+      <div className="tape-label-real" style={getTapeStyle(label)}>{label}</div>
+
+      {/* Knob circle */}
+      <div
+        ref={knobRef}
+        onMouseDown={onMouseDown}
+        style={{
+          width: '70px', height: '70px', borderRadius: '50%',
+          background: '#1e1e1e',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.08)',
+          position: 'relative',
+          transform: `rotate(${settledAngle}deg)`,
+          transition: 'transform 0.25s ease',
+          cursor: 'grab',
+        }}
+      >
+        {/* Small indicator dot */}
+        <div style={{
+          position: 'absolute',
+          top: '8px', left: '50%',
+          transform: 'translateX(-50%)',
+          width: '8px', height: '8px', borderRadius: '50%',
+          background: '#ccc',
+        }} />
+      </div>
+    </div>
+  );
+}
+
 export function CircuitBreaker({ isOn, onToggle, idKey = null }) {
   // Realistic double-pole MCB (CHINT NB1-63 style)
   const poleStyle = {
@@ -756,7 +854,7 @@ export function CircuitBreaker({ isOn, onToggle, idKey = null }) {
 
 export function LcdScreen({ idKey = null }) {
   return (
-    <div id={idKey} style={{ width: '324px', height: '228px', background: '#b8b9ba', border: '1px solid #888', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 12px rgba(0,0,0,0.4)', position: 'relative' }}>
+    <div id={idKey} style={{ width: '648px', height: '456px', background: '#b8b9ba', border: '1px solid #888', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 12px rgba(0,0,0,0.4)', position: 'relative' }}>
       {/* black bevel */}
       <div style={{ flex: 1, background: '#111', borderRadius: '4px', border: '4px solid #222', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)' }}></div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '12px' }}>

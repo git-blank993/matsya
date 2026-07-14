@@ -1632,40 +1632,157 @@ def AppLayout(active_tab="Main"):
     elif active_tab == "Switches_S3":
         sw = s.switches.s
         
-        def ToggleBlock(label, is_on, state_key):
+        def ToggleBlock(label_text, is_on, state_key):
+            # Using standard MetalSwitch but adding custom styling for the label via CSS
             return Div(
                 MetalSwitch(
-                    label=label,
+                    label=label_text,
                     is_on=is_on,
                     id_key=f"tog-sw-s-{state_key.replace('_', '-')}",
                     toggle_url=f"/api/toggle/switches.s.{state_key}"
                 ),
-                style="display: flex; justify-content: center; align-items: center; padding: 4px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 2px;"
+                style="display: flex; flex-direction: column; align-items: center;"
             )
             
-        top_row = Div(
-            InsulationDisplay("EB_S INSULATION", sw.ib_insulation, "k ohm", id_key="disp-sw-s-ib-ins"),
-            BattManDisplay("EB_S STATUS", sw.eb_b_status, "V", id_key="disp-sw-s-eb-b-status"),
-            RedVoltageDisplay("UB_S VOLTAGE", sw.ub_voltage, "V", id_key="disp-sw-s-ub-voltage"),
-            style="display: flex; gap: 40px; align-items: flex-end; padding: 20px; background: #c0c0c0; border: 1px solid #aaa; border-radius: 8px; margin-bottom: 20px; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);"
+        def BlackButton(label_text, is_on, state_key):
+            return Div(
+                Div(
+                    style="width:30px; height:20px; background:black; border: 2px solid #555; margin-bottom: 5px; cursor: pointer;",
+                    id=f"btn-sw-s-{state_key.replace('_', '-')}",
+                    hx_post=f"/api/toggle/switches.s.{state_key}",
+                    hx_swap="none"
+                ),
+                Div(label_text, style="font-size: 10px; font-weight:bold; color: #ff0055; text-align: center; max-width: 60px; line-height: 1; text-transform:uppercase;"),
+                style="display:flex; flex-direction:column; align-items:center;"
+            )
+
+        def ToggleWithStatus(label_text, is_on, state_key, status_label):
+            return Div(
+                ToggleBlock(label_text, is_on, state_key),
+                Div(style="width:20px; height:20px; border-radius:50%; background:#d00000; margin-top:5px; border:2px solid #660000; box-shadow: inset 0 0 5px rgba(0,0,0,0.8);"),
+                Div(status_label, style="font-size:8px; font-weight:bold; color:#ff0055; text-align:center; max-width:60px; line-height:1; margin-top:3px; text-transform:uppercase;"),
+                style="display:flex; flex-direction:column; align-items:center;"
+            )
+
+        # Style override for the specific pink labels in this panel
+        panel_style = Div(
+            _tag="style",
+            text=""".switches-s-panel .metal-switch-label { color: #ff0077 !important; font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; }"""
         )
-        
-        col1 = Div(
-            Div("Power Status & Selection", cls="mcc-panel-title", style="background:#ffea00; color:black; margin-bottom: 15px;"),
-            top_row,
+
+        top_left = Div(
             Div(
-                RotarySwitch("Power selection EB_", ["UB_", "E_Batts"], sw.power_selection_eb, id_key="rot-sw-s-power-eb", toggle_url="/api/toggle/switches.s.power_selection_eb"),
-                RotarySwitch("Power selection UB", ["AB", "MB"], sw.power_selection_ub, id_key="rot-sw-s-power-ub", toggle_url="/api/toggle/switches.s.power_selection_ub"),
-                ToggleBlock("UB MCB", sw.ub_mcb, "ub_mcb"),
-                style="display:flex; flex-direction:column; gap:8px; align-items: center;"
+                RotarySwitch("E_BATT_S", ["1", "2"], sw.power_selection_eb, id_key="rot-sw-s-power-eb", toggle_url="/api/toggle/switches.s.power_selection_eb"),
+                Div("Power Selection", style="font-size:12px; font-weight:bold; text-align:center; color:black;"),
+                Div("EB_S", style="font-size:12px; font-weight:bold; text-align:center; color:black;"),
+                style="margin-bottom: 20px; display:flex; flex-direction:column; align-items:center;"
             ),
-            cls="mcc-col", style="display:flex; flex-direction:column; gap:4px; grid-column: span 4;"
+            Div(
+                InsulationDisplay("EB_S INSULATION", sw.ib_insulation, "k ohm", id_key="disp-sw-s-ib-ins"),
+                BattManDisplay("EB_S STATUS", sw.eb_b_status, "V", id_key="disp-sw-s-eb-b-status"),
+                style="display:flex; gap: 20px; align-items:flex-end;"
+            ),
+            style="display:flex; flex-direction:column; align-items:center;"
+        )
+
+        top_right = Div(
+            Div(
+                RotarySwitch("AB_S", ["1", "2"], sw.power_selection_ub, id_key="rot-sw-s-power-ub", toggle_url="/api/toggle/switches.s.power_selection_ub"),
+                Div("Power Selection", style="font-size:12px; font-weight:bold; text-align:center; color:black;"),
+                Div("UB_S", style="font-size:12px; font-weight:bold; text-align:center; color:black;"),
+                style="margin-bottom: 20px; display:flex; flex-direction:column; align-items:center;"
+            ),
+            Div(
+                RedVoltageDisplay("UB_S_VOLTAGE", sw.ub_voltage, "V", id_key="disp-sw-s-ub-voltage"),
+                Div(
+                    Div("MCB 63A", style="color:#ff00ff; font-weight:bold; font-size:14px; position:absolute; top:40%; text-align:center; width:100%;"),
+                    style="width: 80px; height: 120px; border: 1px solid black; background: transparent; position:relative; margin-left: 20px; border-left: 1px solid black; border-right: 1px solid black;"
+                ),
+                style="display:flex; gap: 20px; align-items:center;"
+            ),
+            style="display:flex; flex-direction:column; align-items:center;"
+        )
+
+        wago_plc = Div(
+            Div(
+                Div(
+                    "WAGO PLC", 
+                    style="color:#204090; font-size:40px; font-weight:normal; font-family:sans-serif;"
+                ),
+                style="background:white; width:95%; height:85%; display:flex; justify-content:center; align-items:center;"
+            ),
+            Div(
+                Div(style="width:12px; height:12px; border:2px solid #555;"),
+                Div(style="width:12px; height:12px; border:2px solid #555;"),
+                Div(style="width:12px; height:12px; border:2px solid #555;"),
+                Div(style="width:12px; height:12px; border:2px solid #555;"),
+                style="display:flex; gap: 50px; position:absolute; bottom:8px;"
+            ),
+            style="width:480px; height:300px; background:black; border-radius:12px; display:flex; justify-content:center; align-items:center; position:relative; border-bottom: 30px solid #ccc; box-sizing:border-box;"
+        )
+
+        mid_right_switches = Div(
+            Div(
+                BlackButton("PDE_S_OLR_RESET", sw.pde_s_olr_reset, "pde_s_olr_reset"),
+                BlackButton("OIM_S_RESET", sw.oim_s_reset, "oim_s_reset"),
+                style="display:flex; gap:60px; justify-content:center; margin-bottom: 25px;"
+            ),
+            Div(
+                ToggleBlock("AB_S_BMS", sw.ab_s_bms, "ab_s_bms"),
+                ToggleBlock("AB_S", sw.ab_s, "ab_s"),
+                ToggleBlock("PDE_S_OIM", sw.pde_s_oim, "pde_s_oim"),
+                style="display:flex; gap:40px; justify-content:center; margin-bottom: 20px;"
+            ),
+            Div(
+                Div(
+                    ToggleBlock("SPARE-2", sw.spare_2, "spare_2"),
+                    style="border: 1px solid #ff0055; padding: 5px; position:relative;"
+                ),
+                ToggleBlock("IDE2", sw.ide2, "ide2"),
+                ToggleBlock("IDE1_S", sw.ide1_s, "ide1_s"),
+                style="display:flex; gap:40px; justify-content:center; margin-bottom: 20px;"
+            ),
+            Div(
+                ToggleBlock("Wago", sw.wago, "wago"),
+                ToggleBlock("XX", sw.xx, "xx"),
+                ToggleBlock("OIM", sw.oim, "oim"),
+                style="display:flex; gap:40px; justify-content:center;"
+            ),
+            style="display:flex; flex-direction:column;"
+        )
+
+        bottom_row = Div(
+            Div(
+                ToggleBlock("SECONDARY PRIMARY PDE-S 24V CONTROL", sw.secondary_primary_pde_s, "secondary_primary_pde_s"),
+                style="width: 120px; text-align:center;"
+            ),
+            ToggleBlock("MB_S_BMS", sw.mb_s_bms, "mb_s_bms"),
+            ToggleBlock("MB_S_1", sw.mb_s_1, "mb_s_1"),
+            ToggleBlock("MB_S_2", sw.mb_s_2, "mb_s_2"),
+            ToggleBlock("MB_S_3", sw.mb_s_3, "mb_s_3"),
+            ToggleBlock("MB_S_4", sw.mb_s_4, "mb_s_4"),
+            ToggleBlock("MB_S_5", sw.mb_s_5, "mb_s_5"),
+            ToggleWithStatus("PDE-S-OLR", sw.pde_s_olr, "pde_s_olr", "PDE-S OLR STATUS"),
+            ToggleWithStatus("MB_S-PDE_S", sw.mb_s_pde_s, "mb_s_pde_s", "PDE-S 148V IN STATUS"),
+            ToggleWithStatus("24_MAIN_S", sw.main_s_24, "main_s_24", "PDE-S_PL STATUS"),
+            style="display:flex; justify-content:space-around; align-items:flex-start; width:100%; margin-top: 50px;"
         )
 
         switches_panel = Div(
-            Div(col1, style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; min-height: 0;"),
-            cls="mcc-panel",
-            style="display: flex; flex-direction: column;"
+            panel_style,
+            Div(
+                top_left,
+                top_right,
+                style="display:flex; justify-content:space-around; width:100%; margin-bottom: 40px;"
+            ),
+            Div(
+                wago_plc,
+                mid_right_switches,
+                style="display:flex; justify-content:center; gap:100px; width:100%; align-items:center;"
+            ),
+            bottom_row,
+            cls="switches-s-panel",
+            style="display:flex; flex-direction:column; align-items:center; width:100%; background:#c8c8c8; padding:30px; overflow-y:auto; flex:1; min-height:0; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);"
         )
 
         main_content_area = Div(

@@ -652,6 +652,21 @@ class SwitchesCategory_S(BaseModel):
     power_selection_eb: str = "1"
     power_selection_ub: str = "1"
     ub_mcb: bool = False
+    
+    # Newly added fields for custom layout
+    pde_s_olr_reset: bool = False
+    oim_s_reset: bool = False
+    ab_s: bool = False
+    pde_s_oim: bool = False
+    spare_2: bool = False
+    ide2: bool = False
+    ide1_s: bool = False
+    wago: bool = False
+    xx: bool = False
+    oim: bool = False
+    secondary_primary_pde_s: bool = False
+    pde_s_olr: bool = False
+    main_s_24: bool = False
 
 class SwitchesState(BaseModel):
     p: SwitchesCategory_P = SwitchesCategory_P()
