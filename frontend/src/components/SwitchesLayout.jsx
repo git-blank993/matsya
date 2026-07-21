@@ -65,12 +65,16 @@ export function SwitchesPLayout({ appState, apiCall }) {
 
       <div style={{ display: "flex", gap: "80px", marginTop: "40px" }}>
         <RotarySwitch
-          label="AB_P"
+          label={"Power Selection\nUB_P"}
+          pos1Label="AB_P"
+          pos2Label="24v PDE_P"
           value={sw.ab_p ? 2 : 1}
           onChange={() => apiCall("/api/toggle/switches.p.ab_p")}
         />
         <RotarySwitch
-          label="E_BATT_P"
+          label={"Power Selection\nEB_P"}
+          pos1Label="E_BATT_P"
+          pos2Label="UB_P"
           value={sw.e_batts ? 2 : 1}
           onChange={() => apiCall("/api/toggle/switches.p.e_batts")}
         />
@@ -550,12 +554,16 @@ export function SwitchesSLayout({ appState, apiCall }) {
 
       <div style={{ display: "flex", gap: "80px", marginTop: "40px" }}>
         <RotarySwitch
-          label="E_BATT_S"
+          label={"Power Selection\nEB_S"}
+          pos1Label="E_BATT_S"
+          pos2Label="UB_S"
           value={sw.e_batt_s ? 2 : 1}
           onChange={() => apiCall("/api/toggle/switches.s.e_batt_s")}
         />
         <RotarySwitch
-          label="AB_S"
+          label={"Power Selection\nUB_S"}
+          pos1Label="AB_S"
+          pos2Label="24v_PDE_S"
           value={sw.ab_s ? 2 : 1}
           onChange={() => apiCall("/api/toggle/switches.s.ab_s")}
         />

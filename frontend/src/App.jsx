@@ -76,11 +76,12 @@ function App() {
   }
 
   const isOnSwitchesPage = SWITCHES_ONLY_TABS.includes(activeTab)
+  const isDedicatedSwitchesPage = ["Switches_P", "Switches_S", "SW-3"].includes(activeTab)
 
   return (
     <div className={`dashboard-root ${!appState.is_powered_on ? 'system-off' : ''} ${isOnSwitchesPage ? 'on-switches-page' : ''}`}>
       {!connected && <div style={{ background: 'red', color: 'white', padding: '5px', textAlign: 'center' }}>Disconnected from Backend</div>}
-      <HeaderArea appState={appState} apiCall={apiCall} />
+      {!isDedicatedSwitchesPage && <HeaderArea appState={appState} apiCall={apiCall} />}
       {activeTab === "Main" ? <AppLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Switches_P" ? <SwitchesPLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Switches_S" ? <SwitchesSLayout appState={appState} apiCall={apiCall} />
@@ -102,13 +103,15 @@ function App() {
           </div>
         </div>
       )}
-      <BottomTabsNav
-        tabs={TABS}
-        activeTab={activeTab}
-        onTabSelect={handleTabSelect}
-        isPoweredOn={appState.is_powered_on}
-        switchesOnlyTabs={SWITCHES_ONLY_TABS}
-      />
+      {!isDedicatedSwitchesPage && (
+        <BottomTabsNav
+          tabs={TABS}
+          activeTab={activeTab}
+          onTabSelect={handleTabSelect}
+          isPoweredOn={appState.is_powered_on}
+          switchesOnlyTabs={SWITCHES_ONLY_TABS}
+        />
+      )}
     </div>
   )
 }
