@@ -165,7 +165,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
                 style={{
                   color: "#ff1493",
                   fontWeight: "bold",
-                  fontSize: "12px",
+                  fontSize: "24px",
                   marginBottom: "5px",
                 }}
               >
@@ -207,7 +207,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
                 style={{
                   color: "#ff1493",
                   fontWeight: "bold",
-                  fontSize: "12px",
+                  fontSize: "24px",
                   marginBottom: "5px",
                 }}
               >
@@ -339,7 +339,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
                   style={{
                     color: "#1a5f9a",
                     fontWeight: "bold",
-                    fontSize: "10px",
+                    fontSize: "22px",
                     marginBottom: "2px",
                   }}
                 >
@@ -383,7 +383,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
                     style={{
                       color: "#ff1493",
                       fontWeight: "bold",
-                      fontSize: "10px",
+                      fontSize: "22px",
                       marginBottom: "2px",
                     }}
                   >
@@ -445,7 +445,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "12px",
+              fontSize: "24px",
               marginTop: "2px",
             }}
           >
@@ -459,7 +459,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "12px",
+              fontSize: "24px",
               marginTop: "2px",
             }}
           >
@@ -468,7 +468,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
         </div>
         <div
           style={{
-            fontSize: "16px",
+            fontSize: "36px",
             fontWeight: "bold",
             color: "#ff1493",
             fontFamily: "monospace",
@@ -492,7 +492,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "12px",
+              fontSize: "24px",
               marginTop: "2px",
             }}
           >
@@ -506,7 +506,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "12px",
+              fontSize: "24px",
               marginTop: "2px",
             }}
           >
@@ -524,7 +524,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
           color: "#000",
           padding: "4px 8px",
           fontWeight: "bold",
-          fontSize: "12px",
+          fontSize: "28px",
           border: "2px solid #000",
         }}
       >
@@ -723,7 +723,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
 
       <div
         style={{
-          fontSize: "24px",
+          fontSize: "36px",
           fontWeight: "bold",
           color: "#ff1493",
           fontFamily: "sans-serif",
@@ -818,7 +818,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
           color: "#000",
           padding: "4px 8px",
           fontWeight: "bold",
-          fontSize: "12px",
+          fontSize: "28px",
           border: "2px solid #000",
         }}
       >
@@ -858,13 +858,7 @@ export function Switches3Layout({ appState, apiCall }) {
         }}
       >
         <div
-          className="tape-label-real"
-          style={{
-            position: "absolute",
-            top: "-10px",
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
+          style={{ position: "absolute", top: "-15px", left: "50%", transform: "translateX(-50%)", color: "#ff1493", fontSize: "24px", fontWeight: "bold", background: "#f0f0f0", padding: "0 10px" }}
         >
           EMERGENCY JETTISONING SWITCHES
         </div>
@@ -1622,7 +1616,7 @@ export function Switches3Layout({ appState, apiCall }) {
           color: "#000",
           padding: "4px 8px",
           fontWeight: "bold",
-          fontSize: "12px",
+          fontSize: "28px",
           border: "2px solid #000",
         }}
       >

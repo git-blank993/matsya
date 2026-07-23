@@ -10,12 +10,12 @@ import {
 } from './components/PageLayouts'
 
 const TABS = [
-  "Main", "HSSS", "Ballast", "Propulsion", "POWER", "Imaging", 
+  "Main", "Main-2", "HSSS", "Ballast", "Propulsion", "POWER", "Imaging", 
   "Sensors", "Logging", "Status", "50 Kwh", "MCC", 
   "Switches_P", "Switches_S", "SW-3"
 ]
 
-const SWITCHES_ONLY_TABS = ["Main", "Switches_P", "Switches_S", "SW-3"]
+const SWITCHES_ONLY_TABS = ["Main", "Main-2", "Switches_P", "Switches_S", "SW-3"]
 
 function App() {
   const [appState, setAppState] = useState(null)
@@ -83,6 +83,7 @@ function App() {
       {!connected && <div style={{ background: 'red', color: 'white', padding: '5px', textAlign: 'center' }}>Disconnected from Backend</div>}
       {!isDedicatedSwitchesPage && <HeaderArea appState={appState} apiCall={apiCall} />}
       {activeTab === "Main" ? <AppLayout appState={appState} apiCall={apiCall} />
+      : activeTab === "Main-2" ? <AppLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Switches_P" ? <SwitchesPLayout appState={appState} apiCall={apiCall} />
       : activeTab === "Switches_S" ? <SwitchesSLayout appState={appState} apiCall={apiCall} />
       : activeTab === "SW-3" ? <Switches3Layout appState={appState} apiCall={apiCall} />
