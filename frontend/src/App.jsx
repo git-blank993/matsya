@@ -104,15 +104,13 @@ function App() {
           </div>
         </div>
       )}
-      {!isDedicatedSwitchesPage && (
-        <BottomTabsNav
-          tabs={TABS}
-          activeTab={activeTab}
-          onTabSelect={handleTabSelect}
-          isPoweredOn={appState.is_powered_on}
-          switchesOnlyTabs={SWITCHES_ONLY_TABS}
-        />
-      )}
+      <BottomTabsNav
+        tabs={TABS}
+        activeTab={activeTab}
+        onTabSelect={handleTabSelect}
+        isPoweredOn={appState.is_powered_on}
+        switchesOnlyTabs={SWITCHES_ONLY_TABS}
+      />
     </div>
   )
 }
