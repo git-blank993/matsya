@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { fmtVal } from '../utils';
 
 // Helper for generating random tape rotations
@@ -860,16 +860,179 @@ export function CircuitBreaker({ isOn, onToggle, idKey = null }) {
   );
 }
 
-export function LcdScreen({ idKey = null }) {
+// ── EMCS Sensor Reading Screen ────────────────────────────────────────────────
+function EmcsSensorCell({ label, value, unit, highlight }) {
+  const bg = highlight === 'warn'  ? '#e8a000'
+           : highlight === 'alert' ? '#d03030'
+           : 'transparent';
+  const color = highlight ? '#fff' : '#111';
   return (
-    <div id={idKey} style={{ width: '648px', height: '456px', background: '#b8b9ba', border: '1px solid #888', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 12px rgba(0,0,0,0.4)', position: 'relative' }}>
-      {/* black bevel */}
-      <div style={{ flex: 1, background: '#111', borderRadius: '4px', border: '4px solid #222', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)' }}></div>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '12px' }}>
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#666', boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.5)' }}></div>
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#666', boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.5)' }}></div>
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#666', boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.5)' }}></div>
-        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#666', boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.5)' }}></div>
+    <div style={{
+      display: 'flex', flexDirection: 'column', gap: '4px',
+      padding: '6px 10px', minWidth: '130px', flex: 1,
+    }}>
+      <span style={{ fontSize: '11px', color: '#444', fontWeight: 600, letterSpacing: '0.03em' }}>{label}</span>
+      <div style={{
+        background: bg, color,
+        borderRadius: '4px',
+        border: highlight ? 'none' : '1px solid #bbb',
+        padding: '3px 8px',
+        fontSize: '14px', fontWeight: 700,
+        minHeight: '28px', display: 'flex', alignItems: 'center',
+      }}>
+        {value != null ? `${typeof value === 'number' ? value.toFixed(2) : value} ${unit ?? ''}`.trim() : '—'}
+      </div>
+    </div>
+  );
+}
+
+export function LcdScreen({ idKey = null, hsss = {}, side = 'PORT' }) {
+  const [activeTab, setActiveTab] = useState('SENSORS');
+  const tabs = ['OVERVIEW', 'SENSORS', 'ALARMS', 'LOGGING', 'CONFIG'];
+
+  const now = new Date();
+  const dateStr = `${now.getMonth()+1}/${now.getDate()}/${now.getFullYear()} `
+    + now.toLocaleTimeString('en-US', { hour12: true });
+
+  // Determine alert states
+  const tempVal   = hsss?.temp?.value ?? 0;
+  const lpVal     = hsss?.lp_l_pressure?.value ?? 0;
+  const tempAlert = tempVal > 30 ? 'warn' : undefined;
+  const lpAlert   = lpVal < 1  ? 'alert' : undefined;
+
+  return (
+    <div id={idKey} style={{
+      width: '648px', height: '456px',
+      background: '#c8caca',
+      border: '2px solid #888', borderRadius: '8px',
+      padding: '10px',
+      display: 'flex', flexDirection: 'column',
+      boxShadow: '0 6px 16px rgba(0,0,0,0.5)',
+      fontFamily: "'Segoe UI', Arial, sans-serif",
+      userSelect: 'none', overflow: 'hidden',
+    }}>
+
+      {/* ── LCD screen area ── */}
+      <div style={{
+        flex: 1, background: '#e8ecec',
+        borderRadius: '4px', border: '3px solid #777',
+        display: 'flex', flexDirection: 'column',
+        overflow: 'hidden', boxShadow: 'inset 0 1px 6px rgba(0,0,0,0.25)',
+      }}>
+
+        {/* Top chrome bar: date + hamburger */}
+        <div style={{
+          background: '#3a3a3a', color: '#eee',
+          fontSize: '11px', fontWeight: 600,
+          display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
+          padding: '3px 10px', gap: '16px', flexShrink: 0,
+        }}>
+          <span>{dateStr}</span>
+          <span style={{ fontSize: '16px', lineHeight: 1 }}>☰</span>
+        </div>
+
+        {/* Blue title bar */}
+        <div style={{
+          background: 'linear-gradient(180deg, #1a7fc0 0%, #1464a0 100%)',
+          color: '#fff', padding: '5px 12px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          flexShrink: 0,
+        }}>
+          <span style={{ fontWeight: 700, fontSize: '14px', letterSpacing: '0.04em' }}>
+            EMCS – {side === 'S' ? 'STARBOARD' : 'PORT'} SIDE
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '11px', opacity: 0.85 }}>Operator</span>
+            <div style={{
+              background: '#c0392b', borderRadius: '4px',
+              width: '28px', height: '28px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '15px',
+            }}>🔒</div>
+          </div>
+        </div>
+
+        {/* Power icon + SENSOR READINGS title row */}
+        <div style={{
+          background: '#d4d8d8',
+          display: 'flex', alignItems: 'center',
+          padding: '4px 12px', gap: '12px', flexShrink: 0,
+          borderBottom: '1px solid #bbb',
+        }}>
+          <div style={{
+            width: '32px', height: '32px', borderRadius: '50%',
+            background: 'linear-gradient(145deg,#555,#222)',
+            border: '2px solid #888',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#aaffaa', fontSize: '16px', flexShrink: 0,
+          }}>⏻</div>
+          <span style={{
+            flex: 1, textAlign: 'center',
+            fontWeight: 800, fontSize: '15px',
+            letterSpacing: '0.12em', color: '#111',
+          }}>SENSOR READINGS</span>
+        </div>
+
+        {/* Sensor grid */}
+        <div style={{ flex: 1, padding: '6px 4px', overflowY: 'auto' }}>
+          {/* Row 1 */}
+          <div style={{ display: 'flex', borderBottom: '1px solid #ccc', paddingBottom: '4px', marginBottom: '4px' }}>
+            <EmcsSensorCell label="Oxygen"           value={hsss?.oxygen?.value}       unit={hsss?.oxygen?.unit ?? '% vol'} />
+            <EmcsSensorCell label="CO2"              value={hsss?.co2?.value}          unit={hsss?.co2?.unit ?? 'ppm'} />
+            <EmcsSensorCell label="Hydrogen"         value={hsss?.hydrogen?.value}     unit={hsss?.hydrogen?.unit ?? 'ppm'} />
+            <EmcsSensorCell label="Temperature"      value={hsss?.temp?.value}         unit={hsss?.temp?.unit ?? '°C'} highlight={tempAlert} />
+          </div>
+          {/* Row 2 */}
+          <div style={{ display: 'flex', borderBottom: '1px solid #ccc', paddingBottom: '4px', marginBottom: '4px' }}>
+            <EmcsSensorCell label="Humidity"         value={hsss?.humidity?.value}     unit={hsss?.humidity?.unit ?? '%RH'} />
+            <EmcsSensorCell label="Ambient Pressure" value={hsss?.pressure?.value}     unit={hsss?.pressure?.unit ?? 'mbar'} />
+            <EmcsSensorCell label="HP Bank 1"        value={hsss?.hp_b1_pressure?.value} unit="bar" />
+            <EmcsSensorCell label="HP Bank 2"        value={hsss?.hp_b2_pressure?.value} unit="bar" />
+          </div>
+          {/* Row 3 */}
+          <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <EmcsSensorCell label="HP Bank 3"        value={hsss?.hp_b3_pressure?.value} unit="bar" />
+            <EmcsSensorCell label="LP Line"          value={hsss?.lp_l_pressure?.value}  unit="bar" highlight={lpAlert} />
+            <div style={{ flex: 2 }} />
+            <div style={{ padding: '6px 10px', display: 'flex', alignItems: 'flex-end' }}>
+              <button style={{
+                background: 'linear-gradient(180deg, #29b8e0 0%, #1590b8 100%)',
+                color: '#fff', border: 'none', borderRadius: '6px',
+                padding: '8px 22px', fontWeight: 800, fontSize: '13px',
+                letterSpacing: '0.1em', cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+              }}>SAMPLING</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom tab bar */}
+        <div style={{
+          display: 'flex', flexShrink: 0,
+          borderTop: '2px solid #999',
+          background: '#bbbdbd',
+        }}>
+          {tabs.map(t => (
+            <button key={t} onClick={() => setActiveTab(t)} style={{
+              flex: 1, padding: '6px 4px',
+              background: t === activeTab
+                ? 'linear-gradient(180deg,#29b8e0 0%,#1590b8 100%)'
+                : 'linear-gradient(180deg,#d0d4d4 0%,#b8bcbc 100%)',
+              color: t === activeTab ? '#fff' : '#333',
+              border: 'none', borderRight: '1px solid #999',
+              fontWeight: t === activeTab ? 800 : 600,
+              fontSize: '11px', letterSpacing: '0.05em',
+              cursor: 'pointer',
+            }}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Bezel dots */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '8px' }}>
+        {[0,1,2,3].map(i => (
+          <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#666', boxShadow: 'inset 1px 1px 2px rgba(0,0,0,0.5)' }} />
+        ))}
       </div>
     </div>
   );

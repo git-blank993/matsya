@@ -221,7 +221,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
         </div>
 
         <div style={{ marginTop: "20px" }}>
-          <LcdScreen />
+          <LcdScreen hsss={appState.hsss?.p} side="P" />
         </div>
       </div>
 
@@ -602,7 +602,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
 
       <div style={{ display: "flex", gap: "40px", marginTop: "20px" }}>
         <div style={{ marginTop: "20px" }}>
-          <LcdScreen />
+          <LcdScreen hsss={appState.hsss?.s} side="S" />
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
