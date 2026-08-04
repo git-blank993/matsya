@@ -4605,7 +4605,6 @@ body {
     padding: 2px 6px;
     border: 1px solid #ddd;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-    transform: rotate(-1deg);
     display: inline-block;
     text-transform: uppercase;
 }
@@ -5063,7 +5062,7 @@ body {
   font-family: "Marker Felt", "Comic Sans MS", fantasy, sans-serif;
   font-weight: bold;
   font-size: 16px;
-  padding: 2px 6px;
+  padding: 5px 6px;
   border-radius: 1px;
   box-shadow: 1px 1px 3px rgba(0,0,0,0.4), inset 0 0 2px rgba(0,0,0,0.1);
   display: inline-block;
@@ -5072,6 +5071,7 @@ body {
   text-align: center;
   z-index: 2;
   position: relative;
+  transform: none !important;
 }
 
 /* Realistic toggle base assembly */

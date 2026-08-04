@@ -63,7 +63,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
       <div className="screws" style={{ top: "10px", left: "10px" }}></div>
       <div className="screws" style={{ top: "10px", right: "10px" }}></div>
 
-      <div style={{ display: "flex", gap: "80px", marginTop: "40px" }}>
+      <div style={{ display: "flex", gap: "80px", marginTop: "40px", width: "100%", justifyContent: "space-evenly" }}>
         <RotarySwitch
           label={"Power Selection\nUB_P"}
           pos1Label="AB_P"
@@ -86,6 +86,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
           gap: "20px",
           marginTop: "40px",
           alignItems: "flex-start",
+          width: "100%",
+          justifyContent: "space-evenly",
         }}
       >
         <div
@@ -111,7 +113,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
         <YellowLedDisplay label="EB_P INSULATION" value={sw.ib_insulation} />
       </div>
 
-      <div style={{ display: "flex", gap: "40px", marginTop: "20px" }}>
+      <div style={{ display: "flex", gap: "40px", marginTop: "30px", width: "100%", justifyContent: "space-evenly", alignItems: "flex-start" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           <div style={{ display: "flex", gap: "15px" }}>
             <BlackPushButton
@@ -225,7 +227,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+      <div style={{ display: "flex", gap: "10px", marginTop: "30px", width: "100%", justifyContent: "space-evenly" }}>
         {tc(
           "SECONDARY\nPRIMARY\nPDE-P\n24V CONTROL",
           "",
@@ -552,7 +554,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
       <div className="screws" style={{ top: "10px", left: "10px" }}></div>
       <div className="screws" style={{ top: "10px", right: "10px" }}></div>
 
-      <div style={{ display: "flex", gap: "80px", marginTop: "40px" }}>
+      <div style={{ display: "flex", gap: "80px", marginTop: "40px", width: "100%", justifyContent: "space-evenly" }}>
         <RotarySwitch
           label={"Power Selection\nEB_S"}
           pos1Label="E_BATT_S"
@@ -575,6 +577,8 @@ export function SwitchesSLayout({ appState, apiCall }) {
           gap: "20px",
           marginTop: "40px",
           alignItems: "flex-start",
+          width: "100%",
+          justifyContent: "space-evenly",
         }}
       >
         <YellowLedDisplay label="EB_S INSULATION" value={sw.eb_s_insulation} />
@@ -600,7 +604,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "40px", marginTop: "20px" }}>
+      <div style={{ display: "flex", gap: "40px", marginTop: "30px", width: "100%", justifyContent: "space-evenly", alignItems: "flex-start" }}>
         <div style={{ marginTop: "20px" }}>
           <LcdScreen hsss={appState.hsss?.s} side="S" />
         </div>

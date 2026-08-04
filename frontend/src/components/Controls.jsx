@@ -1,12 +1,8 @@
 import React, { useRef, useCallback, useState } from 'react';
 import { fmtVal } from '../utils';
 
-// Helper for generating random tape rotations
-const getTapeStyle = (label) => {
-  // deterministic pseudo-random rotation based on label length
-  const rot = ((label?.length || 5) % 5) - 2; 
-  return { transform: `rotate(${rot}deg)` };
-};
+// Labels are rendered straight — no tape-slant effect
+const getTapeStyle = (_label) => ({});
 
 export function ToggleSwitch({ label, isOn, onToggle, idKey = null }) {
   const toggleCls = isOn ? "toggle-on" : "toggle-off";
