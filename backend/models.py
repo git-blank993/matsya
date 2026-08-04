@@ -579,6 +579,53 @@ class SwitchesCategory_P(BaseModel):
     ub_p_mcb: bool = False
     ub_p_mcb2: bool = False
 
+    # Custom layout fields (frontend-specific names)
+    pde_p_clr_rst: bool = False
+    oim_p_reset: bool = False
+    ab_p_power: bool = False
+    pde_p_dim: bool = False
+    ide_p_1: bool = False
+    ide_2: bool = False
+    spare_2: bool = False
+    oim_p: bool = False
+    spare_p: bool = False
+    wago_p: bool = False
+    pde_p_24v: bool = False
+    mb_1: bool = False
+    mb_2: bool = False
+    mb_3: bool = False
+    mb_4: bool = False
+    mb_5: bool = False
+    pde_p_olr: bool = False
+    pde_p_148: bool = False
+    pde_p_24v_main: bool = False
+    # SDW aliases (frontend uses sdwp_1..10 / sdws_1..10)
+    sdwp_1: bool = False
+    sdwp_2: bool = False
+    sdwp_3: bool = False
+    sdwp_4: bool = False
+    sdwp_5: bool = False
+    sdwp_6: bool = False
+    sdwp_7: bool = False
+    sdwp_8: bool = False
+    sdwp_9: bool = False
+    sdwp_10: bool = False
+    sdws_1: bool = False
+    sdws_2: bool = False
+    sdws_3: bool = False
+    sdws_4: bool = False
+    sdws_5: bool = False
+    sdws_6: bool = False
+    sdws_7: bool = False
+    sdws_8: bool = False
+    sdws_9: bool = False
+    sdws_10: bool = False
+    sdw_master_p: bool = False
+    sdw_master_s: bool = False
+    sdw_master_stbd: bool = False
+    sdw_master_stbd_p: bool = False
+    sdw_master_stbd_s: bool = False
+
 class SwitchesCategory_S(BaseModel):
     # Thruster Controls
     speed_control: bool = False
@@ -681,6 +728,25 @@ class SwitchesCategory_S(BaseModel):
     pde_s_olr: bool = False
     mb_s_pde_s: bool = False
     main_24_s: bool = False
+
+    # General control switch aliases (frontend-specific)
+    e_batt_s: bool = False
+    aps_2: bool = False
+    joystick_p: bool = False
+    emg_led_s: bool = False
+    co2_s: bool = False
+    co2_p: bool = False
+    vhs_pow_s: bool = False
+    vhs_pow_p: bool = False
+    uwt: bool = False
+    vhf: bool = False
+    mbs_ctrl: bool = False
+    dc_fan: bool = False
+    emg_led_p: bool = False
+    int_led_s: bool = False
+    int_led_p: bool = False
+    uw_led_s: bool = False
+    uw_led_p: bool = False
 
 class SwitchesSW3(BaseModel):
     # Emergency Jettisoning - Trim
