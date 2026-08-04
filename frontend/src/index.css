@@ -231,9 +231,10 @@ body {
 .compass-area {
     flex: 1;
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: center;
     min-height: 0;
+    padding: 4px;
 }
 
 .big-numbers-row {
@@ -605,12 +606,13 @@ body {
 .sub-viewer {
     display: flex;
     flex-direction: column;
-    width: min(100%, calc(100vh - 280px));
-    max-width: 500px;
+    /* Square that fills as much of compass-area as possible */
+    /* Height drives the square: constrained by viewport height minus header/footer */
+    height: min(calc(100vh - 300px), 100%);
+    aspect-ratio: 1 / 1;
     gap: 8px;
     flex-shrink: 0;
-    flex: 1;
-    min-height: 0;
+    overflow: hidden;
 }
 
 .sub-viewer-img-wrap {
