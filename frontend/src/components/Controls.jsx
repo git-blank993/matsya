@@ -4,6 +4,9 @@ import { fmtVal } from '../utils';
 // Labels are rendered straight — no tape-slant effect
 const getTapeStyle = (_label) => ({});
 
+// Unique ID counter for SVG gradients across RotarySwitch instances
+let _rotatoryGradCounter = 0;
+
 export function ToggleSwitch({ label, isOn, onToggle, idKey = null }) {
   const toggleCls = isOn ? "toggle-on" : "toggle-off";
   const dotCls = isOn ? "toggle-dot-on" : "toggle-dot-off";
@@ -565,49 +568,104 @@ export function Buzzer({ label, isOn, idKey = null }) {
 }
 
 export function RotarySwitch({ label, value, onChange, idKey = null, topLabel="1", rightLabel="2", pos1Label="", pos2Label="" }) {
-  const rotation = value === 1 ? -45 : 45;
+  // value 1 points to 1 (top). value 2 points to 2 (right).
+  // In our SVG, the cutout (pointer) is at the top (0 degrees).
+  const rotation = value === 1 ? 0 : 90;
+
   return (
-    <div id={idKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', position: 'relative' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
-        {/* Left Label */}
-        <div style={{ width: '80px', fontSize: '16px', fontWeight: 'bold', color: '#111', textAlign: 'right', whiteSpace: 'pre-wrap', marginRight: '10px', marginTop: '10px' }}>{pos1Label}</div>
+    <div id={idKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', margin: '10px' }}>
+      
+      {/* Top Label (pos1Label) */}
+      {pos1Label && (
+        <div style={{ fontSize: '18px', fontWeight: '900', color: '#111', marginBottom: '8px' }}>
+          {pos1Label}
+        </div>
+      )}
+
+      {/* Center Row: Faceplate + Right Label */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         
-        {/* Square gray faceplate */}
+        {/* Faceplate */}
         <div
           onClick={onChange}
           style={{
-            position: 'relative', width: '100px', height: '100px', borderRadius: '8px',
-            background: '#4a4b4b', boxShadow: 'inset 0 0 2px rgba(255,255,255,0.2), 0 4px 6px rgba(0,0,0,0.5)',
-            border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            position: 'relative',
+            width: '120px',
+            height: '120px',
+            borderRadius: '24px',
+            background: '#a3a6a9', // flat gray
+            border: '8px solid black',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            boxSizing: 'border-box'
           }}
         >
-          <div style={{ position: 'absolute', top: '8px', left: '12px', fontSize: '20px', fontWeight: 'bold', color: '#111', fontFamily: 'sans-serif' }}>{topLabel}</div>
-          <div style={{ position: 'absolute', top: '8px', right: '12px', fontSize: '20px', fontWeight: 'bold', color: '#111', fontFamily: 'sans-serif' }}>{rightLabel}</div>
+          {/* Position "1" — top center */}
+          <div style={{
+            position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)',
+            fontSize: '24px', fontWeight: '900', color: '#e00000',
+            fontFamily: 'sans-serif', lineHeight: 1, zIndex: 2
+          }}>{topLabel}</div>
+
+          {/* Position "2" — right center */}
+          <div style={{
+            position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)',
+            fontSize: '24px', fontWeight: '900', color: '#e00000',
+            fontFamily: 'sans-serif', lineHeight: 1, zIndex: 2
+          }}>{rightLabel}</div>
 
           {/* Knob */}
           <div style={{
-            position: 'relative', width: '60px', height: '60px',
-            transform: `rotate(${rotation}deg)`, transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            transform: `rotate(${rotation}deg)`,
+            transition: 'transform 0.25s ease-out',
+            zIndex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
-            <div style={{ position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', borderRadius: '50%', background: '#1a1a1a', boxShadow: '2px 4px 6px rgba(0,0,0,0.8)' }}></div>
-            {/* Pointer handle */}
-            <div style={{
-              position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)',
-              width: '18px', height: '40px', borderRadius: '8px', background: '#1a1a1a',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.6)'
-            }}>
-              <div style={{ position: 'absolute', top: '4px', left: '50%', transform: 'translateX(-50%)', width: '4px', height: '15px', borderRadius: '2px', background: '#e8e8e0' }}></div>
-            </div>
+            <svg viewBox="-50 -50 100 100" width="100%" height="100%" style={{ overflow: 'visible' }}>
+              {/* Handle */}
+              <rect x="-7" y="0" width="14" height="60" rx="7" fill="black" />
+              {/* Main circle */}
+              <circle cx="0" cy="0" r="40" fill="black" />
+              {/* Cutout pointing UP (matches faceplate color) */}
+              <path d="M -2.5 0 L -2.5 12 A 2.5 2.5 0 0 0 2.5 12 L 2.5 0 Q 10 -15 22 -33.4 A 40 40 0 0 0 -22 -33.4 Q -10 -15 -2.5 0 Z" fill="#a3a6a9" />
+            </svg>
           </div>
         </div>
 
-        {/* Right Label */}
-        <div style={{ width: '80px', fontSize: '16px', fontWeight: 'bold', color: '#111', textAlign: 'left', whiteSpace: 'pre-wrap', marginLeft: '10px', marginTop: '10px' }}>{pos2Label}</div>
+        {/* Right Label (pos2Label) - Rotated vertically */}
+        {pos2Label && (
+          <div style={{ 
+            marginLeft: '14px',
+            fontSize: '18px', 
+            fontWeight: '900', 
+            color: '#111',
+            writingMode: 'vertical-rl',
+            transform: 'rotate(180deg)',
+            textAlign: 'center',
+            whiteSpace: 'pre-wrap',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '120px' // match faceplate height
+          }}>
+            {pos2Label}
+          </div>
+        )}
       </div>
 
-      <div style={{ position: 'absolute', bottom: '-45px', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 10 }}>
-        <div className="tape-label-real" style={{ fontSize: '15px', ...getTapeStyle(label) }}>{label}</div>
-      </div>
+      {/* Bottom Label (label) */}
+      {label && (
+        <div style={{ marginTop: '8px', textAlign: 'center', fontSize: '18px', fontWeight: '900', color: '#111', whiteSpace: 'pre-wrap' }}>
+          {label}
+        </div>
+      )}
     </div>
   );
 }
