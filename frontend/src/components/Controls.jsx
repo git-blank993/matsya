@@ -33,7 +33,7 @@ export function MetalSwitch({ label, isOn, onToggle, idKey = null, showLed = fal
       onClick={onToggle}
       style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '6px 8px', userSelect: 'none' }}
     >
-      <svg width="60" height="100" viewBox="0 0 60 100"
+      <svg width="48" height="80" viewBox="0 0 60 100"
         style={{ overflow: 'visible', filter: 'drop-shadow(2px 6px 10px rgba(0,0,0,0.8))' }}
       >
         <defs>
@@ -226,7 +226,7 @@ export function MetalSwitch({ label, isOn, onToggle, idKey = null, showLed = fal
       </svg>
 
       {label && (
-        <div className="tape-label-real" style={{ marginTop: '4px', ...getTapeStyle(label) }}>
+        <div className="tape-label-real" style={{ marginTop: '4px', fontSize: '14px', ...getTapeStyle(label) }}>
           {label}
         </div>
       )}

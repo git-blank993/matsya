@@ -30,7 +30,7 @@ const tc = (
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      margin: "4px",
+      margin: "2px",
       border: isRedBox ? "2px solid red" : "none",
       padding: isRedBox ? "4px" : "0",
     }}
@@ -51,7 +51,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
   return (
     <div
       style={{
-        padding: "20px",
+        padding: "6px",
         flex: 1,
         minHeight: 0,
         overflowY: "auto",
@@ -63,7 +63,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
       <div className="screws" style={{ top: "10px", left: "10px" }}></div>
       <div className="screws" style={{ top: "10px", right: "10px" }}></div>
 
-      <div style={{ display: "flex", gap: "80px", marginTop: "40px", width: "100%", justifyContent: "space-evenly" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", marginTop: "10px", width: "100%", justifyContent: "space-evenly" }}>
         <RotarySwitch
           label={"Power Selection\nUB_P"}
           pos1Label="AB_P"
@@ -82,9 +82,9 @@ export function SwitchesPLayout({ appState, apiCall }) {
 
       <div
         style={{
-          display: "flex",
-          gap: "20px",
-          marginTop: "40px",
+          display: "flex", flexWrap: "wrap",
+          gap: "6px",
+          marginTop: "10px",
           alignItems: "flex-start",
           width: "100%",
           justifyContent: "space-evenly",
@@ -101,7 +101,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             isOn={sw.ub_mcb}
             onToggle={() => apiCall("/api/toggle/switches.p.ub_mcb")}
           />
-          <div className="tape-label-real" style={{ marginTop: "5px" }}>
+          <div className="tape-label-real" style={{ marginTop: "3px" }}>
             UB_P MCB
           </div>
         </div>
@@ -113,9 +113,9 @@ export function SwitchesPLayout({ appState, apiCall }) {
         <YellowLedDisplay label="EB_P INSULATION" value={sw.ib_insulation} />
       </div>
 
-      <div style={{ display: "flex", gap: "40px", marginTop: "30px", width: "100%", justifyContent: "space-evenly", alignItems: "flex-start" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <div style={{ display: "flex", gap: "15px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "10px", width: "100%", justifyContent: "space-evenly", alignItems: "flex-start" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             <BlackPushButton
               labelTop="NC"
               labelBottom="PDE_S_OLR_RESET"
@@ -127,7 +127,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
               onClick={() => apiCall("/api/toggle/switches.p.oim_p_reset")}
             />
           </div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             {tc("AB_P_BMS", "", sw.ab_p_bms, () =>
               apiCall("/api/toggle/switches.p.ab_p_bms"),
             )}
@@ -138,7 +138,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
               apiCall("/api/toggle/switches.p.pde_p_dim"),
             )}
           </div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             {tc("IDE1_P", "", sw.ide_p_1, () =>
               apiCall("/api/toggle/switches.p.ide_p_1"),
             )}
@@ -155,7 +155,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
               true,
             )}
           </div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             <div
               style={{
                 display: "flex",
@@ -167,8 +167,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
                 style={{
                   color: "#ff1493",
                   fontWeight: "bold",
-                  fontSize: "24px",
-                  marginBottom: "5px",
+                  fontSize: "14px",
+                  marginBottom: "3px",
                 }}
               >
                 OIM
@@ -189,7 +189,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
                   color: "red",
                   fontWeight: "bold",
                   fontSize: "12px",
-                  marginBottom: "5px",
+                  marginBottom: "3px",
                 }}
               >
                 Spare
@@ -209,8 +209,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
                 style={{
                   color: "#ff1493",
                   fontWeight: "bold",
-                  fontSize: "24px",
-                  marginBottom: "5px",
+                  fontSize: "14px",
+                  marginBottom: "3px",
                 }}
               >
                 Wago
@@ -222,12 +222,12 @@ export function SwitchesPLayout({ appState, apiCall }) {
           </div>
         </div>
 
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "6px" }}>
           <LcdScreen hsss={appState.hsss?.p} side="P" />
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "10px", marginTop: "30px", width: "100%", justifyContent: "space-evenly" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginTop: "10px", width: "100%", justifyContent: "space-evenly" }}>
         {tc(
           "SECONDARY\nPRIMARY\nPDE-P\n24V CONTROL",
           "",
@@ -296,7 +296,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
 
       <div
         style={{
-          fontSize: "16px",
+          fontSize: "14px",
           fontWeight: "bold",
           color: "#000",
           fontFamily: "monospace",
@@ -306,9 +306,9 @@ export function SwitchesPLayout({ appState, apiCall }) {
       </div>
       <div
         style={{
-          display: "flex",
-          gap: "40px",
-          marginTop: "10px",
+          display: "flex", flexWrap: "wrap",
+          gap: "4px",
+          marginTop: "2px",
           justifyContent: "center",
           width: "100%",
         }}
@@ -323,9 +323,9 @@ export function SwitchesPLayout({ appState, apiCall }) {
           <div
             style={{
               display: "flex",
-              gap: "12px",
-              flexWrap: "nowrap",
-              marginTop: "10px",
+              gap: "2px",
+              flexWrap: "wrap",
+              marginTop: "2px",
             }}
           >
             {[1, 2, 3, 4, 5].map((i) => (
@@ -341,8 +341,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
                   style={{
                     color: "#1a5f9a",
                     fontWeight: "bold",
-                    fontSize: "22px",
-                    marginBottom: "2px",
+                    fontSize: "12px",
+                    marginBottom: "0px",
                   }}
                 >
                   {i === 5 ? `SDW5_P_100kg` : `SDW${i}_P_50kg`}
@@ -385,8 +385,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
                     style={{
                       color: "#ff1493",
                       fontWeight: "bold",
-                      fontSize: "22px",
-                      marginBottom: "2px",
+                      fontSize: "12px",
+                      marginBottom: "0px",
                     }}
                   >
                     {i === 5 ? `SDW5_S_100kg` : `SDW${i}_S_50kg`}
@@ -423,11 +423,11 @@ export function SwitchesPLayout({ appState, apiCall }) {
 
       <div
         style={{
-          display: "flex",
+          display: "flex", flexWrap: "wrap",
           justifyContent: "center",
           alignItems: "center",
-          gap: "30px",
-          marginTop: "20px",
+          gap: "4px",
+          marginTop: "2px",
           width: "100%",
         }}
       >
@@ -447,8 +447,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "24px",
-              marginTop: "2px",
+              fontSize: "14px",
+              marginTop: "0px",
             }}
           >
             PWR_P
@@ -461,8 +461,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "24px",
-              marginTop: "2px",
+              fontSize: "14px",
+              marginTop: "0px",
             }}
           >
             PWR_S
@@ -470,7 +470,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
         </div>
         <div
           style={{
-            fontSize: "36px",
+            fontSize: "16px",
             fontWeight: "bold",
             color: "#ff1493",
             fontFamily: "monospace",
@@ -494,8 +494,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "24px",
-              marginTop: "2px",
+              fontSize: "14px",
+              marginTop: "0px",
             }}
           >
             PWR_S
@@ -508,8 +508,8 @@ export function SwitchesPLayout({ appState, apiCall }) {
             style={{
               color: "#ff1493",
               fontWeight: "bold",
-              fontSize: "24px",
-              marginTop: "2px",
+              fontSize: "14px",
+              marginTop: "0px",
             }}
           >
             PWR_P
@@ -526,7 +526,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
           color: "#000",
           padding: "4px 8px",
           fontWeight: "bold",
-          fontSize: "28px",
+          fontSize: "18px",
           border: "2px solid #000",
         }}
       >
@@ -542,7 +542,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
   return (
     <div
       style={{
-        padding: "20px",
+        padding: "6px",
         flex: 1,
         minHeight: 0,
         overflowY: "auto",
@@ -554,7 +554,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
       <div className="screws" style={{ top: "10px", left: "10px" }}></div>
       <div className="screws" style={{ top: "10px", right: "10px" }}></div>
 
-      <div style={{ display: "flex", gap: "80px", marginTop: "40px", width: "100%", justifyContent: "space-evenly" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", marginTop: "10px", width: "100%", justifyContent: "space-evenly" }}>
         <RotarySwitch
           label={"Power Selection\nEB_S"}
           pos1Label="E_BATT_S"
@@ -573,9 +573,9 @@ export function SwitchesSLayout({ appState, apiCall }) {
 
       <div
         style={{
-          display: "flex",
-          gap: "20px",
-          marginTop: "40px",
+          display: "flex", flexWrap: "wrap",
+          gap: "6px",
+          marginTop: "10px",
           alignItems: "flex-start",
           width: "100%",
           justifyContent: "space-evenly",
@@ -598,19 +598,19 @@ export function SwitchesSLayout({ appState, apiCall }) {
             isOn={sw.ub_mcb}
             onToggle={() => apiCall("/api/toggle/switches.s.ub_mcb")}
           />
-          <div className="tape-label-real" style={{ marginTop: "5px" }}>
+          <div className="tape-label-real" style={{ marginTop: "3px" }}>
             UB_S MCB
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "40px", marginTop: "30px", width: "100%", justifyContent: "space-evenly", alignItems: "flex-start" }}>
-        <div style={{ marginTop: "20px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "10px", width: "100%", justifyContent: "space-evenly", alignItems: "flex-start" }}>
+        <div style={{ marginTop: "6px" }}>
           <LcdScreen hsss={appState.hsss?.s} side="S" />
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <div style={{ display: "flex", gap: "15px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             <BlackPushButton
               labelTop=""
               labelBottom="PDE_S_OLR_RESET"
@@ -622,7 +622,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
               onClick={() => apiCall("/api/toggle/switches.s.oim_s_reset")}
             />
           </div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             {tc("AB_S_BMS", "", sw.ab_s_bms, () =>
               apiCall("/api/toggle/switches.s.ab_s_bms"),
             )}
@@ -633,7 +633,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
               apiCall("/api/toggle/switches.s.pde_s_oim"),
             )}
           </div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             {tc(
               "SPARE-2\nKEEP IN ON",
               "",
@@ -650,7 +650,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
               apiCall("/api/toggle/switches.s.ide_s_1"),
             )}
           </div>
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             {tc("Wago", "", sw.wago, () => apiCall("/api/toggle/switches.s.wago"))}
             {tc("XX", "", sw.xx, () => apiCall("/api/toggle/switches.s.xx"))}
             {tc("OIM", "", sw.oim, () => apiCall("/api/toggle/switches.s.oim"))}
@@ -658,7 +658,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "10px", marginTop: "40px", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginTop: "10px", justifyContent: "space-between" }}>
         {tc(
           "SECONDARY\nPWR_S",
           "PRIMARY PDE-S\n24V CONTROL",
@@ -727,7 +727,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
 
       <div
         style={{
-          fontSize: "36px",
+          fontSize: "16px",
           fontWeight: "bold",
           color: "#ff1493",
           fontFamily: "sans-serif",
@@ -739,14 +739,14 @@ export function SwitchesSLayout({ appState, apiCall }) {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "20px",
-          marginTop: "10px",
+          gap: "6px",
+          marginTop: "5px",
         }}
       >
         <div
           style={{
             display: "flex",
-            gap: "15px",
+            gap: "7px",
             flexWrap: "wrap",
             justifyContent: "center",
           }}
@@ -782,7 +782,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
         <div
           style={{
             display: "flex",
-            gap: "15px",
+            gap: "7px",
             flexWrap: "wrap",
             justifyContent: "center",
           }}
@@ -822,7 +822,7 @@ export function SwitchesSLayout({ appState, apiCall }) {
           color: "#000",
           padding: "4px 8px",
           fontWeight: "bold",
-          fontSize: "28px",
+          fontSize: "18px",
           border: "2px solid #000",
         }}
       >
@@ -838,7 +838,7 @@ export function Switches3Layout({ appState, apiCall }) {
   return (
     <div
       style={{
-        padding: "20px",
+        padding: "6px",
         flex: 1,
         minHeight: 0,
         overflowY: "auto",
@@ -854,26 +854,26 @@ export function Switches3Layout({ appState, apiCall }) {
       <div
         style={{
           border: "1px solid #777",
-          padding: "10px",
+          padding: "5px",
           position: "relative",
-          marginTop: "10px",
+          marginTop: "5px",
           width: "100%",
           boxSizing: "border-box",
         }}
       >
         <div
-          style={{ position: "absolute", top: "-15px", left: "50%", transform: "translateX(-50%)", color: "#ff1493", fontSize: "24px", fontWeight: "bold", background: "#f0f0f0", padding: "0 10px" }}
+          style={{ position: "absolute", top: "-15px", left: "50%", transform: "translateX(-50%)", color: "#ff1493", fontSize: "14px", fontWeight: "bold", background: "#f0f0f0", padding: "0 10px" }}
         >
           EMERGENCY JETTISONING SWITCHES
         </div>
 
         <div
           style={{
-            display: "flex",
+            display: "flex", flexWrap: "wrap",
             justifyContent: "center",
             alignItems: "center",
-            gap: "20px",
-            marginTop: "10px",
+            gap: "6px",
+            marginTop: "5px",
           }}
         >
           <div
@@ -883,10 +883,10 @@ export function Switches3Layout({ appState, apiCall }) {
               alignItems: "center",
             }}
           >
-            <div className="tape-label-real" style={{ marginBottom: "5px" }}>
+            <div className="tape-label-real" style={{ marginBottom: "3px" }}>
               TRIM-EMG JET-STBD
             </div>
-            <div style={{ display: "flex", gap: "15px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
               <Toggle3Pos
                 showLed={true}
                 labelTop="T-EJ-P1"
@@ -955,10 +955,10 @@ export function Switches3Layout({ appState, apiCall }) {
           >
             <div
               style={{
-                display: "flex",
+                display: "flex", flexWrap: "wrap",
                 width: "100%",
                 justifyContent: "space-between",
-                marginBottom: "5px",
+                marginBottom: "3px",
                 padding: "0 40px",
               }}
             >
@@ -968,7 +968,7 @@ export function Switches3Layout({ appState, apiCall }) {
               </div>
               <div className="tape-label-real">RELEASE STBD</div>
             </div>
-            <div style={{ display: "flex", gap: "15px", position: "relative" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "7px", position: "relative" }}>
               <Toggle3Pos
                 showLed={true}
                 labelTop="MB-EJ-P1"
@@ -1034,9 +1034,9 @@ export function Switches3Layout({ appState, apiCall }) {
       {/* Manipulator + Sample Basket row */}
       <div
         style={{
-          display: "flex",
-          gap: "50px",
-          marginTop: "20px",
+          display: "flex", flexWrap: "wrap",
+          gap: "12px",
+          marginTop: "6px",
           justifyContent: "center",
           alignItems: "flex-end",
         }}
@@ -1049,14 +1049,14 @@ export function Switches3Layout({ appState, apiCall }) {
             alignItems: "center",
           }}
         >
-          <div className="tape-label-real" style={{ marginBottom: "4px" }}>
+          <div className="tape-label-real" style={{ marginBottom: "2px" }}>
             MANIPULATOR
           </div>
-          <div style={{ display: "flex", gap: "60px", marginBottom: "4px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "15px", marginBottom: "2px" }}>
             <div className="tape-label-real">PORT</div>
             <div className="tape-label-real">STBD</div>
           </div>
-          <div style={{ display: "flex", gap: "12px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
             <Toggle3Pos
               showLed={true}
               labelTop="EJM-P1"
@@ -1124,10 +1124,10 @@ export function Switches3Layout({ appState, apiCall }) {
             alignItems: "center",
           }}
         >
-          <div className="tape-label-real" style={{ marginBottom: "28px" }}>
+          <div className="tape-label-real" style={{ marginBottom: "9px" }}>
             SAMPLE BASKET
           </div>
-          <div style={{ display: "flex", gap: "12px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
             <Toggle3Pos
               showLed={true}
               labelTop="EJS-P1"
@@ -1193,9 +1193,9 @@ export function Switches3Layout({ appState, apiCall }) {
       {/* Main Lower Section */}
       <div
         style={{
-          display: "flex",
-          gap: "40px",
-          marginTop: "40px",
+          display: "flex", flexWrap: "wrap",
+          gap: "10px",
+          marginTop: "10px",
           justifyContent: "center",
           alignItems: "flex-start",
           width: "100%",
@@ -1209,7 +1209,7 @@ export function Switches3Layout({ appState, apiCall }) {
             alignItems: "center",
           }}
         >
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             <Toggle3Pos
               showLed={true}
               labelTop="EDW_P1"
@@ -1243,9 +1243,9 @@ export function Switches3Layout({ appState, apiCall }) {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: "30px",
-              marginTop: "40px",
+              display: "flex", flexWrap: "wrap",
+              gap: "10px",
+              marginTop: "10px",
               alignItems: "flex-start",
             }}
           >
@@ -1256,10 +1256,10 @@ export function Switches3Layout({ appState, apiCall }) {
                 alignItems: "center",
               }}
             >
-              <div className="tape-label-real" style={{ marginBottom: "3px" }}>
+              <div className="tape-label-real" style={{ marginBottom: "1px" }}>
                 WATER LEAK
               </div>
-              <div style={{ display: "flex", gap: "2px", marginBottom: "3px" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "2px", marginBottom: "1px" }}>
                 <div style={{ width: "44px" }}></div>
                 <div
                   className="tape-label-real"
@@ -1293,7 +1293,7 @@ export function Switches3Layout({ appState, apiCall }) {
                 <div
                   key={i}
                   style={{
-                    display: "flex",
+                    display: "flex", flexWrap: "wrap",
                     alignItems: "center",
                     height: "40px",
                   }}
@@ -1341,14 +1341,14 @@ export function Switches3Layout({ appState, apiCall }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              marginTop: "15px",
+              marginTop: "7px",
             }}
           >
             <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(4, 1fr)",
-                gap: "12px",
+                gap: "6px",
               }}
             >
               <BlackPushButton labelTop="MB" />
@@ -1364,7 +1364,7 @@ export function Switches3Layout({ appState, apiCall }) {
               <BlackPushButton labelTop="SPARE 7" />
               <BlackPushButton labelTop="SPARE 8" />
             </div>
-            <div className="tape-label-real" style={{ marginTop: "16px" }}>
+            <div className="tape-label-real" style={{ marginTop: "8px" }}>
               ALARM PANEL
             </div>
           </div>
@@ -1378,7 +1378,7 @@ export function Switches3Layout({ appState, apiCall }) {
             alignItems: "center",
           }}
         >
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
             <Toggle3Pos
               showLed={true}
               labelTop="EDW_P3"
@@ -1412,9 +1412,9 @@ export function Switches3Layout({ appState, apiCall }) {
           </div>
           <div
             style={{
-              display: "flex",
-              gap: "30px",
-              marginTop: "40px",
+              display: "flex", flexWrap: "wrap",
+              gap: "10px",
+              marginTop: "10px",
               alignItems: "flex-start",
             }}
           >
@@ -1428,10 +1428,10 @@ export function Switches3Layout({ appState, apiCall }) {
                 alignItems: "center",
               }}
             >
-              <div className="tape-label-real" style={{ marginBottom: "3px" }}>
+              <div className="tape-label-real" style={{ marginBottom: "1px" }}>
                 INSULATION
               </div>
-              <div style={{ display: "flex", gap: "2px", marginBottom: "3px" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "2px", marginBottom: "1px" }}>
                 <div
                   className="tape-label-real"
                   style={{
@@ -1465,7 +1465,7 @@ export function Switches3Layout({ appState, apiCall }) {
                 <div
                   key={i}
                   style={{
-                    display: "flex",
+                    display: "flex", flexWrap: "wrap",
                     alignItems: "center",
                     height: "40px",
                   }}
@@ -1506,18 +1506,18 @@ export function Switches3Layout({ appState, apiCall }) {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "16px",
-          marginBottom: "10px",
+          gap: "8px",
+          marginBottom: "5px",
           alignItems: "center",
         }}
       >
-        <div style={{ display: "flex", gap: "20px", alignItems: "flex-start", flexWrap: "wrap" }}>
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div style={{ display: "flex", gap: "6px", alignItems: "flex-start", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
           <BlackPushButton labelTop="SUBMERSIBLE\nCTRL" />
           <BlackPushButton labelTop="WATER OUT" />
           <BlackPushButton labelTop="TRIM" />
         </div>
-        <div style={{ display: "flex", gap: "4px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "2px" }}>
           {tc(
             "FREEBOARD_P",
             "",
@@ -1600,7 +1600,7 @@ export function Switches3Layout({ appState, apiCall }) {
           )}
         </div>
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
           <KnobToggleSwitch label="FWD CTRL" value={sw.fwd_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.fwd_ctrl")} />
           <KnobToggleSwitch label="HEADING_CTRL" value={sw.heading_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.heading_ctrl")} />
           <KnobToggleSwitch label="DEPTH_CTRL" value={sw.depth_ctrl ? 2 : 1} onChange={() => apiCall("/api/toggle/switches.sw3.depth_ctrl")} />
@@ -1620,7 +1620,7 @@ export function Switches3Layout({ appState, apiCall }) {
           color: "#000",
           padding: "4px 8px",
           fontWeight: "bold",
-          fontSize: "28px",
+          fontSize: "18px",
           border: "2px solid #000",
         }}
       >
