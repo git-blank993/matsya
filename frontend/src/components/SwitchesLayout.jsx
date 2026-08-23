@@ -24,6 +24,7 @@ const tc = (
   color = "black",
   isRedBox = false,
   showLed = false,
+  fontSize
 ) => (
   <div
     style={{
@@ -41,6 +42,7 @@ const tc = (
       idKey={idKey}
       label={labelTop || labelBottom}
       showLed={showLed}
+      fontSize={fontSize}
     />
   </div>
 );
@@ -229,10 +231,15 @@ export function SwitchesPLayout({ appState, apiCall }) {
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginTop: "10px", width: "100%", justifyContent: "space-evenly" }}>
         {tc(
-          "SECONDARY\nPRIMARY\nPDE-P\n24V CONTROL",
+          "SECONDARY / PRIMARY\nPDE-P 24V CONTROL",
           "",
           sw.pde_p_24v,
           () => apiCall("/api/toggle/switches.p.pde_p_24v"),
+          null,
+          "black",
+          false,
+          false,
+          "10px"
         )}
         {tc("MB_P_BMS", "", sw.mb_p_bms, () =>
           apiCall("/api/toggle/switches.p.mb_p_bms"),
@@ -253,7 +260,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
           apiCall("/api/toggle/switches.p.mb_5"),
         )}
         {tc(
-          "PDE_P_OLR\n\nPDE_P_OLR\nSTATUS",
+          "PDE_P_OLR\nSTATUS",
           "",
           sw.pde_p_olr,
           () => apiCall("/api/toggle/switches.p.pde_p_olr"),
@@ -263,7 +270,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
           true,
         )}
         {tc(
-          "PDE_P_148\n\nPDE_P_148\nIN STATUS",
+          "PDE_P_148\nIN STATUS",
           "",
           sw.pde_p_148,
           () => apiCall("/api/toggle/switches.p.pde_p_148"),
@@ -273,7 +280,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
           true,
         )}
         {tc(
-          "PDE_P_24V_INT\n\nPDE_P_PL\nSTATUS",
+          "PDE_P_24V_INT\nPL STATUS",
           "",
           sw.pde_p_24v_main,
           () => apiCall("/api/toggle/switches.p.pde_p_24v_main"),
@@ -307,9 +314,10 @@ export function SwitchesPLayout({ appState, apiCall }) {
       <div
         style={{
           display: "flex", flexWrap: "wrap",
-          gap: "4px",
-          marginTop: "2px",
           justifyContent: "center",
+          alignItems: "center",
+          gap: "10px",
+          marginTop: "2px",
           width: "100%",
         }}
       >
@@ -320,12 +328,34 @@ export function SwitchesPLayout({ appState, apiCall }) {
             alignItems: "center",
           }}
         >
+          <div style={{ color: "#00cc66", fontWeight: "bold", fontSize: "10px" }}>
+            SDW MASTER SWITCH_PORT
+          </div>
+          <div style={{ color: "#ff1493", fontWeight: "bold", fontSize: "14px", marginTop: "0px" }}>
+            PWR_P
+          </div>
+          <Toggle3Pos
+            value={sw.sdw_master_p ? 1 : sw.sdw_master_s ? -1 : 0}
+            onToggle={() => apiCall("/api/toggle/switches.p.sdw_master_p")}
+          />
+          <div style={{ color: "#ff1493", fontWeight: "bold", fontSize: "14px", marginTop: "0px" }}>
+            PWR_S
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
           <div
             style={{
               display: "flex",
-              gap: "2px",
-              flexWrap: "wrap",
-              marginTop: "2px",
+              gap: "4px",
+              justifyContent: "center",
             }}
           >
             {[1, 2, 3, 4, 5].map((i) => (
@@ -370,6 +400,14 @@ export function SwitchesPLayout({ appState, apiCall }) {
                 />
               </div>
             ))}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: "4px",
+              justifyContent: "center",
+            }}
+          >
             {[1, 2, 3, 4, 5].map((i) => {
               const sdwId = i + 5;
               return (
@@ -419,18 +457,7 @@ export function SwitchesPLayout({ appState, apiCall }) {
             })}
           </div>
         </div>
-      </div>
 
-      <div
-        style={{
-          display: "flex", flexWrap: "wrap",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "4px",
-          marginTop: "2px",
-          width: "100%",
-        }}
-      >
         <div
           style={{
             display: "flex",
@@ -438,80 +465,17 @@ export function SwitchesPLayout({ appState, apiCall }) {
             alignItems: "center",
           }}
         >
-          <div
-            style={{ color: "#00cc66", fontWeight: "bold", fontSize: "10px" }}
-          >
-            SDW MASTER SWITCH_PORT
-          </div>
-          <div
-            style={{
-              color: "#ff1493",
-              fontWeight: "bold",
-              fontSize: "14px",
-              marginTop: "0px",
-            }}
-          >
-            PWR_P
-          </div>
-          <Toggle3Pos
-            value={sw.sdw_master_p ? 1 : sw.sdw_master_s ? -1 : 0}
-            onToggle={() => apiCall("/api/toggle/switches.p.sdw_master_p")}
-          />
-          <div
-            style={{
-              color: "#ff1493",
-              fontWeight: "bold",
-              fontSize: "14px",
-              marginTop: "0px",
-            }}
-          >
-            PWR_S
-          </div>
-        </div>
-        <div
-          style={{
-            fontSize: "16px",
-            fontWeight: "bold",
-            color: "#ff1493",
-            fontFamily: "monospace",
-          }}
-        >
-          SERVICE DROP WEIGHT SWITCHES
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{ color: "#00cc66", fontWeight: "bold", fontSize: "10px" }}
-          >
+          <div style={{ color: "#00cc66", fontWeight: "bold", fontSize: "10px" }}>
             SDW MASTER SWITCH_STBD
           </div>
-          <div
-            style={{
-              color: "#ff1493",
-              fontWeight: "bold",
-              fontSize: "14px",
-              marginTop: "0px",
-            }}
-          >
+          <div style={{ color: "#ff1493", fontWeight: "bold", fontSize: "14px", marginTop: "0px" }}>
             PWR_S
           </div>
           <Toggle3Pos
             value={sw.sdw_master_stbd_s ? 1 : sw.sdw_master_stbd_p ? -1 : 0}
             onToggle={() => apiCall("/api/toggle/switches.p.sdw_master_stbd")}
           />
-          <div
-            style={{
-              color: "#ff1493",
-              fontWeight: "bold",
-              fontSize: "14px",
-              marginTop: "0px",
-            }}
-          >
+          <div style={{ color: "#ff1493", fontWeight: "bold", fontSize: "14px", marginTop: "0px" }}>
             PWR_P
           </div>
         </div>

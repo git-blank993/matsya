@@ -23,7 +23,7 @@ export function ToggleSwitch({ label, isOn, onToggle, idKey = null }) {
   );
 }
 
-export function MetalSwitch({ label, isOn, onToggle, idKey = null, showLed = false }) {
+export function MetalSwitch({ label, isOn, onToggle, idKey = null, showLed = false, fontSize }) {
   const id = idKey || (label ? label.replace(/\s/g,'_') : Math.random().toString(36).slice(2));
 
   return (
@@ -31,7 +31,7 @@ export function MetalSwitch({ label, isOn, onToggle, idKey = null, showLed = fal
       className="metal-switch-container"
       id={idKey}
       onClick={onToggle}
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '6px 8px', userSelect: 'none' }}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '6px 2px', userSelect: 'none' }}
     >
       <svg width="48" height="80" viewBox="0 0 60 100"
         style={{ overflow: 'visible', filter: 'drop-shadow(2px 6px 10px rgba(0,0,0,0.8))' }}
@@ -226,7 +226,7 @@ export function MetalSwitch({ label, isOn, onToggle, idKey = null, showLed = fal
       </svg>
 
       {label && (
-        <div className="tape-label-real" style={{ marginTop: '4px', fontSize: '14px', ...getTapeStyle(label) }}>
+        <div className="tape-label-real" style={{ marginTop: '4px', fontSize: fontSize || '14px', ...getTapeStyle(label) }}>
           {label}
         </div>
       )}
